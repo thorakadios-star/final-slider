@@ -2446,7 +2446,7 @@ function openPicks(tipsterId) {
   activeTipster = tipsterId;
   go('picks');
 }
-
+    
 function renderPicksPanel(tipsterId) {
   const picks = picksStore[tipsterId] || [];
   const container = document.getElementById('picks-' + tipsterId);
