@@ -1374,15 +1374,24 @@ nav.sc{border-color:#243028}
         <div class="card-banner">
           <div class="card-banner-bg" style="background:linear-gradient(135deg,#2a2418 0%,#0d0a06 100%)"></div>
           <div class="card-banner-overlay"></div>
-          <div class="card-content">
-            <div class="tipster-avatar verified"><img src="lacatedra.png" alt="La Cátedra"></div>
+          <div class="tipster-rank">#4</div>
+          <div class="verified-badge">🔰 Verificado</div>
+          <div class="sport-badge futbol">⚽ Fútbol</div>
+        </div>
+        <div class="card-content">
+          <div class="tipster-identity">
+            <div class="tipster-avatar verified">
+              <img src="lacatedra.png" alt="La Cátedra">
+            </div>
             <div class="tipster-info">
               <div class="tipster-name">La Cátedra</div>
-              <div class="tipster-subtitle">PRONÓSTICOS DE EXPERTOS</div>
-            </div>
-            <div class="sport-badge" style="background:rgba(34,197,94,.15);color:#22c55e">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-              Fútbol
+              <div class="tipster-rating">
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star half" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
             </div>
           </div>
           <div class="stats-grid">
@@ -1399,9 +1408,18 @@ nav.sc{border-color:#243028}
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-action primary" onclick="openTipsterProfile({name:'La Cátedra',subtitle:'PRONÓSTICOS DE EXPERTOS',avatar:'lacatedra.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
-            <button class="btn-action" onclick="openTipsterProfile({name:'La Cátedra',subtitle:'PRONÓSTICOS DE EXPERTOS',avatar:'lacatedra.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
-            <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
+            <button class="btn-action primary" onclick="openTipsterProfile({name:'La Cátedra',subtitle:'PRONÓSTICOS DE EXPERTOS',avatar:'lacatedra.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Ver Picks
+            </button>
+            <button class="btn-action" onclick="openTipsterProfile({name:'La Cátedra',subtitle:'PRONÓSTICOS DE EXPERTOS',avatar:'lacatedra.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});showTipsterTab('stats')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Estadísticas
+            </button>
+            <button class="btn-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              Seguir
+            </button>
           </div>
         </div>
       </div>
@@ -1411,15 +1429,24 @@ nav.sc{border-color:#243028}
         <div class="card-banner">
           <div class="card-banner-bg" style="background:linear-gradient(135deg,#1a3020 0%,#081510 100%)"></div>
           <div class="card-banner-overlay"></div>
-          <div class="card-content">
-            <div class="tipster-avatar verified"><img src="golyganancia.png" alt="Gol y Ganancia"></div>
+          <div class="tipster-rank">#5</div>
+          <div class="verified-badge">🔰 Verificado</div>
+          <div class="sport-badge futbol">⚽ Fútbol</div>
+        </div>
+        <div class="card-content">
+          <div class="tipster-identity">
+            <div class="tipster-avatar verified">
+              <img src="golyganancia.png" alt="Gol y Ganancia">
+            </div>
             <div class="tipster-info">
               <div class="tipster-name">Gol y Ganancia</div>
-              <div class="tipster-subtitle">PASIÓN Y PREMIOS</div>
-            </div>
-            <div class="sport-badge" style="background:rgba(34,197,94,.15);color:#22c55e">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-              Fútbol
+              <div class="tipster-rating">
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star half" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
             </div>
           </div>
           <div class="stats-grid">
@@ -1436,9 +1463,18 @@ nav.sc{border-color:#243028}
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-action primary" onclick="openTipsterProfile({name:'Gol y Ganancia',subtitle:'PASIÓN Y PREMIOS',avatar:'golyganancia.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
-            <button class="btn-action" onclick="openTipsterProfile({name:'Gol y Ganancia',subtitle:'PASIÓN Y PREMIOS',avatar:'golyganancia.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
-            <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
+            <button class="btn-action primary" onclick="openTipsterProfile({name:'Gol y Ganancia',subtitle:'PASIÓN Y PREMIOS',avatar:'golyganancia.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Ver Picks
+            </button>
+            <button class="btn-action" onclick="openTipsterProfile({name:'Gol y Ganancia',subtitle:'PASIÓN Y PREMIOS',avatar:'golyganancia.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});showTipsterTab('stats')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Estadísticas
+            </button>
+            <button class="btn-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              Seguir
+            </button>
           </div>
         </div>
       </div>
@@ -1446,17 +1482,26 @@ nav.sc{border-color:#243028}
       <!-- TIPSTER 6 - Apuesta Total -->
       <div class="tipster-card">
         <div class="card-banner">
-          <div class="card-banner-bg" style="background:linear-gradient(135deg,#1a2030 0%,#080a10 100%)"></div>
+          <div class="card-banner-bg" style="background:linear-gradient(135deg,#1a2030 0%,#080a15 100%)"></div>
           <div class="card-banner-overlay"></div>
-          <div class="card-content">
-            <div class="tipster-avatar verified"><img src="apuestatotal.png" alt="Apuesta Total"></div>
+          <div class="tipster-rank">#6</div>
+          <div class="verified-badge">🔰 Verificado</div>
+          <div class="sport-badge futbol">⚽ Fútbol</div>
+        </div>
+        <div class="card-content">
+          <div class="tipster-identity">
+            <div class="tipster-avatar verified">
+              <img src="apuestatotal.png" alt="Apuesta Total">
+            </div>
             <div class="tipster-info">
               <div class="tipster-name">Apuesta Total</div>
-              <div class="tipster-subtitle">TU CANAL DE APUESTAS</div>
-            </div>
-            <div class="sport-badge" style="background:rgba(34,197,94,.15);color:#22c55e">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-              Fútbol
+              <div class="tipster-rating">
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star half" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
             </div>
           </div>
           <div class="stats-grid">
@@ -1473,9 +1518,18 @@ nav.sc{border-color:#243028}
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-action primary" onclick="openTipsterProfile({name:'Apuesta Total',subtitle:'TU CANAL DE APUESTAS',avatar:'apuestatotal.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
-            <button class="btn-action" onclick="openTipsterProfile({name:'Apuesta Total',subtitle:'TU CANAL DE APUESTAS',avatar:'apuestatotal.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
-            <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
+            <button class="btn-action primary" onclick="openTipsterProfile({name:'Apuesta Total',subtitle:'TU CANAL DE APUESTAS',avatar:'apuestatotal.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Ver Picks
+            </button>
+            <button class="btn-action" onclick="openTipsterProfile({name:'Apuesta Total',subtitle:'TU CANAL DE APUESTAS',avatar:'apuestatotal.png',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});showTipsterTab('stats')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Estadísticas
+            </button>
+            <button class="btn-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              Seguir
+            </button>
           </div>
         </div>
       </div>
