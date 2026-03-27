@@ -1184,17 +1184,17 @@ nav.sc{border-color:#243028}
     <div class="stats-banner" style="animation:fadeUp .7s .1s ease forwards;opacity:0">
       <div class="stat-pill">
         <span class="stat-pill-icon">🛡️</span>
-        <span class="stat-pill-value">0</span>
+        <span class="stat-pill-value" id="global-picks">0</span>
         <span class="stat-pill-label">picks auditados</span>
       </div>
       <div class="stat-pill">
         <span class="stat-pill-icon">🎯</span>
-        <span class="stat-pill-value">0%</span>
+        <span class="stat-pill-value" id="global-winrate">0%</span>
         <span class="stat-pill-label">precisión media</span>
       </div>
       <div class="stat-pill">
         <span class="stat-pill-icon">💰</span>
-        <span class="stat-pill-value">0€</span>
+        <span class="stat-pill-value" id="global-profit">0€</span>
         <span class="stat-pill-label">verificados</span>
       </div>
       <div class="stat-pill">
@@ -1249,25 +1249,25 @@ nav.sc{border-color:#243028}
               </div>
             </div>
           </div>
-          <div class="stats-grid">
-            <div class="stat-item"><div class="stat-value">0</div><div class="stat-label">Score</div></div>
-            <div class="stat-item"><div class="stat-value yield">0%</div><div class="stat-label">Yield</div></div>
-            <div class="stat-item"><div class="stat-value profit">0</div><div class="stat-label">Beneficio</div></div>
-            <div class="stat-item"><div class="stat-value">0</div><div class="stat-label">Picks</div></div>
+          <div class="stats-grid" id="ghp-stats-grid">
+            <div class="stat-item"><div class="stat-value" id="ghp-score">0</div><div class="stat-label">Score</div></div>
+            <div class="stat-item"><div class="stat-value yield" id="ghp-yield">0%</div><div class="stat-label">Yield</div></div>
+            <div class="stat-item"><div class="stat-value profit" id="ghp-profit">0</div><div class="stat-label">Beneficio</div></div>
+            <div class="stat-item"><div class="stat-value" id="ghp-picks">0</div><div class="stat-label">Picks</div></div>
           </div>
           <div class="performance-section">
             <span class="performance-label">Últimos 10</span>
-            <div class="performance-dots">
+            <div class="performance-dots" id="ghp-dots">
               <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
               <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-action primary" onclick="openTipsterProfile({name:'Green Hunter Pro',subtitle:'FOOTBALL PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})">
+            <button class="btn-action primary" id="ghp-btn-picks" onclick="openTipsterProfile({name:'Green Hunter Pro',subtitle:'FOOTBALL PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               Ver Picks
             </button>
-            <button class="btn-action" onclick="openTipsterProfile({name:'Green Hunter Pro',subtitle:'FOOTBALL PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});showTipsterTab('stats')">
+            <button class="btn-action" id="ghp-btn-stats" onclick="openTipsterProfile({name:'Green Hunter Pro',subtitle:'FOOTBALL PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});showTipsterTab('stats')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
               Estadísticas
             </button>
@@ -3803,9 +3803,162 @@ async function loadPicksFromSupabase() {
       renderPicksPanel('ghp');
       renderPicksPanel('tp');
       console.log('Picks cargados desde Supabase:', data.length);
+      
+      // Calcular y actualizar estadísticas automáticamente
+      calculateAndUpdateStats(data);
     }
   } catch (e) {
     console.warn('Error cargando desde Supabase:', e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CÁLCULO AUTOMÁTICO DE ESTADÍSTICAS DESDE SUPABASE
+// ═══════════════════════════════════════════════════════════════════════════════
+function calculateAndUpdateStats(picks) {
+  if (!picks || picks.length === 0) {
+    console.log('No hay picks para calcular estadísticas');
+    return;
+  }
+  
+  // Filtrar solo picks resueltos (ganado o perdido)
+  const resueltos = picks.filter(p => p.estado === 'ganado' || p.estado === 'perdido' || p.estado === 'Ganado' || p.estado === 'Perdido');
+  const ganados = resueltos.filter(p => p.estado === 'ganado' || p.estado === 'Ganado');
+  const perdidos = resueltos.filter(p => p.estado === 'perdido' || p.estado === 'Perdido');
+  
+  // Cálculos
+  const totalPicks = picks.length;
+  const totalResueltos = resueltos.length;
+  const totalGanados = ganados.length;
+  const winrate = totalResueltos > 0 ? ((totalGanados / totalResueltos) * 100).toFixed(1) : 0;
+  
+  // Calcular beneficio y yield
+  let beneficioTotal = 0;
+  let stakeTotal = 0;
+  
+  resueltos.forEach(pick => {
+    const stake = parseFloat(pick.stake) || 1;
+    const cuota = parseFloat(pick.cuota) || 1;
+    stakeTotal += stake;
+    
+    if (pick.estado === 'ganado' || pick.estado === 'Ganado') {
+      beneficioTotal += stake * (cuota - 1); // Ganancia neta
+    } else {
+      beneficioTotal -= stake; // Pérdida del stake
+    }
+  });
+  
+  const yield_pct = stakeTotal > 0 ? ((beneficioTotal / stakeTotal) * 100).toFixed(1) : 0;
+  const beneficioStr = beneficioTotal >= 0 ? '+' + beneficioTotal.toFixed(2) : beneficioTotal.toFixed(2);
+  
+  // Score (fórmula simple: winrate * 10 + yield)
+  const score = ((parseFloat(winrate) * 10) + parseFloat(yield_pct)).toFixed(0);
+  
+  console.log(`📊 Stats calculadas: ${totalPicks} picks, ${totalGanados}W/${perdidos.length}L, Winrate: ${winrate}%, Yield: ${yield_pct}%, Beneficio: ${beneficioStr}`);
+  
+  // Actualizar stats globales de la plataforma
+  const globalPicks = document.getElementById('global-picks');
+  const globalWinrate = document.getElementById('global-winrate');
+  const globalProfit = document.getElementById('global-profit');
+  
+  if (globalPicks) globalPicks.textContent = totalPicks;
+  if (globalWinrate) globalWinrate.textContent = winrate + '%';
+  if (globalProfit) {
+    globalProfit.textContent = (beneficioTotal >= 0 ? '+' : '') + beneficioTotal.toFixed(0) + '€';
+  }
+  
+  // Actualizar UI de Green Hunter Pro
+  updateTipsterCardUI('ghp', {
+    score: score,
+    yield: yield_pct + '%',
+    profit: beneficioStr,
+    picks: totalPicks,
+    winrate: winrate + '%',
+    recentResults: resueltos.slice(0, 10) // Últimos 10 para los dots
+  });
+  
+  // Guardar stats en variable global para usar en openTipsterProfile
+  window.ghpStats = {
+    score: score,
+    yield: yield_pct + '%',
+    benefit: beneficioStr,
+    bets: totalPicks.toString(),
+    winrate: winrate + '%',
+    stake: stakeTotal > 0 ? (stakeTotal / totalResueltos).toFixed(2) : '0'
+  };
+}
+
+function updateTipsterCardUI(tipsterId, stats) {
+  // Actualizar valores en la card
+  const scoreEl = document.getElementById(`${tipsterId}-score`);
+  const yieldEl = document.getElementById(`${tipsterId}-yield`);
+  const profitEl = document.getElementById(`${tipsterId}-profit`);
+  const picksEl = document.getElementById(`${tipsterId}-picks`);
+  const dotsEl = document.getElementById(`${tipsterId}-dots`);
+  
+  if (scoreEl) scoreEl.textContent = stats.score;
+  if (yieldEl) yieldEl.textContent = stats.yield;
+  if (profitEl) {
+    profitEl.textContent = stats.profit;
+    // Color según beneficio
+    if (parseFloat(stats.profit) > 0) {
+      profitEl.style.color = '#22c55e';
+    } else if (parseFloat(stats.profit) < 0) {
+      profitEl.style.color = '#ef4444';
+    }
+  }
+  if (picksEl) picksEl.textContent = stats.picks;
+  
+  // Actualizar dots de rendimiento (últimos 10)
+  if (dotsEl && stats.recentResults) {
+    let dotsHTML = '';
+    for (let i = 0; i < 10; i++) {
+      if (i < stats.recentResults.length) {
+        const result = stats.recentResults[i];
+        const isWin = result.estado === 'ganado' || result.estado === 'Ganado';
+        dotsHTML += `<div class="perf-dot ${isWin ? 'win' : 'loss'}"></div>`;
+      } else {
+        dotsHTML += `<div class="perf-dot"></div>`;
+      }
+    }
+    dotsEl.innerHTML = dotsHTML;
+  }
+  
+  // Actualizar botones con los nuevos datos
+  const btnPicks = document.getElementById(`${tipsterId}-btn-picks`);
+  const btnStats = document.getElementById(`${tipsterId}-btn-stats`);
+  
+  if (btnPicks && window.ghpStats) {
+    btnPicks.onclick = () => openTipsterProfile({
+      name: 'Green Hunter Pro',
+      subtitle: 'FOOTBALL PROFESSIONAL TIPSTER',
+      avatar: 'hunter.JPG',
+      score: window.ghpStats.score,
+      yield: window.ghpStats.yield,
+      benefit: window.ghpStats.benefit,
+      bets: window.ghpStats.bets,
+      winrate: window.ghpStats.winrate,
+      stake: window.ghpStats.stake,
+      sport: 'futbol'
+    });
+  }
+  
+  if (btnStats && window.ghpStats) {
+    btnStats.onclick = () => {
+      openTipsterProfile({
+        name: 'Green Hunter Pro',
+        subtitle: 'FOOTBALL PROFESSIONAL TIPSTER',
+        avatar: 'hunter.JPG',
+        score: window.ghpStats.score,
+        yield: window.ghpStats.yield,
+        benefit: window.ghpStats.benefit,
+        bets: window.ghpStats.bets,
+        winrate: window.ghpStats.winrate,
+        stake: window.ghpStats.stake,
+        sport: 'futbol'
+      });
+      showTipsterTab('stats');
+    };
   }
 }
 
