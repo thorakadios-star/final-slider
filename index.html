@@ -1870,6 +1870,57 @@ window.onerror = function(msg, url, line, col, error) {
 
 console.log('TrueStats cargado correctamente');
 
+// ── SLIDERS LANDING ─────────────────────────────────────────────────────────────
+const slidePos = { 1: 0, 2: 0, 3: 0 };
+const autoInterval = { 1: null, 2: null, 3: null };
+const SLIDE_COUNT = 5;
+
+function gSlide(box, idx) {
+  slidePos[box] = idx;
+  const track = document.getElementById('track-' + box);
+  if (track) track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  updateDots(box);
+  resetAuto(box);
+}
+
+function mvSlide(box, dir) {
+  let next = slidePos[box] + dir;
+  if (next < 0) next = SLIDE_COUNT - 1;
+  if (next >= SLIDE_COUNT) next = 0;
+  gSlide(box, next);
+}
+
+function updateDots(box) {
+  const dots = document.querySelectorAll('#dots-' + box + ' .dot-pip');
+  dots.forEach((d, i) => d.classList.toggle('on', i === slidePos[box]));
+}
+
+function resetAuto(box) {
+  if (autoInterval[box]) clearInterval(autoInterval[box]);
+  autoInterval[box] = setInterval(() => mvSlide(box, 1), 5000);
+}
+
+function pauseSlider(box) {
+  if (autoInterval[box]) clearInterval(autoInterval[box]);
+}
+
+// Touch swipe
+let touchStartX = 0;
+function tsStart(box, e) {
+  touchStartX = e.touches[0].clientX;
+  pauseSlider(box);
+}
+function tsEnd(box, e) {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) mvSlide(box, diff > 0 ? 1 : -1);
+  else resetAuto(box);
+}
+
+// Iniciar autoplay
+document.addEventListener('DOMContentLoaded', () => {
+  [1, 2, 3].forEach(box => resetAuto(box));
+});
+
 // ── NAVEGACIÓN ─────────────────────────────────────────────────────────────────
 function go(p) {
   try {
