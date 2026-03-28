@@ -4566,50 +4566,42 @@ async function publishPick() {
     btn.innerHTML = '<span class="spin">⟳</span> Publicando...';
   }
 
-  // 5. Envío a Supabase
+  // 5. Envío a Supabase (REEMPLAZA DESDE AQUÍ)
   try {
     const { data, error } = await getSbClient().from('picks').insert([{ 
-    evento: pickFinal.partido,
-    pronostico: pickFinal.mercado,
-    cuota: pickFinal.cuota,
-    stake: pickFinal.stake,
-    estado: 'pendiente'
-}]).select();
+        evento: pickFinal.partido,
+        pronostico: pickFinal.mercado,
+        cuota: pickFinal.cuota,
+        stake: pickFinal.stake,
+        tipo: pickFinal.tipo,      // Simple o Combinada
+        fecha: pickFinal.fecha,    // YYYY-MM-DD
+        estado: 'pendiente',
+        analisis: pickFinal.analisis
+    }]).select();
+
     if (error) throw error;
 
-    // Crear objeto completo del pick para store local y Telegram
+  // Crear objeto completo para la UI y Telegram usando el ID real de Supabase
     const pickCompleto = {
       ...pickFinal,
-      id: data?.[0]?.id || Date.now(),
-      created_at: new Date().toISOString(),
-      timestamp: new Date().toISOString(),
+      id: data?.[0]?.id, // El ID que acaba de generar la base de datos
+      created_at: data?.[0]?.creado_at || new Date().toISOString(),
       ganancias: '+' + (stakeVal * (cuotaTotal - 1)).toFixed(2),
-      stake: stakeVal + '/10',
-      acceso: toggleState.acceso || 'free',
-      momento: toggleState.momento === 'live' ? 'EN VIVO' : 'PRE-PARTIDO',
-      estado: 'pendiente'
+      stake: stakeVal,
+      momento: toggleState.momento === 'live' ? 'EN VIVO' : 'PRE-PARTIDO'
     };
 
-    // Agregar al store local (al principio de la lista)
+  // 1. Actualizar lista local
     picksStore.ghp.unshift(pickCompleto);
     savePicksToStorage();
 
-    // Telegram - enviar con datos completos
+   // 2. Enviar a Telegram (si está marcado)
     const telegramCheckbox = document.getElementById('pub-telegram');
-    console.log('📢 Telegram checkbox:', telegramCheckbox?.checked);
-    
     if (telegramCheckbox?.checked) {
-      console.log('📤 Enviando a Telegram...', pickCompleto);
-      try {
-        await sendToTelegram(pickCompleto);
-      } catch (telegramError) {
-        console.error('❌ Error Telegram:', telegramError);
-      }
-    } else {
-      console.log('⏭️ Telegram no marcado, saltando envío');
+      sendToTelegram(pickCompleto).catch(e => console.error('Error Telegram:', e));
     }
 
-    // ÉXITO
+    // 3. Feedback Visual y Reset
     if (btn) {
       btn.style.background = '#16a34a';
       btn.innerHTML = '¡Pick Publicado!';
@@ -4617,28 +4609,29 @@ async function publishPick() {
       setTimeout(() => {
         launchConfetti();
         showToast(`✅ Publicado correctamente`, 'success');
+        
         showPublishModal({
           ...pickFinal,
           ganancias: '+' + (stakeVal * (cuotaTotal - 1)).toFixed(2) + 'u',
           stake: stakeVal + 'u'
         });
-        // Actualizar vista del tipster si está visible
-        if (typeof renderTipsterPicks === 'function') renderTipsterPicks();
-        
+
         setTimeout(() => {
           btn.disabled = false;
           btn.innerHTML = 'Publicar Pronóstico';
           btn.style.background = '';
-          resetForm();
+          resetForm(); // Limpia los inputs para el siguiente pick
+          loadPicksFromSupabase(); // Recarga stats de la Vista SQL
         }, 2000);
       }, 800);
     }
   } catch (err) {
-    console.error("Error:", err.message);
+    console.error("Error al publicar:", err.message);
     showToast('❌ Error: ' + err.message, 'error');
     if (btn) { btn.disabled = false; btn.innerHTML = 'Reintentar'; }
   }
-}
+} // FIN DE LA FUNCIÓN
+    
 // ═══ TOAST NOTIFICATIONS ═══
 function showToast(message, type = 'info') {
   // Eliminar toast anterior si existe
