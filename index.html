@@ -939,9 +939,10 @@ nav.sc{border-color:#243028}
             </div>
           </div>
           <p style="margin-top:8px">Nace porque en las apuestas <strong style="color:#e8ecf2">el engaño está normalizado.</strong> Tipsters que borran picks, inflan stats y venden resultados falsos.</p>
-          <div style="display:flex;align-items:center;gap:10px;margin-top:8px;padding:9px 12px;background:rgba(192,200,212,.07);border:1px solid rgba(192,200,212,.18);border-radius:7px">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8090a8;letter-spacing:.04em">🛡️ Resultados 100% inalterables</span>
-          </div>
+          <button class="btn-card slide-cta" onclick="go('picks')" style="margin-top:12px;background:linear-gradient(135deg,#8898aa,#5a6878);color:#e8ecf2;width:100%;padding:12px 18px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Verificar mis stats
+          </button>
         </div>
 
         <!-- 2/5 -->
@@ -1072,17 +1073,11 @@ nav.sc{border-color:#243028}
               <h2>Demuestra<br>que eres <span style="color:#4ade80">rentable</span></h2>
             </div>
           </div>
-          <p style="margin-top:8px">
-  Publica tus picks con datos sellados. 
-  <strong style="color:#c8d4cc">Mecanismo creador de Picks automático.</strong> 
-  Tu historial habla por ti, 
-  <strong style="color:#c8d4cc">sin posibilidad de edición.</strong>
-</p>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:3px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);color:#4ade80;letter-spacing:.07em">AUDITADO</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:3px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);color:#93c5fd;letter-spacing:.07em">TIEMPO REAL</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:3px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);color:#fbbf24;letter-spacing:.07em">VERIFICADO</span>
-          </div>
+          <p style="margin-top:8px">Publica tus picks con datos sellados. <strong style="color:#c8d4cc">Tu historial habla por ti.</strong></p>
+          <button class="btn-card slide-cta" onclick="go('picks')" style="margin-top:12px;background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;width:100%;padding:12px 18px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Publicar Pick Auditado
+          </button>
         </div>
 
         <!-- 2/5 -->
@@ -1199,11 +1194,11 @@ nav.sc{border-color:#243028}
               <h2>Encuentra tipsters<br><span style="color:#60a5fa">de verdad</span></h2>
             </div>
           </div>
-          <p style="margin-top:8px">¿Cansado de tipsters que borran sus fallos? Aquí encontrarás <strong style="color:#c8d4cc">solo datos verificados</strong> e imposibles de manipular.</p>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:3px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);color:#93c5fd;letter-spacing:.07em">VERIFICADO</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:3px;background:rgba(rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);color:#FFFF;letter-spacing:.07em">AUDITADO</span>
-          </div>
+          <p style="margin-top:8px">¿Cansado de tipsters que borran sus fallos? Aquí solo <strong style="color:#c8d4cc">datos verificados.</strong></p>
+          <button class="btn-card slide-cta" onclick="go('plat')" style="margin-top:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;width:100%;padding:12px 18px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Ver Tipsters Verificados
+          </button>
         </div>
 
         <!-- 2/5 -->
@@ -2113,8 +2108,8 @@ function updateDots(box) {
 }
 
 function resetAuto(box) {
+  // Autoplay desactivado - los slides solo cambian manualmente
   if (autoInterval[box]) clearInterval(autoInterval[box]);
-  autoInterval[box] = setInterval(() => mvSlide(box, 1), 5000);
 }
 
 function pauseSlider(box) {
@@ -3923,7 +3918,7 @@ function getSbClient() {
 async function savePickToSupabase(pick) {
   try {
     const { data, error } = await sbClient
-      .from('pronosticos')
+      .from('picks')
       .insert([pick]);
     
     if (error) throw error;
@@ -3936,63 +3931,117 @@ async function savePickToSupabase(pick) {
 // 2. CARGAR PICKS
 async function loadPicksFromSupabase() {
   try {
-    // 1. Cargamos los picks (el historial visible) de la tabla 'picks'
+    // Cargamos los picks de la tabla 'picks' (esquema real)
     const { data: picks, error: errPicks } = await sbClient
       .from('picks') 
       .select('*')
-      .order('creado_at', { ascending: false });
-
-    // 2. Cargamos las estadísticas calculadas de la VISTA SQL
-    const { data: stats, error: errStats } = await sbClient
-      .from('estadisticas_tipsters')
-      .select('*')
-      .single();
+      .order('fecha', { ascending: false });
 
     if (errPicks) throw errPicks;
 
     // Actualizamos el almacén local y la interfaz de la lista
-    if (picks) {
+    if (picks && picks.length > 0) {
       picksStore.ghp = picks;
       savePicksToStorage(); 
       renderPicksPanel('ghp');
       renderPicksPanel('tp');
       console.log('Picks cargados:', picks.length);
-    }
-
-    // 3. ACTUALIZAR UI CON LA VISTA (Sustituye a calculateAndUpdateStats)
-    if (stats) {
-      const winrate = parseFloat(stats.win_rate || 0).toFixed(1) + '%';
-      const yield_pct = parseFloat(stats.yield_total || 0).toFixed(1) + '%';
-      const beneficio = parseFloat(stats.beneficio_total_uds || 0).toFixed(2);
-      const beneficioStr = (beneficio >= 0 ? '+' : '') + beneficio + 'u';
-
-      // Actualizamos los contadores globales de tu web
-      if (document.getElementById('global-picks')) 
-          document.getElementById('global-picks').textContent = stats.total_picks;
-      if (document.getElementById('global-winrate')) 
-          document.getElementById('global-winrate').textContent = winrate;
-      if (document.getElementById('global-profit')) 
-          document.getElementById('global-profit').textContent = beneficioStr;
-
-      // Actualizamos la Card de Green Hunter Pro
-      updateTipsterCardUI('ghp', {
-        score: Math.round(stats.win_rate), // Usamos el winrate como base del score
-        yield: yield_pct,
-        profit: beneficioStr,
-        picks: stats.total_picks,
-        winrate: winrate,
-        recentResults: picks ? picks.filter(p => p.estado !== 'pendiente').slice(0, 10) : []
-      });
-
-      console.log('📊 Stats sincronizadas desde Vista SQL');
+      
+      // Calcular estadísticas desde los picks
+      calculateAndUpdateStats(picks);
+    } else {
+      console.log('No hay picks en Supabase');
     }
   } catch (e) {
     console.warn('Error cargando desde Supabase:', e.message);
   }
 }
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // CÁLCULO AUTOMÁTICO DE ESTADÍSTICAS DESDE SUPABASE
+// Esquema: picks (id, tipster_id, deporte, evento, pronostico, cuota, stake, estado, fecha, tipo, analisis, ganancias)
+// Estados: 'pendiente', 'ganado', 'perdido', 'nulo'
+// ganancias: calculado automáticamente en DB
 // ═══════════════════════════════════════════════════════════════════════════════
+function calculateAndUpdateStats(picks) {
+  if (!picks || picks.length === 0) {
+    console.log('No hay picks para calcular estadísticas');
+    return;
+  }
+  
+  // Filtrar picks según estado
+  const resueltos = picks.filter(p => p.estado === 'ganado' || p.estado === 'perdido');
+  const ganados = picks.filter(p => p.estado === 'ganado');
+  const perdidos = picks.filter(p => p.estado === 'perdido');
+  const pendientes = picks.filter(p => p.estado === 'pendiente');
+  const nulos = picks.filter(p => p.estado === 'nulo');
+  
+  // Cálculos
+  const totalPicks = picks.length;
+  const totalResueltos = resueltos.length;
+  const totalGanados = ganados.length;
+  const winrate = totalResueltos > 0 ? ((totalGanados / totalResueltos) * 100).toFixed(1) : 0;
+  
+  // Calcular beneficio desde la columna 'ganancias' (calculada en DB)
+  // O calcular manualmente si no está disponible
+  let beneficioTotal = 0;
+  let stakeTotal = 0;
+  
+  resueltos.forEach(pick => {
+    const stake = parseFloat(pick.stake) || 1;
+    const cuota = parseFloat(pick.cuota) || 1;
+    stakeTotal += stake;
+    
+    // Si existe la columna 'ganancias' la usamos, sino calculamos
+    if (pick.ganancias !== undefined && pick.ganancias !== null) {
+      beneficioTotal += parseFloat(pick.ganancias);
+    } else {
+      // Cálculo manual
+      if (pick.estado === 'ganado') {
+        beneficioTotal += stake * (cuota - 1);
+      } else if (pick.estado === 'perdido') {
+        beneficioTotal -= stake;
+      }
+    }
+  });
+  
+  const yield_pct = stakeTotal > 0 ? ((beneficioTotal / stakeTotal) * 100).toFixed(1) : 0;
+  const beneficioStr = (beneficioTotal >= 0 ? '+' : '') + beneficioTotal.toFixed(2);
+  
+  // Score = winrate redondeado
+  const score = Math.round(parseFloat(winrate));
+  
+  console.log(`📊 Stats: ${totalPicks} picks (${totalGanados}W/${perdidos.length}L/${pendientes.length}P/${nulos.length}N), Winrate: ${winrate}%, Yield: ${yield_pct}%, Beneficio: ${beneficioStr}u`);
+  
+  // Actualizar stats globales de la plataforma
+  const globalPicks = document.getElementById('global-picks');
+  const globalWinrate = document.getElementById('global-winrate');
+  const globalProfit = document.getElementById('global-profit');
+  
+  if (globalPicks) globalPicks.textContent = totalPicks;
+  if (globalWinrate) globalWinrate.textContent = winrate + '%';
+  if (globalProfit) globalProfit.textContent = beneficioStr + 'u';
+  
+  // Actualizar UI de Green Hunter Pro
+  updateTipsterCardUI('ghp', {
+    score: score,
+    yield: yield_pct + '%',
+    profit: beneficioStr + 'u',
+    picks: totalPicks,
+    winrate: winrate + '%',
+    recentResults: resueltos.slice(0, 10)
+  });
+  
+  // Guardar stats en variable global
+  window.ghpStats = {
+    score: score.toString(),
+    yield: yield_pct + '%',
+    benefit: beneficioStr + 'u',
+    bets: totalPicks.toString(),
+    winrate: winrate + '%',
+    stake: totalResueltos > 0 ? (stakeTotal / totalResueltos).toFixed(1) : '0'
+  };
+}
 
 function updateTipsterCardUI(tipsterId, stats) {
   // Actualizar valores en la card
@@ -4068,29 +4117,32 @@ function updateTipsterCardUI(tipsterId, stats) {
   }
 }
 
-// 3. ACTUALIZAR ESTADO (Ganado/Perdido)
+// 3. ACTUALIZAR ESTADO (Ganado/Perdido/Nulo)
 async function updatePickStatus(pickId, nuevoEstado) {
   try {
     const { data, error } = await sbClient
-      .from('pronosticos')
+      .from('picks')
       .update({ estado: nuevoEstado })
       .eq('id', pickId);
     
     if (error) throw error;
     console.log('Estado actualizado en Supabase');
+    // Recargar stats
+    loadPicksFromSupabase();
   } catch (e) {
     console.error('Error actualizando estado:', e.message);
   }
 }
+
 // 4. ACTUALIZAR PICK COMPLETO (desde modal de edición)
 async function updatePickInSupabase(pick) {
   if (!pick.id) return;
   try {
     const { error } = await sbClient
-      .from('pronosticos')
+      .from('picks')
       .update({
         estado: pick.estado,
-        mercado: pick.mercado,
+        pronostico: pick.pronostico,
         cuota: pick.cuota,
         stake: pick.stake,
         analisis: pick.analisis
@@ -4108,7 +4160,7 @@ async function deletePickFromSupabase(pickId) {
   if (!pickId) return;
   try {
     const { error } = await sbClient
-      .from('pronosticos')
+      .from('picks')
       .delete()
       .eq('id', pickId);
     if (error) throw error;
