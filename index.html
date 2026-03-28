@@ -3930,103 +3930,63 @@ async function savePickToSupabase(pick) {
 // 2. CARGAR PICKS
 async function loadPicksFromSupabase() {
   try {
-    const { data, error } = await sbClient
-      .from('pronosticos')
+    // 1. Cargamos los picks (el historial visible) de la tabla 'picks'
+    const { data: picks, error: errPicks } = await sbClient
+      .from('picks') 
       .select('*')
-      .order('timestamp', { ascending: false });
+      .order('creado_at', { ascending: false });
 
-    if (error) throw error;
+    // 2. Cargamos las estadísticas calculadas de la VISTA SQL
+    const { data: stats, error: errStats } = await sbClient
+      .from('estadisticas_tipsters')
+      .select('*')
+      .single();
 
-    if (data) {
-      picksStore.ghp = data;
-      savePicksToStorage(); // Mantienes tu backup en localStorage
+    if (errPicks) throw errPicks;
+
+    // Actualizamos el almacén local y la interfaz de la lista
+    if (picks) {
+      picksStore.ghp = picks;
+      savePicksToStorage(); 
       renderPicksPanel('ghp');
       renderPicksPanel('tp');
-      console.log('Picks cargados desde Supabase:', data.length);
-      
-      // Calcular y actualizar estadísticas automáticamente
-      calculateAndUpdateStats(data);
+      console.log('Picks cargados:', picks.length);
+    }
+
+    // 3. ACTUALIZAR UI CON LA VISTA (Sustituye a calculateAndUpdateStats)
+    if (stats) {
+      const winrate = parseFloat(stats.win_rate || 0).toFixed(1) + '%';
+      const yield_pct = parseFloat(stats.yield_total || 0).toFixed(1) + '%';
+      const beneficio = parseFloat(stats.beneficio_total_uds || 0).toFixed(2);
+      const beneficioStr = (beneficio >= 0 ? '+' : '') + beneficio + 'u';
+
+      // Actualizamos los contadores globales de tu web
+      if (document.getElementById('global-picks')) 
+          document.getElementById('global-picks').textContent = stats.total_picks;
+      if (document.getElementById('global-winrate')) 
+          document.getElementById('global-winrate').textContent = winrate;
+      if (document.getElementById('global-profit')) 
+          document.getElementById('global-profit').textContent = beneficioStr;
+
+      // Actualizamos la Card de Green Hunter Pro
+      updateTipsterCardUI('ghp', {
+        score: Math.round(stats.win_rate), // Usamos el winrate como base del score
+        yield: yield_pct,
+        profit: beneficioStr,
+        picks: stats.total_picks,
+        winrate: winrate,
+        recentResults: picks ? picks.filter(p => p.estado !== 'pendiente').slice(0, 10) : []
+      });
+
+      console.log('📊 Stats sincronizadas desde Vista SQL');
     }
   } catch (e) {
     console.warn('Error cargando desde Supabase:', e.message);
   }
 }
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // CÁLCULO AUTOMÁTICO DE ESTADÍSTICAS DESDE SUPABASE
 // ═══════════════════════════════════════════════════════════════════════════════
-function calculateAndUpdateStats(picks) {
-  if (!picks || picks.length === 0) {
-    console.log('No hay picks para calcular estadísticas');
-    return;
-  }
-  
-  // Filtrar solo picks resueltos (ganado o perdido)
-  const resueltos = picks.filter(p => p.estado === 'ganado' || p.estado === 'perdido' || p.estado === 'Ganado' || p.estado === 'Perdido');
-  const ganados = resueltos.filter(p => p.estado === 'ganado' || p.estado === 'Ganado');
-  const perdidos = resueltos.filter(p => p.estado === 'perdido' || p.estado === 'Perdido');
-  
-  // Cálculos
-  const totalPicks = picks.length;
-  const totalResueltos = resueltos.length;
-  const totalGanados = ganados.length;
-  const winrate = totalResueltos > 0 ? ((totalGanados / totalResueltos) * 100).toFixed(1) : 0;
-  
-  // Calcular beneficio y yield
-  let beneficioTotal = 0;
-  let stakeTotal = 0;
-  
-  resueltos.forEach(pick => {
-    const stake = parseFloat(pick.stake) || 1;
-    const cuota = parseFloat(pick.cuota) || 1;
-    stakeTotal += stake;
-    
-    if (pick.estado === 'ganado' || pick.estado === 'Ganado') {
-      beneficioTotal += stake * (cuota - 1); // Ganancia neta
-    } else {
-      beneficioTotal -= stake; // Pérdida del stake
-    }
-  });
-  
-  const yield_pct = stakeTotal > 0 ? ((beneficioTotal / stakeTotal) * 100).toFixed(1) : 0;
-  const beneficioStr = beneficioTotal >= 0 ? '+' + beneficioTotal.toFixed(2) : beneficioTotal.toFixed(2);
-  
-  // Score (fórmula simple: winrate * 10 + yield)
-  const score = ((parseFloat(winrate) * 10) + parseFloat(yield_pct)).toFixed(0);
-  
-  console.log(`📊 Stats calculadas: ${totalPicks} picks, ${totalGanados}W/${perdidos.length}L, Winrate: ${winrate}%, Yield: ${yield_pct}%, Beneficio: ${beneficioStr}`);
-  
-  // Actualizar stats globales de la plataforma
-  const globalPicks = document.getElementById('global-picks');
-  const globalWinrate = document.getElementById('global-winrate');
-  const globalProfit = document.getElementById('global-profit');
-  
-  if (globalPicks) globalPicks.textContent = totalPicks;
-  if (globalWinrate) globalWinrate.textContent = winrate + '%';
-  if (globalProfit) {
-    globalProfit.textContent = (beneficioTotal >= 0 ? '+' : '') + beneficioTotal.toFixed(0) + '€';
-  }
-  
-  // Actualizar UI de Green Hunter Pro
-  updateTipsterCardUI('ghp', {
-    score: score,
-    yield: yield_pct + '%',
-    profit: beneficioStr,
-    picks: totalPicks,
-    winrate: winrate + '%',
-    recentResults: resueltos.slice(0, 10) // Últimos 10 para los dots
-  });
-  
-  // Guardar stats en variable global para usar en openTipsterProfile
-  window.ghpStats = {
-    score: score,
-    yield: yield_pct + '%',
-    benefit: beneficioStr,
-    bets: totalPicks.toString(),
-    winrate: winrate + '%',
-    stake: stakeTotal > 0 ? (stakeTotal / totalResueltos).toFixed(2) : '0'
-  };
-}
 
 function updateTipsterCardUI(tipsterId, stats) {
   // Actualizar valores en la card
