@@ -4568,8 +4568,7 @@ async function publishPick() {
 
   // 5. Envío a Supabase
   try {
-    const { data, error } = await getSbClient().from('picks').insert([{
-    tipster_id: 'TU_ID_AQUI', 
+    const { data, error } = await getSbClient().from('picks').insert([{ 
     evento: pickFinal.partido,
     pronostico: pickFinal.mercado,
     cuota: pickFinal.cuota,
