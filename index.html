@@ -4608,7 +4608,14 @@ async function publishPick() {
 
   // 5. Envío a Supabase
   try {
-    const { data, error } = await getSbClient().from('pronosticos').insert([pickFinal]).select();
+    const { data, error } = await getSbClient().from('picks').insert([{
+    tipster_id: 'TU_ID_AQUI', 
+    evento: pickFinal.partido,
+    pronostico: pickFinal.mercado,
+    cuota: pickFinal.cuota,
+    stake: pickFinal.stake,
+    estado: 'pendiente'
+}]).select();
     if (error) throw error;
 
     // Crear objeto completo del pick para store local y Telegram
