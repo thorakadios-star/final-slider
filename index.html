@@ -1864,21 +1864,15 @@ nav.sc{border-color:#243028}
   </div>
 
   <!-- Tab Content: Picks -->
-  <div id="tab-picks" class="tipster-tab-content active" style="max-width:1400px;margin:0 auto">
-    
-    <div class="picks-header">
-      <div class="picks-filter">
-        <select class="picks-month">
-          <option>Mar 2026</option>
-          <option>Feb 2026</option>
-          <option>Ene 2026</option>
-        </select>
-      </div>
-      <div class="picks-toggle">
-        <span>Activos</span>
-        <input type="checkbox" checked>
-        <span>Historial</span>
-      </div>
+<div id="tab-picks" class="tipster-tab-content active" style="max-width:1400px;margin:0 auto">
+  
+  <div class="picks-header" style="justify-content: flex-start;"> <div class="picks-filter">
+     <select id="month-filter" class="picks-month" onchange="renderPicksPanel('ghp')">
+  <option value="2026-03">Mar 2026</option>
+  <option value="2026-02">Feb 2026</option>
+  <option value="2026-01">Ene 2026</option>
+</select>
+    </div>
     </div>
 
     <div class="picks-grid" id="tipster-picks-container">
@@ -3455,23 +3449,37 @@ function openPicks(tipsterId) {
 }
     
 function renderPicksPanel(tipsterId) {
-  const picks = picksStore[tipsterId] || [];
+  // 1. Obtener el mes seleccionado del HTML
+  const monthSelector = document.getElementById('month-filter');
+  const selectedMonth = monthSelector ? monthSelector.value : "2026-03"; 
+
+  // 2. Filtrar picks por el mes seleccionado (Independientemente del estado)
+  const allPicks = picksStore[tipsterId] || [];
+  const picks = allPicks.filter(p => p.fecha && p.fecha.startsWith(selectedMonth));
+
   const container = document.getElementById('picks-' + tipsterId);
   const counter = document.getElementById('cnt-' + tipsterId);
+  
   if (!container) return;
+
+  // Actualizar contador con los picks filtrados
   if (counter) counter.textContent = picks.length + (picks.length === 1 ? ' pick' : ' picks');
+
   if (picks.length === 0) {
-    container.innerHTML = '<div class="prono-empty">Sin picks publicados aún.</div>';
+    container.innerHTML = '<div class="prono-empty">Sin picks publicados para este periodo.</div>';
     return;
   }
+
+  // 3. Renderizar la lista
   container.innerHTML = picks.map((p, index) => {
-    const estadoClass = p.estado === 'Ganado' ? 'est-win' : p.estado === 'Perdido' ? 'est-loss' : 'est-pend';
+    // Normalizamos el estado para las clases CSS (ganado, perdido, pendiente)
+    const st = (p.estado || 'pendiente').toLowerCase();
+    const estadoClass = st === 'ganado' ? 'est-win' : st === 'perdido' ? 'est-loss' : 'est-pend';
     const isCombo = p.tipo === 'COMBINADA';
     
     let contenidoHTML = '';
     
     if (isCombo && p.partido.includes(' + ')) {
-      // COMBINADA: mostrar cada partido en su propia sección
       const partidos = p.partido.split(' + ');
       const mercados = p.mercado.split(' · ');
       
@@ -3488,7 +3496,6 @@ function renderPicksPanel(tipsterId) {
         </div>
       `;
     } else {
-      // SIMPLE: estructura normal
       contenidoHTML = `
         <div class="pick-match">${p.partido}</div>
         <div class="pick-meta">${p.fecha}</div>
@@ -3500,16 +3507,16 @@ function renderPicksPanel(tipsterId) {
       ? new Date(p.created_at || p.timestamp).toLocaleString('es-ES',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})
       : '';
 
-    return `<div class="pick-row" style="position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 18px">
-      <!-- Fila 1: badges + hora publicación -->
+    // Agregamos un borde lateral de color para identificar el estado visualmente rápido
+    const borderColor = st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : 'transparent';
+
+    return `<div class="pick-row" style="position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 18px; border-left: 3px solid ${borderColor}">
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
         ${p.tipo ? `<span class="pick-tipo-badge">${p.tipo}</span>` : ''}
         <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.08em;padding:3px 8px;border-radius:4px;background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.3)">🛡️ Auditado</span>
         ${pubTime ? `<span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#3a5040">🕐 ${pubTime}</span>` : ''}
       </div>
-      <!-- Fila 2: contenido partido/mercado -->
       <div>${contenidoHTML}</div>
-      <!-- Fila 3: cuota | stake | estado -->
       <div style="display:flex;align-items:stretch;gap:8px;flex-wrap:wrap">
         <div style="display:flex;flex-direction:column;align-items:center;padding:8px 14px;background:rgba(248,250,252,.08);border:1px solid rgba(248,250,252,.18);border-radius:6px;min-width:60px">
           <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#f8fafc;margin-bottom:3px">CUOTA</span>
@@ -3520,11 +3527,10 @@ function renderPicksPanel(tipsterId) {
           <span class="pick-stake" style="font-size:15px">${p.stake}</span>
         </div>
         <div style="margin-left:auto;display:flex;align-items:center">
-          <div class="pick-estado ${estadoClass}">${p.estado}</div>
+          <div class="pick-estado ${estadoClass}">${p.estado.toUpperCase()}</div>
         </div>
       </div>
       
-      <!-- Acciones -->
       <div style="display:flex;gap:4px">
         <button onclick="viewPick('${tipsterId}',${index})" title="Ver" style="width:28px;height:28px;border-radius:4px;border:1px solid #1e3028;background:transparent;color:#6a8a78;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(59,130,246,.1)';this.style.borderColor='#3b82f6';this.style.color='#60a5fa'" onmouseleave="this.style.background='transparent';this.style.borderColor='#1e3028';this.style.color='#6a8a78'">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
