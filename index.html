@@ -1977,6 +1977,8 @@ nav.sc{border-color:#243028}
   <div class="tipster-tabs" id="tabs-picks-section">
     <button class="tipster-tab tab-green active">Picks</button>
     <select id="month-filter-picks" class="tipster-tab tab-orange" onchange="renderPicksPanel('ghp')" style="appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:28px;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23fb923c%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>');background-repeat:no-repeat;background-position:right 10px center">
+      <option value="2026-05">May 2026</option>
+      <option value="2026-04">Abr 2026</option>
       <option value="2026-03">Mar 2026</option>
       <option value="2026-02">Feb 2026</option>
       <option value="2026-01">Ene 2026</option>
@@ -1992,6 +1994,8 @@ nav.sc{border-color:#243028}
     <div style="flex:1"></div>
     <button class="tipster-tab tab-blue active">Stats</button>
     <select id="month-filter-stats" class="tipster-tab tab-blue" style="appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:28px;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2360a5fa%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>');background-repeat:no-repeat;background-position:right 10px center">
+      <option value="2026-05">May 2026</option>
+      <option value="2026-04">Abr 2026</option>
       <option value="2026-03">Mar 2026</option>
       <option value="2026-02">Feb 2026</option>
       <option value="2026-01">Ene 2026</option>
@@ -3852,6 +3856,14 @@ function renderPicksPanel(tipsterId) {
 
   // 2. Filtrar picks por el mes seleccionado y ordenar de más nuevo a más antiguo
   const allPicks = picksStore[tipsterId] || [];
+  
+  // DEBUG: Ver qué datos llegan
+  console.log('📋 Todos los picks:', allPicks);
+  console.log('📅 Mes seleccionado:', selectedMonth);
+  if (allPicks.length > 0) {
+    console.log('📝 Primer pick completo:', JSON.stringify(allPicks[0], null, 2));
+  }
+  
   const picks = allPicks
     .filter(p => p.fecha && p.fecha.startsWith(selectedMonth))
     .sort((a, b) => {
@@ -3859,6 +3871,8 @@ function renderPicksPanel(tipsterId) {
       const dateB = new Date(b.created_at || b.fecha);
       return dateB - dateA; // Más nuevo primero
     });
+  
+  console.log('📋 Picks filtrados para este mes:', picks.length);
 
   const container = document.getElementById('tipster-picks-container');
   
@@ -5207,18 +5221,43 @@ async function publishPick() {
   const homeTeam = eventData.homeTeam || {};
   const awayTeam = eventData.awayTeam || {};
   
-  // Extraer liga, país y equipos
-  const liga = tournament.name || document.getElementById(`${firstPid}-manual-liga`)?.value?.trim() || '';
-  const pais = tournament.category?.name || '';
-  const equipoLocal = homeTeam.name || document.getElementById(`${firstPid}-home`)?.textContent || '';
-  const equipoVisitante = awayTeam.name || document.getElementById(`${firstPid}-away`)?.textContent || '';
+  // Extraer liga, país y equipos - funciona para modo API y manual
+  let liga, pais, equipoLocal, equipoVisitante;
+  
+  if (isManual) {
+    // Modo manual: leer de inputs
+    liga = document.getElementById(`${firstPid}-manual-liga`)?.value?.trim() || '';
+    pais = ''; // No hay campo de país en manual
+    equipoLocal = document.getElementById(`${firstPid}-home`)?.value?.trim() || '';
+    equipoVisitante = document.getElementById(`${firstPid}-away`)?.value?.trim() || '';
+  } else {
+    // Modo API: leer de evento o de los spans
+    liga = tournament.name || document.getElementById(`${firstPid}-manual-liga`)?.value?.trim() || '';
+    pais = tournament.category?.name || '';
+    equipoLocal = homeTeam.name || document.getElementById(`${firstPid}-home`)?.textContent?.trim() || '';
+    equipoVisitante = awayTeam.name || document.getElementById(`${firstPid}-away`)?.textContent?.trim() || '';
+  }
+  
+  // Limpiar equipos si son placeholder
+  if (equipoLocal === '—' || equipoLocal === 'Local') equipoLocal = '';
+  if (equipoVisitante === '—' || equipoVisitante === 'Visitante') equipoVisitante = '';
   
   // Extraer selección (sin el mercado)
-  const mercadoSelect = document.getElementById(`${firstPid}-mercado`);
-  const mercadoNombre = mercadoSelect && mercadoSelect.selectedIndex > 0 ? mercadoSelect.options[mercadoSelect.selectedIndex].textContent : '';
-  const seleccionManual = document.getElementById(`${firstPid}-seleccion-manual`)?.value?.trim() || '';
-  const selInput = document.getElementById(`${firstPid}-sel`)?.value?.trim() || '';
-  const seleccion = seleccionManual || selInput || '';
+  let seleccion = '';
+  if (isManual) {
+    seleccion = document.getElementById(`${firstPid}-sel-manual`)?.value?.trim() || '';
+  } else {
+    const seleccionManual = document.getElementById(`${firstPid}-seleccion-manual`)?.value?.trim() || '';
+    const selInput = document.getElementById(`${firstPid}-sel`)?.value?.trim() || '';
+    seleccion = seleccionManual || selInput || '';
+  }
+  
+  // Obtener deporte
+  const deporteEl = document.querySelector(`#${firstPid}-deportes .opt.active`);
+  const deporte = deporteEl?.dataset?.value || 'futbol';
+  
+  // DEBUG: Ver qué datos se extraen
+  console.log('📤 Datos extraídos para publicar:', { liga, pais, equipoLocal, equipoVisitante, seleccion, deporte, isManual });
   
   const pickFinal = {
     partido: isCombo ? "COMBINADA: " + picksData.map(p => p.partido).join(' / ') : picksData[0].partido,
