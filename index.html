@@ -3847,110 +3847,194 @@ function openPicks(tipsterId) {
     
 function renderPicksPanel(tipsterId) {
   // 1. Obtener el mes seleccionado del HTML
-  const monthSelector = document.getElementById('month-filter');
+  const monthSelector = document.getElementById('month-filter-picks');
   const selectedMonth = monthSelector ? monthSelector.value : "2026-03"; 
 
-  // 2. Filtrar picks por el mes seleccionado (Independientemente del estado)
+  // 2. Filtrar picks por el mes seleccionado y ordenar de más nuevo a más antiguo
   const allPicks = picksStore[tipsterId] || [];
-  const picks = allPicks.filter(p => p.fecha && p.fecha.startsWith(selectedMonth));
+  const picks = allPicks
+    .filter(p => p.fecha && p.fecha.startsWith(selectedMonth))
+    .sort((a, b) => {
+      const dateA = new Date(a.created_at || a.fecha);
+      const dateB = new Date(b.created_at || b.fecha);
+      return dateB - dateA; // Más nuevo primero
+    });
 
   const container = document.getElementById('tipster-picks-container');
   
   if (!container) return;
 
   if (picks.length === 0) {
-    container.innerHTML = '<div class="prono-empty" style="text-align:center;padding:40px;color:#5a7265;font-size:14px">Sin picks publicados para este periodo.</div>';
+    container.innerHTML = `
+      <div style="text-align:center;padding:60px 20px;color:#5a7265">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:16px;opacity:.4">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <p style="font-size:15px;margin-bottom:8px">Sin picks publicados para este periodo</p>
+        <p style="font-size:12px;opacity:.6">Selecciona otro mes o espera nuevas publicaciones</p>
+      </div>
+    `;
     return;
   }
 
-  // 3. Renderizar la lista usando nombres del esquema: evento, pronostico, fecha, cuota, stake, estado
+  // 3. Renderizar en formato GRID con Tipster Cards
+  container.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;padding:20px 0;';
+  
   container.innerHTML = picks.map((p, index) => {
     const st = (p.estado || 'pendiente').toLowerCase();
-    const estadoClass = st === 'ganado' ? 'est-win' : st === 'perdido' ? 'est-loss' : st === 'nulo' ? 'est-void' : 'est-pend';
     const isCombo = p.tipo === 'COMBINADA';
     
     // Usar 'evento' o 'partido' según lo que exista
     const evento = p.evento || p.partido || '—';
-    // Usar 'pronostico' o 'mercado' según lo que exista
     const pronostico = p.pronostico || p.mercado || '—';
     
-    let contenidoHTML = '';
-    
-    if (isCombo && evento.includes(' + ')) {
-      const partidos = evento.split(' + ');
-      const mercados = pronostico.split(' · ');
-      
-      contenidoHTML = `
-        <div style="display:flex;flex-direction:column;gap:12px">
-          ${partidos.map((partido, i) => `
-            <div style="padding:10px 12px;background:#080c0a;border:1px solid #1a2a1c;border-radius:6px">
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#4a7d52;margin-bottom:6px">PARTIDO ${i + 1}</div>
-              <div class="pick-match" style="font-size:14px;font-weight:600;color:#60a5fa">${partido}</div>
-              <div class="pick-mercado" style="margin-top:6px;font-size:13px;color:#22c55e">${mercados[i] || '—'}</div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+    // Extraer equipos
+    let equipoLocal = 'Local';
+    let equipoVisitante = 'Visitante';
+    if (evento.includes(' vs ')) {
+      const equipos = evento.split(' vs ');
+      equipoLocal = equipos[0].trim();
+      equipoVisitante = equipos[1] ? equipos[1].trim() : 'Visitante';
+    } else if (evento.includes(' - ')) {
+      const equipos = evento.split(' - ');
+      equipoLocal = equipos[0].trim();
+      equipoVisitante = equipos[1] ? equipos[1].trim() : 'Visitante';
     } else {
-      contenidoHTML = `
-        <div class="pick-match" style="font-size:15px;font-weight:600;color:#60a5fa;margin-bottom:4px">${evento}</div>
-        <div class="pick-mercado" style="font-size:13px;color:#22c55e;font-weight:500">${pronostico}</div>
-      `;
+      equipoLocal = evento;
+      equipoVisitante = '';
     }
     
-    // Timestamp - usar created_at o fecha
+    // Timestamp
     const timestamp = p.created_at || p.timestamp;
     const pubTime = timestamp
-      ? new Date(timestamp).toLocaleString('es-ES',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})
-      : p.fecha || '';
+      ? new Date(timestamp).toLocaleString('es-ES', {hour:'2-digit', minute:'2-digit'})
+      : '';
+    const pubDate = p.fecha 
+      ? new Date(p.fecha).toLocaleDateString('es-ES', {day:'numeric', month:'short', year:'numeric'})
+      : '';
+    
+    // Estado visual
+    const estadoBadge = st === 'ganado' 
+      ? '<span style="position:absolute;top:12px;right:12px;font-family:IBM Plex Mono,monospace;font-size:10px;font-weight:700;padding:6px 12px;border-radius:6px;background:rgba(34,197,94,.2);color:#22c55e;border:1px solid rgba(34,197,94,.4)">✓ GANADO</span>'
+      : st === 'perdido'
+      ? '<span style="position:absolute;top:12px;right:12px;font-family:IBM Plex Mono,monospace;font-size:10px;font-weight:700;padding:6px 12px;border-radius:6px;background:rgba(239,68,68,.2);color:#ef4444;border:1px solid rgba(239,68,68,.4)">✗ PERDIDO</span>'
+      : st === 'nulo'
+      ? '<span style="position:absolute;top:12px;right:12px;font-family:IBM Plex Mono,monospace;font-size:10px;font-weight:700;padding:6px 12px;border-radius:6px;background:rgba(107,114,128,.2);color:#9ca3af;border:1px solid rgba(107,114,128,.4)">⊘ NULO</span>'
+      : '<span style="position:absolute;top:12px;right:12px;font-family:IBM Plex Mono,monospace;font-size:10px;font-weight:700;padding:6px 12px;border-radius:6px;background:rgba(251,191,36,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.4)">⏳ PENDIENTE</span>';
+    
+    // Borde según estado
+    const borderGlow = st === 'ganado' 
+      ? 'border-color:rgba(34,197,94,.4);box-shadow:0 0 20px rgba(34,197,94,.15)'
+      : st === 'perdido'
+      ? 'border-color:rgba(239,68,68,.4);box-shadow:0 0 20px rgba(239,68,68,.15)'
+      : 'border-color:rgba(74,222,128,.25);box-shadow:0 0 20px rgba(74,222,128,.15)';
+    
+    // Ganancias
+    const gananciaHTML = p.ganancias !== undefined && st !== 'pendiente' 
+      ? `<div style="text-align:center;padding:8px;margin-top:10px;border-radius:8px;background:${parseFloat(p.ganancias) >= 0 ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'}">
+           <span style="font-family:IBM Plex Mono,monospace;font-size:9px;color:#7a9280">RESULTADO</span>
+           <div style="font-size:18px;font-weight:700;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'}">${parseFloat(p.ganancias) >= 0 ? '+' : ''}${parseFloat(p.ganancias).toFixed(2)}u</div>
+         </div>`
+      : '';
 
-    const borderColor = st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : st === 'nulo' ? '#6b7280' : 'transparent';
-    const estadoText = st === 'nulo' ? 'NULO' : (p.estado || 'PENDIENTE').toUpperCase();
+    return `
+    <div class="tipster-card" style="width:100%;max-width:420px;${borderGlow}" data-pick-index="${index}">
+      <div class="card-glow"></div>
+      ${estadoBadge}
+      
+      <!-- Header -->
+      <div class="header">
+        <div class="logo">TS</div>
+        <div>
+          <div class="platform">Green Hunter Pro</div>
+          <div class="subtitle">TrueStats Verified</div>
+        </div>
+      </div>
 
-    return `<div class="pick-row" style="position:relative;display:flex;flex-direction:column;gap:12px;padding:16px 18px;background:#0a0e0c;border:1px solid #1a2620;border-radius:10px;border-left:3px solid ${borderColor};margin-bottom:12px">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        ${p.tipo ? `<span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.08em;padding:4px 10px;border-radius:4px;background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.3)">${p.tipo}</span>` : ''}
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.08em;padding:4px 10px;border-radius:4px;background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.3)">🛡️ Auditado</span>
-        ${pubTime ? `<span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5a7265">🕐 ${pubTime}</span>` : ''}
-      </div>
-      
-      <div style="padding:12px 0">${contenidoHTML}</div>
-      
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <div style="display:flex;flex-direction:column;align-items:center;padding:10px 16px;background:rgba(248,250,252,.08);border:1px solid rgba(248,250,252,.18);border-radius:8px;min-width:70px">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.1em;color:#94a3b8;margin-bottom:4px">CUOTA</span>
-          <span style="font-size:16px;font-weight:700;color:#f8fafc">@${p.cuota || '—'}</span>
+      <!-- Título -->
+      <div class="title">${isCombo ? '📊 COMBINADA' : '📋 ANÁLISIS'}</div>
+
+      <!-- Match Box -->
+      <div class="match-box">
+        <div class="sport">⚽ ${p.deporte || 'FÚTBOL'}</div>
+        <div class="teams">
+          <div class="team">
+            <span style="font-weight:600">${equipoLocal}</span>
+          </div>
+          ${equipoVisitante ? `
+          <div class="vs">vs</div>
+          <div class="team">
+            <span style="font-weight:600">${equipoVisitante}</span>
+          </div>
+          ` : ''}
         </div>
-        <div style="display:flex;flex-direction:column;align-items:center;padding:10px 16px;background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);border-radius:8px;min-width:70px">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.1em;color:#fb923c;margin-bottom:4px">STAKE</span>
-          <span style="font-size:16px;font-weight:700;color:#fb923c">${p.stake || '—'}</span>
-        </div>
-        ${p.ganancias !== undefined ? `
-        <div style="display:flex;flex-direction:column;align-items:center;padding:10px 16px;background:${parseFloat(p.ganancias) >= 0 ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};border:1px solid ${parseFloat(p.ganancias) >= 0 ? 'rgba(34,197,94,.25)' : 'rgba(239,68,68,.25)'};border-radius:8px;min-width:70px">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.1em;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'};margin-bottom:4px">GANANCIA</span>
-          <span style="font-size:16px;font-weight:700;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'}">${parseFloat(p.ganancias) >= 0 ? '+' : ''}${parseFloat(p.ganancias).toFixed(2)}u</span>
-        </div>
-        ` : ''}
-        <div style="margin-left:auto">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;padding:6px 14px;border-radius:6px;background:${st === 'ganado' ? 'rgba(34,197,94,.15)' : st === 'perdido' ? 'rgba(239,68,68,.15)' : st === 'nulo' ? 'rgba(107,114,128,.15)' : 'rgba(251,191,36,.15)'};color:${st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : st === 'nulo' ? '#9ca3af' : '#fbbf24'};border:1px solid ${st === 'ganado' ? 'rgba(34,197,94,.3)' : st === 'perdido' ? 'rgba(239,68,68,.3)' : st === 'nulo' ? 'rgba(107,114,128,.3)' : 'rgba(251,191,36,.3)'}">${estadoText}</span>
+        <div class="meta">
+          <div>${p.competicion || 'Competición'}</div>
+          <div>${pubDate}</div>
         </div>
       </div>
-      
-      <div style="display:flex;gap:6px;padding-top:8px;border-top:1px solid #1a2620">
-        <button onclick="viewPick('${tipsterId}',${index})" title="Ver" style="width:32px;height:32px;border-radius:6px;border:1px solid #1e3028;background:transparent;color:#6a8a78;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(59,130,246,.1)';this.style.borderColor='#3b82f6';this.style.color='#60a5fa'" onmouseleave="this.style.background='transparent';this.style.borderColor='#1e3028';this.style.color='#6a8a78'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
-        <button onclick="sharePick('${tipsterId}',${index})" title="Compartir" style="width:32px;height:32px;border-radius:6px;border:1px solid #1e3028;background:transparent;color:#6a8a78;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(168,85,247,.1)';this.style.borderColor='#a855f7';this.style.color='#a855f7'" onmouseleave="this.style.background='transparent';this.style.borderColor='#1e3028';this.style.color='#6a8a78'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </button>
-        <button onclick="editPick('${tipsterId}',${index})" title="Editar" style="width:32px;height:32px;border-radius:6px;border:1px solid #1e3028;background:transparent;color:#6a8a78;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(249,115,22,.1)';this.style.borderColor='#f97316';this.style.color='#f97316'" onmouseleave="this.style.background='transparent';this.style.borderColor='#1e3028';this.style.color='#6a8a78'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        <button onclick="deletePick('${tipsterId}',${index})" title="Borrar" style="width:32px;height:32px;border-radius:6px;border:1px solid #1e3028;background:transparent;color:#6a8a78;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(239,68,68,.1)';this.style.borderColor='#ef4444';this.style.color='#ef4444'" onmouseleave="this.style.background='transparent';this.style.borderColor='#1e3028';this.style.color='#6a8a78'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        </button>
+
+      <!-- Pick Box -->
+      <div class="pick-box">
+        <div>
+          <div class="label">PRONÓSTICO</div>
+          <div class="pick-type">${p.tipoMercado || 'Apuesta'}</div>
+          <div class="pick">${pronostico}</div>
+        </div>
+        <div class="odds">${p.cuota || '—'}</div>
       </div>
-    </div>`;
+
+      <!-- Stake Box -->
+      <div class="stake-box">
+        <div>
+          <div class="label">STAKE</div>
+          <div class="value">${p.stake || '1'}</div>
+        </div>
+        <div>
+          <div class="label">CUOTA</div>
+          <div class="value">${p.cuota || '—'}</div>
+        </div>
+      </div>
+      
+      ${gananciaHTML}
+
+      <!-- Análisis -->
+      ${p.analisis ? `
+      <div class="analysis">
+        <div class="section-title">COMENTARIO TÉCNICO</div>
+        <p>${p.analisis}</p>
+      </div>
+      ` : ''}
+
+      <!-- Badges -->
+      <div class="badges">
+        <span>✔ Tipster verificado</span>
+        <span>🕒 ${pubTime || pubDate}</span>
+        <span>🔒 Inmutable</span>
+        <span>📊 Auditado por TrueStats</span>
+      </div>
+
+      <!-- ID y Acciones -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid rgba(74,222,128,.15)">
+        <div class="id" style="margin:0">ID: TS-${(p.id || index).toString().slice(-8).toUpperCase()}</div>
+        <div style="display:flex;gap:6px">
+          <button onclick="viewPick('${tipsterId}',${index})" title="Ver" style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(74,222,128,.2);background:transparent;color:#4ade80;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(74,222,128,.1)'" onmouseleave="this.style.background='transparent'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button onclick="sharePick('${tipsterId}',${index})" title="Compartir" style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(168,85,247,.2);background:transparent;color:#a855f7;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(168,85,247,.1)'" onmouseleave="this.style.background='transparent'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+          <button onclick="editPick('${tipsterId}',${index})" title="Editar" style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(251,146,60,.2);background:transparent;color:#fb923c;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(251,146,60,.1)'" onmouseleave="this.style.background='transparent'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button onclick="deletePick('${tipsterId}',${index})" title="Borrar" style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(239,68,68,.2);background:transparent;color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseenter="this.style.background='rgba(239,68,68,.1)'" onmouseleave="this.style.background='transparent'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    `;
   }).join('');
 }
 
