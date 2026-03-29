@@ -3885,33 +3885,44 @@ function renderPicksPanel(tipsterId) {
     const st = (p.estado || 'pendiente').toLowerCase();
     const isCombo = p.tipo === 'COMBINADA';
     
-    // Usar 'evento' o 'partido' según lo que exista
-    const evento = p.evento || p.partido || '—';
-    const pronostico = p.pronostico || p.mercado || '—';
+    // Usar campos de Supabase directamente
+    const equipoLocal = p.equipo_local || '';
+    const equipoVisitante = p.equipo_visitante || '';
+    const liga = p.liga || '';
+    const pais = p.pais || '';
+    const seleccion = p.seleccion || p.pronostico || '—';
+    const deporte = (p.deporte || 'futbol').toUpperCase();
     
-    // Extraer equipos
-    let equipoLocal = 'Local';
-    let equipoVisitante = 'Visitante';
-    if (evento.includes(' vs ')) {
-      const equipos = evento.split(' vs ');
-      equipoLocal = equipos[0].trim();
-      equipoVisitante = equipos[1] ? equipos[1].trim() : 'Visitante';
-    } else if (evento.includes(' - ')) {
-      const equipos = evento.split(' - ');
-      equipoLocal = equipos[0].trim();
-      equipoVisitante = equipos[1] ? equipos[1].trim() : 'Visitante';
-    } else {
-      equipoLocal = evento;
-      equipoVisitante = '';
+    // Si no hay equipos separados, intentar extraer del evento
+    let localDisplay = equipoLocal;
+    let visitanteDisplay = equipoVisitante;
+    if (!equipoLocal && p.evento) {
+      if (p.evento.includes(' vs ')) {
+        const parts = p.evento.split(' vs ');
+        localDisplay = parts[0].trim();
+        visitanteDisplay = parts[1] ? parts[1].trim() : '';
+      } else if (p.evento.includes(' - ')) {
+        const parts = p.evento.split(' - ');
+        localDisplay = parts[0].trim();
+        visitanteDisplay = parts[1] ? parts[1].trim() : '';
+      }
     }
     
-    // Timestamp
-    const timestamp = p.created_at || p.timestamp;
-    const pubTime = timestamp
-      ? new Date(timestamp).toLocaleString('es-ES', {hour:'2-digit', minute:'2-digit'})
+    // Timestamp completo
+    const timestamp = p.created_at;
+    const pubDateTime = timestamp
+      ? new Date(timestamp).toLocaleString('es-ES', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
       : '';
-    const pubDate = p.fecha 
-      ? new Date(p.fecha).toLocaleDateString('es-ES', {day:'numeric', month:'short', year:'numeric'})
+    
+    // Fecha del evento
+    const fechaEvento = p.fecha 
+      ? new Date(p.fecha).toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'})
       : '';
     
     // Estado visual
@@ -3937,6 +3948,11 @@ function renderPicksPanel(tipsterId) {
            <div style="font-size:18px;font-weight:700;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'}">${parseFloat(p.ganancias) >= 0 ? '+' : ''}${parseFloat(p.ganancias).toFixed(2)}u</div>
          </div>`
       : '';
+    
+    // Liga y país
+    const ligaPaisHTML = (liga || pais) 
+      ? `<div style="font-size:11px;color:#7a9280;margin-bottom:8px">${pais ? pais + ' · ' : ''}${liga}</div>`
+      : '';
 
     return `
     <div class="tipster-card" style="width:100%;max-width:420px;${borderGlow}" data-pick-index="${index}">
@@ -3957,30 +3973,29 @@ function renderPicksPanel(tipsterId) {
 
       <!-- Match Box -->
       <div class="match-box">
-        <div class="sport">⚽ ${p.deporte || 'FÚTBOL'}</div>
+        <div class="sport">⚽ ${deporte}</div>
+        ${ligaPaisHTML}
         <div class="teams">
           <div class="team">
-            <span style="font-weight:600">${equipoLocal}</span>
+            <span style="font-weight:600;font-size:15px">${localDisplay || '—'}</span>
           </div>
-          ${equipoVisitante ? `
+          ${visitanteDisplay ? `
           <div class="vs">vs</div>
           <div class="team">
-            <span style="font-weight:600">${equipoVisitante}</span>
+            <span style="font-weight:600;font-size:15px">${visitanteDisplay}</span>
           </div>
           ` : ''}
         </div>
-        <div class="meta">
-          <div>${p.competicion || 'Competición'}</div>
-          <div>${pubDate}</div>
+        <div class="meta" style="margin-top:12px">
+          <div>${fechaEvento}</div>
         </div>
       </div>
 
-      <!-- Pick Box -->
+      <!-- Pick Box - Solo selección, sin mercado -->
       <div class="pick-box">
         <div>
-          <div class="label">PRONÓSTICO</div>
-          <div class="pick-type">${p.tipoMercado || 'Apuesta'}</div>
-          <div class="pick">${pronostico}</div>
+          <div class="label">SELECCIÓN</div>
+          <div class="pick" style="font-size:18px;margin-top:6px">${seleccion}</div>
         </div>
         <div class="odds">${p.cuota || '—'}</div>
       </div>
@@ -4007,10 +4022,10 @@ function renderPicksPanel(tipsterId) {
       </div>
       ` : ''}
 
-      <!-- Badges -->
+      <!-- Badges con timestamp -->
       <div class="badges">
         <span>✔ Tipster verificado</span>
-        <span>🕒 ${pubTime || pubDate}</span>
+        <span>🕒 ${pubDateTime}</span>
         <span>🔒 Inmutable</span>
         <span>📊 Auditado por TrueStats</span>
       </div>
@@ -5182,8 +5197,29 @@ async function publishPick() {
   const stakeInput = isCombo ? document.getElementById('combo-stake') : document.getElementById('p1-stake');
   const stakeVal = parseFloat(stakeInput?.value) || 0;
 
-  // 3. Objeto para Supabase
+  // 3. Objeto para Supabase con todos los campos
   const cuotaTotal = isCombo ? (parseFloat(document.getElementById('cuota-total-combo')?.textContent) || 1) : (picksData[0]?.cuota || 1);
+  
+  // Obtener datos adicionales del evento seleccionado
+  const firstPid = 'p1';
+  const eventData = pronosticoData[firstPid]?.selectedEvent || {};
+  const tournament = eventData.tournament || {};
+  const homeTeam = eventData.homeTeam || {};
+  const awayTeam = eventData.awayTeam || {};
+  
+  // Extraer liga, país y equipos
+  const liga = tournament.name || document.getElementById(`${firstPid}-manual-liga`)?.value?.trim() || '';
+  const pais = tournament.category?.name || '';
+  const equipoLocal = homeTeam.name || document.getElementById(`${firstPid}-home`)?.textContent || '';
+  const equipoVisitante = awayTeam.name || document.getElementById(`${firstPid}-away`)?.textContent || '';
+  
+  // Extraer selección (sin el mercado)
+  const mercadoSelect = document.getElementById(`${firstPid}-mercado`);
+  const mercadoNombre = mercadoSelect && mercadoSelect.selectedIndex > 0 ? mercadoSelect.options[mercadoSelect.selectedIndex].textContent : '';
+  const seleccionManual = document.getElementById(`${firstPid}-seleccion-manual`)?.value?.trim() || '';
+  const selInput = document.getElementById(`${firstPid}-sel`)?.value?.trim() || '';
+  const seleccion = seleccionManual || selInput || '';
+  
   const pickFinal = {
     partido: isCombo ? "COMBINADA: " + picksData.map(p => p.partido).join(' / ') : picksData[0].partido,
     mercado: isCombo ? "Varios" : picksData[0].mercado,
@@ -5192,7 +5228,14 @@ async function publishPick() {
     tipo: isCombo ? 'COMBINADA' : 'SIMPLE',
     fecha: picksData[0].fecha,
     estado: 'pendiente',
-    analisis: document.getElementById('analisis-texto')?.value || ''
+    analisis: document.getElementById('analisis-texto')?.value || '',
+    // Campos adicionales
+    liga: liga,
+    pais: pais,
+    equipo_local: equipoLocal,
+    equipo_visitante: equipoVisitante,
+    seleccion: seleccion,
+    deporte: document.querySelector(`#${firstPid}-deportes .opt.active`)?.dataset?.value || 'futbol'
   };
 
   // 4. Feedback Visual
@@ -5206,13 +5249,20 @@ async function publishPick() {
   try {
     const { data, error } = await getSbClient().from('picks').insert([{ 
         evento: pickFinal.partido,
-        pronostico: pickFinal.mercado,
+        pronostico: pickFinal.seleccion || pickFinal.mercado, // Guardar selección, no mercado
         cuota: pickFinal.cuota,
         stake: pickFinal.stake,
-        tipo: pickFinal.tipo,      // Simple o Combinada
-        fecha: pickFinal.fecha,    // YYYY-MM-DD
+        tipo: pickFinal.tipo,
+        fecha: pickFinal.fecha,
         estado: 'pendiente',
-        analisis: pickFinal.analisis
+        analisis: pickFinal.analisis,
+        // Campos adicionales
+        liga: pickFinal.liga,
+        pais: pickFinal.pais,
+        equipo_local: pickFinal.equipo_local,
+        equipo_visitante: pickFinal.equipo_visitante,
+        seleccion: pickFinal.seleccion,
+        deporte: pickFinal.deporte
     }]).select();
 
     if (error) throw error;
