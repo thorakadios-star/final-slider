@@ -3924,8 +3924,11 @@ function renderPicksPanel(tipsterId) {
     return;
   }
 
+  // Avatar del tipster embebido en base64 (fallback a iniciales)
+  const tipsterAvatarUrl = 'hunter.JPG';
+
   // 3. Renderizar en formato GRID
-  container.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:24px;padding:20px 0;';
+  container.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:24px;padding:20px 0;';
   
   container.innerHTML = picks.map((p, index) => {
     const st = (p.estado || 'pendiente').toLowerCase();
@@ -3935,7 +3938,7 @@ function renderPicksPanel(tipsterId) {
     // Datos del pick
     const equipoLocal = p.equipo_local || '';
     const equipoVisitante = p.equipo_visitante || '';
-    const liga = p.liga || '';
+    const liga = p.liga || 'Liga';
     const pais = p.pais || '';
     const seleccion = p.seleccion || '—';
     const deporte = (p.deporte || 'futbol').toLowerCase();
@@ -3976,10 +3979,14 @@ function renderPicksPanel(tipsterId) {
       : '';
     const horaEvento = p.hora || '';
     
-    // Confianza (basada en stake: 1-3 bajo, 4-6 medio, 7-10 alto)
+    // Confianza (basada en stake: 1-10 -> 10%-100%)
     const stake = parseInt(p.stake) || 1;
-    const confianza = stake <= 3 ? 30 : stake <= 6 ? 60 : 90;
-    const confianzaColor = stake <= 3 ? '#fb923c' : stake <= 6 ? '#fbbf24' : '#22c55e';
+    const confianza = stake * 10;
+    
+    // ID único y dinámico para cada pronóstico
+    const pickId = p.id 
+      ? `TS-${p.id.toString().slice(-8).toUpperCase()}` 
+      : `TS-${(Date.now() + index).toString(36).toUpperCase().slice(-8)}`;
     
     // Borde según estado
     const borderGlow = st === 'ganado' 
@@ -3994,128 +4001,129 @@ function renderPicksPanel(tipsterId) {
       <!-- Glow effect -->
       <div style="position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 30%,rgba(139,92,246,.08) 0%,transparent 50%);pointer-events:none"></div>
       
-      <!-- HEADER: Logo izq + Badges derecha -->
+      <!-- HEADER: Logo Tipster + Nombre + Badges -->
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;position:relative">
-        <!-- Logo Tipster -->
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#1a2f1c,#0d1a0f);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(74,222,128,.2)">
-            <span style="font-size:16px;font-weight:800;color:#4ade80">GH</span>
+        <!-- Logo Tipster con IMAGEN real -->
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="position:relative;width:52px;height:52px">
+            <img src="${tipsterAvatarUrl}" alt="GHP" style="width:52px;height:52px;border-radius:12px;border:2px solid rgba(74,222,128,.5);box-shadow:0 0 25px rgba(74,222,128,.35);object-fit:cover;position:absolute;top:0;left:0" onerror="this.style.opacity='0'">
+            <div style="width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#1a3f1c,#0d1a0f);border:2px solid rgba(74,222,128,.5);display:flex;align-items:center;justify-content:center;box-shadow:0 0 25px rgba(74,222,128,.35)">
+              <span style="font-size:20px;font-weight:800;color:#4ade80">GH</span>
+            </div>
           </div>
           <div>
-            <div style="font-weight:700;font-size:13px;color:#e2e8f0">Green Hunter Pro</div>
-            <div style="font-size:9px;color:#8b5cf6;font-family:'IBM Plex Mono',monospace">TrueStats AI Verified</div>
+            <div style="font-weight:700;font-size:16px;color:#f1f5f9;margin-bottom:3px">Green Hunter Pro</div>
+            <div style="font-size:12px;color:#a78bfa;font-family:'IBM Plex Mono',monospace;font-weight:600">TrueStats AI Verified</div>
           </div>
         </div>
         
         <!-- Badges derecha: Tipo + Acceso + Estado -->
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
           <div style="display:flex;gap:6px">
-            <!-- SIMPLE/COMBINADA -->
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;padding:4px 10px;border-radius:6px;background:linear-gradient(135deg,rgba(96,165,250,.15),rgba(139,92,246,.15));color:#60a5fa;border:1px solid rgba(96,165,250,.3);box-shadow:0 0 10px rgba(96,165,250,.2)">${isCombo ? '📊 COMBINADA' : '📋 SIMPLE'}</span>
-            <!-- FREE/PREMIUM -->
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;padding:4px 10px;border-radius:6px;background:${isPremium ? 'linear-gradient(135deg,rgba(251,191,36,.15),rgba(251,146,60,.15))' : 'rgba(107,114,128,.1)'};color:${isPremium ? '#fbbf24' : '#9ca3af'};border:1px solid ${isPremium ? 'rgba(251,191,36,.3)' : 'rgba(107,114,128,.2)'};box-shadow:${isPremium ? '0 0 10px rgba(251,191,36,.2)' : 'none'}">${isPremium ? '⭐ PREMIUM' : 'FREE'}</span>
+            <!-- SIMPLE/COMBINADA Badge -->
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;padding:6px 14px;border-radius:8px;background:linear-gradient(135deg,rgba(96,165,250,.2),rgba(59,130,246,.15));color:#60a5fa;border:1px solid rgba(96,165,250,.4);box-shadow:0 0 14px rgba(96,165,250,.3)">${isCombo ? '📊 COMBINADA' : '📋 SIMPLE'}</span>
+            <!-- FREE Badge con glow plateado -->
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;padding:6px 14px;border-radius:8px;background:${isPremium ? 'linear-gradient(135deg,rgba(251,191,36,.25),rgba(245,158,11,.18))' : 'linear-gradient(135deg,rgba(226,232,240,.18),rgba(148,163,184,.12))'};color:${isPremium ? '#fbbf24' : '#e2e8f0'};border:1px solid ${isPremium ? 'rgba(251,191,36,.5)' : 'rgba(226,232,240,.4)'};box-shadow:0 0 14px ${isPremium ? 'rgba(251,191,36,.35)' : 'rgba(226,232,240,.25)'}">${isPremium ? '⭐ PREMIUM' : '🆓 FREE'}</span>
           </div>
-          <!-- ESTADO -->
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;padding:5px 12px;border-radius:6px;background:${st === 'ganado' ? 'linear-gradient(135deg,rgba(34,197,94,.2),rgba(22,163,74,.2))' : st === 'perdido' ? 'linear-gradient(135deg,rgba(239,68,68,.2),rgba(220,38,38,.2))' : st === 'nulo' ? 'rgba(107,114,128,.15)' : 'linear-gradient(135deg,rgba(251,191,36,.15),rgba(245,158,11,.15))'};color:${st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : st === 'nulo' ? '#9ca3af' : '#fbbf24'};border:1px solid ${st === 'ganado' ? 'rgba(34,197,94,.4)' : st === 'perdido' ? 'rgba(239,68,68,.4)' : st === 'nulo' ? 'rgba(107,114,128,.3)' : 'rgba(251,191,36,.4)'};box-shadow:0 0 12px ${st === 'ganado' ? 'rgba(34,197,94,.3)' : st === 'perdido' ? 'rgba(239,68,68,.3)' : st === 'nulo' ? 'transparent' : 'rgba(251,191,36,.3)'}">${st === 'ganado' ? '✓ GANADO' : st === 'perdido' ? '✗ PERDIDO' : st === 'nulo' ? '⊘ NULO' : '⏳ PENDIENTE'}</span>
+          <!-- ESTADO Badge -->
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;padding:6px 14px;border-radius:8px;background:${st === 'ganado' ? 'linear-gradient(135deg,rgba(34,197,94,.25),rgba(22,163,74,.2))' : st === 'perdido' ? 'linear-gradient(135deg,rgba(239,68,68,.25),rgba(220,38,38,.2))' : st === 'nulo' ? 'rgba(107,114,128,.2)' : 'linear-gradient(135deg,rgba(251,191,36,.2),rgba(245,158,11,.15))'};color:${st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : st === 'nulo' ? '#9ca3af' : '#fbbf24'};border:1px solid ${st === 'ganado' ? 'rgba(34,197,94,.5)' : st === 'perdido' ? 'rgba(239,68,68,.5)' : st === 'nulo' ? 'rgba(107,114,128,.3)' : 'rgba(251,191,36,.5)'};box-shadow:0 0 15px ${st === 'ganado' ? 'rgba(34,197,94,.35)' : st === 'perdido' ? 'rgba(239,68,68,.35)' : st === 'nulo' ? 'transparent' : 'rgba(251,191,36,.35)'}">${st === 'ganado' ? '✓ GANADO' : st === 'perdido' ? '✗ PERDIDO' : st === 'nulo' ? '⊘ NULO' : '⏳ PENDIENTE'}</span>
         </div>
       </div>
 
-      <!-- PRONÓSTICO HEADER: Icono + País + Liga -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:10px 14px;background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(96,165,250,.08));border-radius:10px;border:1px solid rgba(139,92,246,.15)">
-        <span style="font-size:20px">${deporteIcon}</span>
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#a78bfa;text-transform:uppercase;letter-spacing:.05em">PRONÓSTICO</span>
-        ${pais ? `<span style="font-size:10px;color:#94a3b8">·</span><span style="font-size:11px;color:#e2e8f0">${pais}</span>` : ''}
-        ${liga ? `<span style="font-size:10px;color:#94a3b8">·</span><span style="font-size:11px;color:#60a5fa">${liga}</span>` : ''}
+      <!-- PRONÓSTICO + COMPETICIÓN + TIMESTAMP: Badges independientes azul y naranja -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:7px 14px;border-radius:8px;background:linear-gradient(135deg,rgba(96,165,250,.18),rgba(59,130,246,.12));color:#60a5fa;border:1px solid rgba(96,165,250,.35);box-shadow:0 0 12px rgba(96,165,250,.25)">${deporteIcon} PRONÓSTICO</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:7px 14px;border-radius:8px;background:linear-gradient(135deg,rgba(96,165,250,.18),rgba(59,130,246,.12));color:#60a5fa;border:1px solid rgba(96,165,250,.35);box-shadow:0 0 12px rgba(96,165,250,.25)">${pais ? pais + ' · ' : ''}${liga}</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;padding:7px 14px;border-radius:8px;background:linear-gradient(135deg,rgba(251,146,60,.18),rgba(249,115,22,.12));color:#fb923c;border:1px solid rgba(251,146,60,.35);box-shadow:0 0 12px rgba(251,146,60,.25)">🕒 ${pubDateTime}</span>
       </div>
 
       <!-- BOX 1: EQUIPOS + FECHA/HORA -->
-      <div style="background:rgba(15,23,42,.4);border:1px solid rgba(96,165,250,.15);border-radius:12px;padding:16px;margin-bottom:12px">
-        <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:12px">
+      <div style="background:rgba(15,23,42,.5);border:1px solid rgba(96,165,250,.2);border-radius:12px;padding:18px;margin-bottom:12px">
+        <div style="display:flex;justify-content:center;align-items:center;gap:20px;margin-bottom:14px">
           <div style="text-align:center;flex:1">
-            <div style="font-size:16px;font-weight:700;color:#f1f5f9">${localDisplay || '—'}</div>
+            <div style="font-size:17px;font-weight:700;color:#f1f5f9">${localDisplay || '—'}</div>
           </div>
-          <div style="font-size:12px;font-weight:800;color:#8b5cf6;padding:6px 12px;background:rgba(139,92,246,.1);border-radius:8px;border:1px solid rgba(139,92,246,.2)">VS</div>
+          <div style="font-size:13px;font-weight:800;color:#a78bfa;padding:8px 14px;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(124,58,237,.1));border-radius:10px;border:1px solid rgba(139,92,246,.3);box-shadow:0 0 12px rgba(139,92,246,.2)">VS</div>
           <div style="text-align:center;flex:1">
-            <div style="font-size:16px;font-weight:700;color:#f1f5f9">${visitanteDisplay || '—'}</div>
+            <div style="font-size:17px;font-weight:700;color:#f1f5f9">${visitanteDisplay || '—'}</div>
           </div>
         </div>
         <div style="display:flex;justify-content:center;gap:12px">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;background:rgba(148,163,184,.1);padding:4px 10px;border-radius:6px">📅 ${fechaEvento}</span>
-          ${horaEvento ? `<span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;background:rgba(148,163,184,.1);padding:4px 10px;border-radius:6px">🕐 ${horaEvento}</span>` : ''}
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;background:rgba(148,163,184,.08);padding:5px 12px;border-radius:6px;border:1px solid rgba(148,163,184,.15)">📅 ${fechaEvento}</span>
+          ${horaEvento ? `<span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#94a3b8;background:rgba(148,163,184,.08);padding:5px 12px;border-radius:6px;border:1px solid rgba(148,163,184,.15)">🕐 ${horaEvento}</span>` : ''}
         </div>
       </div>
 
-      <!-- BOX 2: SELECCIÓN -->
-      <div style="background:linear-gradient(135deg,rgba(74,222,128,.08),rgba(34,197,94,.05));border:1px solid rgba(74,222,128,.2);border-radius:12px;padding:16px;margin-bottom:12px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#4ade80;margin-bottom:8px;letter-spacing:.1em">SELECCIÓN</div>
-        <div style="font-size:18px;font-weight:700;color:#4ade80;text-shadow:0 0 20px rgba(74,222,128,.3)">${seleccion}</div>
+      <!-- BOX 2: SELECCIÓN + ID debajo -->
+      <div style="background:linear-gradient(135deg,rgba(74,222,128,.1),rgba(34,197,94,.06));border:1px solid rgba(74,222,128,.25);border-radius:12px;padding:18px;margin-bottom:12px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#4ade80;margin-bottom:8px;letter-spacing:.12em">SELECCIÓN</div>
+        <div style="font-size:20px;font-weight:700;color:#4ade80;text-shadow:0 0 25px rgba(74,222,128,.4);margin-bottom:12px">${seleccion}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#64748b;background:rgba(100,116,139,.12);padding:5px 14px;border-radius:6px;display:inline-block;border:1px solid rgba(100,116,139,.2)">ID: ${pickId}</div>
       </div>
 
-      <!-- BOX 3: CUOTA + STAKE + CONFIANZA -->
+      <!-- BOX 3: CUOTA + STAKE + CONFIANZA (termómetro azul a rojo) -->
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
         <!-- Cuota -->
-        <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#60a5fa;margin-bottom:4px;letter-spacing:.1em">CUOTA</div>
-          <div style="font-size:20px;font-weight:800;color:#60a5fa;text-shadow:0 0 15px rgba(96,165,250,.4)">${p.cuota || '—'}</div>
+        <div style="background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#60a5fa;margin-bottom:6px;letter-spacing:.12em">CUOTA</div>
+          <div style="font-size:22px;font-weight:800;color:#60a5fa;text-shadow:0 0 18px rgba(96,165,250,.45)">${p.cuota || '—'}</div>
         </div>
         <!-- Stake -->
-        <div style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#fb923c;margin-bottom:4px;letter-spacing:.1em">STAKE</div>
-          <div style="font-size:20px;font-weight:800;color:#fb923c;text-shadow:0 0 15px rgba(251,146,60,.4)">${stake}/10</div>
+        <div style="background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.25);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#fb923c;margin-bottom:6px;letter-spacing:.12em">STAKE</div>
+          <div style="font-size:22px;font-weight:800;color:#fb923c;text-shadow:0 0 18px rgba(251,146,60,.45)">${stake}/10</div>
         </div>
-        <!-- Termómetro Confianza -->
-        <div style="background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#a78bfa;margin-bottom:6px;letter-spacing:.1em">CONFIANZA</div>
-          <div style="height:8px;background:rgba(30,41,59,.8);border-radius:4px;overflow:hidden;position:relative">
-            <div style="position:absolute;left:0;top:0;height:100%;width:${confianza}%;background:linear-gradient(90deg,${confianzaColor},${confianzaColor}80);border-radius:4px;box-shadow:0 0 10px ${confianzaColor}60;transition:width .3s"></div>
+        <!-- Termómetro Confianza (AZUL a ROJO) -->
+        <div style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:#a78bfa;margin-bottom:8px;letter-spacing:.12em">CONFIANZA</div>
+          <div style="height:12px;background:rgba(30,41,59,.6);border-radius:6px;overflow:hidden;position:relative">
+            <div style="position:absolute;left:0;top:0;height:100%;width:${confianza}%;background:linear-gradient(90deg,#3b82f6 0%,#8b5cf6 40%,#ec4899 70%,#ef4444 100%);border-radius:6px;box-shadow:0 0 12px rgba(59,130,246,.5);transition:width .3s"></div>
           </div>
+          <div style="font-size:11px;color:#e2e8f0;margin-top:6px;font-weight:700">${confianza}%</div>
         </div>
       </div>
 
       ${p.ganancias !== undefined && st !== 'pendiente' ? `
       <!-- RESULTADO -->
-      <div style="background:${parseFloat(p.ganancias) >= 0 ? 'linear-gradient(135deg,rgba(34,197,94,.1),rgba(22,163,74,.05))' : 'linear-gradient(135deg,rgba(239,68,68,.1),rgba(220,38,38,.05))'};border:1px solid ${parseFloat(p.ganancias) >= 0 ? 'rgba(34,197,94,.25)' : 'rgba(239,68,68,.25)'};border-radius:10px;padding:12px;margin-bottom:12px;text-align:center">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'};margin-bottom:4px;letter-spacing:.1em">RESULTADO</div>
-        <div style="font-size:22px;font-weight:800;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'};text-shadow:0 0 20px ${parseFloat(p.ganancias) >= 0 ? 'rgba(34,197,94,.4)' : 'rgba(239,68,68,.4)'}">${parseFloat(p.ganancias) >= 0 ? '+' : ''}${parseFloat(p.ganancias).toFixed(2)}u</div>
+      <div style="background:${parseFloat(p.ganancias) >= 0 ? 'linear-gradient(135deg,rgba(34,197,94,.12),rgba(22,163,74,.08))' : 'linear-gradient(135deg,rgba(239,68,68,.12),rgba(220,38,38,.08))'};border:1px solid ${parseFloat(p.ganancias) >= 0 ? 'rgba(34,197,94,.3)' : 'rgba(239,68,68,.3)'};border-radius:10px;padding:14px;margin-bottom:12px;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'};margin-bottom:4px;letter-spacing:.12em">RESULTADO</div>
+        <div style="font-size:24px;font-weight:800;color:${parseFloat(p.ganancias) >= 0 ? '#22c55e' : '#ef4444'};text-shadow:0 0 25px ${parseFloat(p.ganancias) >= 0 ? 'rgba(34,197,94,.5)' : 'rgba(239,68,68,.5)'}">${parseFloat(p.ganancias) >= 0 ? '+' : ''}${parseFloat(p.ganancias).toFixed(2)}u</div>
       </div>
       ` : ''}
 
       ${p.analisis ? `
       <!-- BOX ANÁLISIS -->
-      <div style="background:rgba(30,41,59,.3);border:1px solid rgba(148,163,184,.1);border-radius:10px;padding:14px;margin-bottom:12px">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#94a3b8;margin-bottom:8px;letter-spacing:.1em">📝 ANÁLISIS</div>
-        <p style="font-size:12px;color:#cbd5e1;line-height:1.5;margin:0">${p.analisis}</p>
+      <div style="background:rgba(30,41,59,.4);border:1px solid rgba(148,163,184,.15);border-radius:10px;padding:16px;margin-bottom:12px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#94a3b8;margin-bottom:10px;letter-spacing:.1em">📝 ANÁLISIS</div>
+        <p style="font-size:13px;color:#e2e8f0;line-height:1.6;margin:0">${p.analisis}</p>
       </div>
       ` : ''}
 
-      <!-- FOOTER: Badges verificación -->
-      <div style="display:flex;justify-content:space-between;align-items:flex-end">
-        <!-- ID -->
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#64748b">ID: TS-${(p.id || index).toString().slice(-8).toUpperCase()}</div>
-        
-        <!-- Badges verticales -->
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;padding:3px 8px;border-radius:4px;background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.2);box-shadow:0 0 8px rgba(74,222,128,.15)">✔ Tipster verificado</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;padding:3px 8px;border-radius:4px;background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.2);box-shadow:0 0 8px rgba(96,165,250,.15)">🕒 ${pubDateTime}</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;padding:3px 8px;border-radius:4px;background:rgba(251,146,60,.1);color:#fb923c;border:1px solid rgba(251,146,60,.2);box-shadow:0 0 8px rgba(251,146,60,.15)">🔒 Inmutable</span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;padding:3px 8px;border-radius:4px;background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.2);box-shadow:0 0 8px rgba(139,92,246,.15)">🤖 Auditado por TrueStats AI</span>
+      <!-- FOOTER: Badges izquierda (columna) + Acciones derecha (horizontal abajo) -->
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:12px;border-top:1px solid rgba(139,92,246,.15)">
+        <!-- Badges verificación - COLUMNA IZQUIERDA -->
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:5px 12px;border-radius:6px;background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.3);box-shadow:0 0 12px rgba(74,222,128,.2)">✔ Tipster verificado</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:5px 12px;border-radius:6px;background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.3);box-shadow:0 0 12px rgba(96,165,250,.2)">🕒 ${pubDateTime}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:5px 12px;border-radius:6px;background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.3);box-shadow:0 0 12px rgba(251,146,60,.2)">🔒 Inmutable</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;padding:5px 12px;border-radius:6px;background:rgba(139,92,246,.12);color:#a78bfa;border:1px solid rgba(139,92,246,.3);box-shadow:0 0 12px rgba(139,92,246,.2)">🤖 Auditado por TrueStats AI</span>
         </div>
-      </div>
-
-      <!-- Acciones -->
-      <div style="display:flex;justify-content:flex-end;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(139,92,246,.1)">
-        <button onclick="viewPick('${tipsterId}',${index})" title="Ver" style="width:30px;height:30px;border-radius:8px;border:1px solid rgba(96,165,250,.2);background:rgba(96,165,250,.05);color:#60a5fa;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(96,165,250,.15)';this.style.boxShadow='0 0 12px rgba(96,165,250,.3)'" onmouseleave="this.style.background='rgba(96,165,250,.05)';this.style.boxShadow='none'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
-        <button onclick="sharePick('${tipsterId}',${index})" title="Compartir" style="width:30px;height:30px;border-radius:8px;border:1px solid rgba(139,92,246,.2);background:rgba(139,92,246,.05);color:#a78bfa;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(139,92,246,.15)';this.style.boxShadow='0 0 12px rgba(139,92,246,.3)'" onmouseleave="this.style.background='rgba(139,92,246,.05)';this.style.boxShadow='none'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </button>
-        <button onclick="editPick('${tipsterId}',${index})" title="Editar" style="width:30px;height:30px;border-radius:8px;border:1px solid rgba(251,146,60,.2);background:rgba(251,146,60,.05);color:#fb923c;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(251,146,60,.15)';this.style.boxShadow='0 0 12px rgba(251,146,60,.3)'" onmouseleave="this.style.background='rgba(251,146,60,.05)';this.style.boxShadow='none'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        <button onclick="deletePick('${tipsterId}',${index})" title="Borrar" style="width:30px;height:30px;border-radius:8px;border:1px solid rgba(239,68,68,.2);background:rgba(239,68,68,.05);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(239,68,68,.15)';this.style.boxShadow='0 0 12px rgba(239,68,68,.3)'" onmouseleave="this.style.background='rgba(239,68,68,.05)';this.style.boxShadow='none'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        </button>
+        
+        <!-- Acciones - HORIZONTAL DERECHA ABAJO -->
+        <div style="display:flex;gap:8px;align-self:flex-end">
+          <button onclick="viewPick('${tipsterId}',${index})" title="Ver" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(96,165,250,.35);background:rgba(96,165,250,.1);color:#60a5fa;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(96,165,250,.25)';this.style.boxShadow='0 0 18px rgba(96,165,250,.45)'" onmouseleave="this.style.background='rgba(96,165,250,.1)';this.style.boxShadow='none'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button onclick="sharePick('${tipsterId}',${index})" title="Compartir" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(139,92,246,.35);background:rgba(139,92,246,.1);color:#a78bfa;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(139,92,246,.25)';this.style.boxShadow='0 0 18px rgba(139,92,246,.45)'" onmouseleave="this.style.background='rgba(139,92,246,.1)';this.style.boxShadow='none'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+          <button onclick="editPick('${tipsterId}',${index})" title="Editar" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(251,146,60,.35);background:rgba(251,146,60,.1);color:#fb923c;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(251,146,60,.25)';this.style.boxShadow='0 0 18px rgba(251,146,60,.45)'" onmouseleave="this.style.background='rgba(251,146,60,.1)';this.style.boxShadow='none'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button onclick="deletePick('${tipsterId}',${index})" title="Borrar" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseenter="this.style.background='rgba(239,68,68,.25)';this.style.boxShadow='0 0 18px rgba(239,68,68,.45)'" onmouseleave="this.style.background='rgba(239,68,68,.1)';this.style.boxShadow='none'">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
       </div>
     </div>
     `;
