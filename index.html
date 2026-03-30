@@ -2495,6 +2495,23 @@ function showTipsterTab(tabName) {
 
 // Calcular datos para la gráfica desde los picks
 function calculateChartData() {
+  // Usar datos de la vista tipster_stats_cumulative si existen
+  if (window.ghpMonthlyStats && window.ghpMonthlyStats.length > 0) {
+    const result = [{ mes: 'Inicio', beneficio: 0, yield: 0, apuestas: 0 }];
+    
+    window.ghpMonthlyStats.forEach(m => {
+      result.push({
+        mes: m.mes_label || m.mes,
+        beneficio: parseFloat(m.beneficio_acumulado) || 0,
+        yield: parseFloat(m.yield_acumulado) || 0,
+        apuestas: parseInt(m.picks_acumulados) || 0
+      });
+    });
+    
+    return result;
+  }
+  
+  // Fallback: calcular desde picks locales
   const picks = picksStore['ghp'] || [];
   
   // Agrupar por mes
@@ -4451,32 +4468,82 @@ async function savePickToSupabase(pick) {
   }
 }
 
-// 2. CARGAR PICKS
+// 2. CARGAR PICKS Y ESTADÍSTICAS
 async function loadPicksFromSupabase() {
   try {
-    // Cargamos los picks de la tabla 'picks' (esquema real)
+    // 1. Cargar picks de la tabla
     const { data: picks, error: errPicks } = await sbClient
       .from('picks') 
       .select('*')
-      .order('fecha', { ascending: false });
+      .order('created_at', { ascending: false });
 
     if (errPicks) throw errPicks;
 
-    // Actualizamos el almacén local y la interfaz de la lista
+    // 2. Cargar estadísticas de la vista
+    const { data: stats, error: errStats } = await sbClient
+      .from('tipster_stats')
+      .select('*')
+      .eq('tipster_id', 'ghp')
+      .single();
+
+    // 3. Cargar estadísticas mensuales para gráfica
+    const { data: monthly, error: errMonthly } = await sbClient
+      .from('tipster_stats_cumulative')
+      .select('*')
+      .eq('tipster_id', 'ghp')
+      .order('mes', { ascending: true });
+
+    // 4. Cargar forma reciente
+    const { data: form, error: errForm } = await sbClient
+      .from('tipster_recent_form')
+      .select('*')
+      .eq('tipster_id', 'ghp')
+      .single();
+
+    // Actualizar store local
     if (picks && picks.length > 0) {
       picksStore.ghp = picks;
-      savePicksToStorage(); 
-      renderPicksPanel('ghp');
-      renderPicksPanel('tp');
-      console.log('Picks cargados:', picks.length);
-      
-      // Calcular estadísticas desde los picks
-      calculateAndUpdateStats(picks);
+      savePicksToStorage();
+      console.log('✅ Picks cargados:', picks.length);
     } else {
-      console.log('No hay picks en Supabase');
+      picksStore.ghp = [];
+      console.log('📭 No hay picks en Supabase');
     }
+
+    // Guardar estadísticas en window para uso global
+    if (stats) {
+      window.ghpStats = {
+        score: Math.round(stats.winrate || 0).toString(),
+        yield: `${stats.yield || 0}%`,
+        benefit: `${stats.beneficio >= 0 ? '+' : ''}${stats.beneficio || 0}u`,
+        bets: (stats.total_picks || 0).toString(),
+        winrate: `${stats.winrate || 0}%`,
+        stake: (stats.stake_medio || 0).toString(),
+        ganados: stats.ganados || 0,
+        perdidos: stats.perdidos || 0,
+        pendientes: stats.pendientes || 0,
+        nulos: stats.nulos || 0
+      };
+      console.log('📊 Stats cargadas:', window.ghpStats);
+    }
+
+    // Guardar datos mensuales para gráfica
+    if (monthly && monthly.length > 0) {
+      window.ghpMonthlyStats = monthly;
+      console.log('📈 Stats mensuales:', monthly.length, 'meses');
+    }
+
+    // Guardar forma reciente
+    if (form && form.forma) {
+      window.ghpRecentForm = form.forma;
+      console.log('🎯 Forma reciente:', form.forma);
+    }
+
+    // Renderizar panels
+    renderPicksPanel('ghp');
+
   } catch (e) {
-    console.warn('Error cargando desde Supabase:', e.message);
+    console.warn('❌ Error cargando desde Supabase:', e.message);
   }
 }
 
@@ -5111,10 +5178,33 @@ async function sendToTelegramText(pick) {
 function savePicksToStorage() {
   try {
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('truestats_picks', JSON.stringify(picksStore));
+      // Crear copia limpia solo con datos serializables
+      const cleanData = {
+        ghp: (picksStore.ghp || []).map(p => ({
+          id: p.id,
+          tipster_id: p.tipster_id,
+          deporte: p.deporte,
+          pais: p.pais,
+          liga: p.liga,
+          equipo_local: p.equipo_local,
+          equipo_visitante: p.equipo_visitante,
+          evento: p.evento,
+          fecha: p.fecha,
+          seleccion: p.seleccion,
+          cuota: p.cuota,
+          stake: p.stake,
+          tipo: p.tipo,
+          analisis: p.analisis,
+          estado: p.estado,
+          ganancias: p.ganancias,
+          created_at: p.created_at
+        })),
+        tp: picksStore.tp || []
+      };
+      localStorage.setItem('truestats_picks', JSON.stringify(cleanData));
     }
   } catch (e) {
-    console.warn('localStorage no disponible:', e);
+    console.warn('localStorage error:', e.message);
   }
 }
 
@@ -5221,6 +5311,19 @@ async function publishPick() {
   const homeTeam = eventData.homeTeam || {};
   const awayTeam = eventData.awayTeam || {};
   
+  // DEBUG: Ver qué elementos existen
+  const homeEl = document.getElementById(`${firstPid}-home`);
+  const awayEl = document.getElementById(`${firstPid}-away`);
+  console.log('🔍 Elementos encontrados:', {
+    homeEl: homeEl ? homeEl.tagName : 'NO EXISTE',
+    homeValue: homeEl?.value,
+    homeTextContent: homeEl?.textContent,
+    awayEl: awayEl ? awayEl.tagName : 'NO EXISTE',
+    awayValue: awayEl?.value,
+    awayTextContent: awayEl?.textContent,
+    isManual: isManual
+  });
+  
   // Extraer liga, país y equipos - funciona para modo API y manual
   let liga, pais, equipoLocal, equipoVisitante;
   
@@ -5228,14 +5331,14 @@ async function publishPick() {
     // Modo manual: leer de inputs
     liga = document.getElementById(`${firstPid}-manual-liga`)?.value?.trim() || '';
     pais = ''; // No hay campo de país en manual
-    equipoLocal = document.getElementById(`${firstPid}-home`)?.value?.trim() || '';
-    equipoVisitante = document.getElementById(`${firstPid}-away`)?.value?.trim() || '';
+    equipoLocal = homeEl?.value?.trim() || '';
+    equipoVisitante = awayEl?.value?.trim() || '';
   } else {
     // Modo API: leer de evento o de los spans
     liga = tournament.name || document.getElementById(`${firstPid}-manual-liga`)?.value?.trim() || '';
     pais = tournament.category?.name || '';
-    equipoLocal = homeTeam.name || document.getElementById(`${firstPid}-home`)?.textContent?.trim() || '';
-    equipoVisitante = awayTeam.name || document.getElementById(`${firstPid}-away`)?.textContent?.trim() || '';
+    equipoLocal = homeTeam.name || homeEl?.textContent?.trim() || '';
+    equipoVisitante = awayTeam.name || awayEl?.textContent?.trim() || '';
   }
   
   // Limpiar equipos si son placeholder
@@ -5284,23 +5387,25 @@ async function publishPick() {
     btn.innerHTML = '<span class="spin">⟳</span> Publicando...';
   }
 
-  // 5. Envío a Supabase con todos los campos
+  // 5. Envío a Supabase con nuevo esquema
   try {
     const { data, error } = await getSbClient().from('picks').insert([{ 
-        evento: `${pickFinal.equipo_local} vs ${pickFinal.equipo_visitante}`,
-        pronostico: pickFinal.seleccion || pickFinal.mercado,
+        tipster_id: 'ghp',
+        deporte: pickFinal.deporte,
+        pais: pickFinal.pais,
+        liga: pickFinal.liga,
+        equipo_local: pickFinal.equipo_local,
+        equipo_visitante: pickFinal.equipo_visitante,
+        fecha: pickFinal.fecha,
+        seleccion: pickFinal.seleccion,
         cuota: pickFinal.cuota,
         stake: pickFinal.stake,
         tipo: pickFinal.tipo,
-        fecha: pickFinal.fecha,
-        estado: 'pendiente',
-        analisis: pickFinal.analisis,
-        liga: pickFinal.liga,
-        pais: pickFinal.pais,
-        equipo_local: pickFinal.equipo_local,
-        equipo_visitante: pickFinal.equipo_visitante,
-        seleccion: pickFinal.seleccion,
-        deporte: pickFinal.deporte
+        analisis: pickFinal.analisis
+        // estado: 'pendiente' (default en DB)
+        // evento: calculado automáticamente
+        // ganancias: calculado automáticamente
+        // created_at: automático
     }]).select();
 
     if (error) throw error;
