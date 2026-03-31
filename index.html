@@ -566,7 +566,7 @@ nav.sc{border-color:#243028}
 .btn-card-green:hover{background:linear-gradient(135deg,#4ade80,#22c55e);box-shadow:0 0 24px rgba(74,222,128,.35)}
 .btn-card-blue{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#eff6ff}
 .btn-card-blue:hover{background:linear-gradient(135deg,#60a5fa,#3b82f6);box-shadow:0 0 24px rgba(96,165,250,.35)}
-.hero-footer{font-size:14px;color:#60a5fa;font-family:'IBM Plex Mono',monospace;letter-spacing:.02em}
+.hero-footer{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#60a5fa;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.22);padding:7px 16px;border-radius:20px;margin-top:36px}
 .btn-hero{background:linear-gradient(135deg,#22c55e,#16a34a);color:#f0fdf4;font-family:'Inter',sans-serif;font-size:16px;font-weight:600;padding:14px 50px;border-radius:4px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:all .18s;position:relative;overflow:hidden}
 .btn-hero:hover{background:linear-gradient(135deg,#4ade80,#22c55e);transform:translateY(-1px);box-shadow:0 0 36px rgba(74,222,128,.4)}
 .btn-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.08),transparent);pointer-events:none}
@@ -1503,7 +1503,10 @@ nav.sc{border-color:#243028}
 
   </div><!-- /slider-wrap -->
 
-      <p class="hero-footer">Todos los resultados son auditados por TrueStats y no pueden ser modificados.</p>
+      <div class="hero-footer">
+        <div class="bdot" style="background:#60a5fa;box-shadow:0 0 8px #60a5fa"></div>
+        <span>Todos los resultados son auditados por TrueStats y no pueden ser modificados</span>
+      </div>
     </div><!-- /hero-content -->
   </section><!-- /hero -->
 </div><!-- /pg-land -->
@@ -5544,12 +5547,11 @@ function showToast(message, type = 'info') {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// SLIDER BOXES — Auto-play + Flechas + Touch + Dots
+// SLIDER BOXES — Solo Flechas + Touch + Dots (SIN autoplay)
 // ═══════════════════════════════════════════════════════════════════════════════
 (function(){
   const TOTAL = 5;
-  const DELAY = 7000;
-  const state = { 1:{cur:0,timer:null}, 2:{cur:0,timer:null}, 3:{cur:0,timer:null} };
+  const state = { 1:{cur:0}, 2:{cur:0}, 3:{cur:0} };
   const touchStart = {};
 
   function render(id, idx){
@@ -5565,45 +5567,33 @@ function showToast(message, type = 'info') {
     }
   }
 
-  function startTimer(id){
-    clearInterval(state[id].timer);
-    state[id].timer = setInterval(()=>render(id, state[id].cur + 1), DELAY);
-  }
-
-  // Pause — stops autoplay until arrow is used
-  window.pauseSlider = function(id){
-    clearInterval(state[id].timer);
-    state[id].timer = null;
-  };
-
-  // Arrow nav — always resumes autoplay
+  // Arrow nav — solo cambia al hacer click
   window.mvSlide = function(id, dir){
     render(id, state[id].cur + dir);
-    startTimer(id);
   };
 
-  // Dot nav — also resumes autoplay
+  // Dot nav — solo cambia al hacer click
   window.gSlide = function(id, idx){
     render(id, idx);
-    startTimer(id);
   };
 
-  // Touch: pause on press, swipe resumes via mvSlide
+  // Touch swipe
   window.tsStart = function(id, e){
     touchStart[id] = e.touches[0].clientX;
-    pauseSlider(id);
   };
   window.tsEnd = function(id, e){
     const dx = touchStart[id] - e.changedTouches[0].clientX;
     if(Math.abs(dx) > 40){
-      mvSlide(id, dx > 0 ? 1 : -1); // swipe resumes timer
+      mvSlide(id, dx > 0 ? 1 : -1);
     }
-    // tap without swipe stays paused
   };
 
-  // Boot
+  // Pause — ya no hace nada pero mantenemos por compatibilidad
+  window.pauseSlider = function(id){};
+
+  // Boot — sin autoplay
   function boot(){
-    [1,2,3].forEach(id => startTimer(id));
+    [1,2,3].forEach(id => render(id, 0));
   }
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', boot);
