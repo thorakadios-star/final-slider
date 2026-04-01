@@ -1630,7 +1630,7 @@ nav.sc{border-color:#243028}
             </button>
           </div>
           <div style="display:flex;justify-content:center;margin-top:10px">
-            <button class="btn-action primary" onclick="go('tipster');setTimeout(()=>showTipsterTab('crear'),100)" style="width:100%;max-width:280px">
+            <button class="btn-action primary" onclick="go('picks')" style="width:100%;max-width:280px">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Crear Pick
             </button>
@@ -3943,21 +3943,21 @@ function renderPicksPanel(tipsterId) {
     const hasResult = st === 'ganado' || st === 'perdido';
     const isWin = st === 'ganado';
     
-    // Parse partidos para combinadas
+    // Parse partidos para combinadas desde JSON
     let partidos = [];
     if (isCombo && p.partidos) {
       try { partidos = JSON.parse(p.partidos); } catch(e) { partidos = []; }
     }
-    if (partidos.length === 0) {
+    
+    // Si NO es combinada o no hay partidos parseados, crear array con datos del pick
+    if (!isCombo || partidos.length === 0) {
       partidos = [{
         deporte: p.deporte || 'futbol',
         equipo_local: p.equipo_local || '',
         equipo_visitante: p.equipo_visitante || '',
         liga: p.liga || '',
-        pais: p.pais || '',
         fecha: p.fecha || '',
         hora: p.hora || '',
-        mercado: p.mercado || '',
         seleccion: p.seleccion || '',
         cuota: p.cuota || ''
       }];
@@ -3970,7 +3970,7 @@ function renderPicksPanel(tipsterId) {
     };
     
     const stake = parseInt(p.stake) || 1;
-    const cuotaTotal = parseFloat(p.cuota) || partidos.reduce((acc, pt) => acc * (parseFloat(pt.cuota) || 1), 1);
+    const cuotaTotal = parseFloat(p.cuota) || 1;
     const ganancias = parseFloat(p.ganancias) || (isWin ? stake * (cuotaTotal - 1) : -stake);
     
     const pickId = p.id ? `TRUEPICK-${p.id.toString().slice(-6).toUpperCase()}` : `TRUEPICK-${(Date.now()+index).toString(36).toUpperCase().slice(-6)}`;
@@ -4000,9 +4000,10 @@ function renderPicksPanel(tipsterId) {
           local = parts[0]?.trim() || '';
           visitante = parts[1]?.trim() || '';
         }
-        // Fecha completa con día, mes y hora
+        // Fecha con día y mes
         const fechaObj = pt.fecha ? new Date(pt.fecha+'T00:00:00') : null;
-        const fechaCompleta = fechaObj ? fechaObj.toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : '';
+        const fechaStr = fechaObj ? fechaObj.toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : '';
+        // Hora del evento
         const horaEvento = pt.hora || p.hora || '';
         
         return `
@@ -4015,8 +4016,8 @@ function renderPicksPanel(tipsterId) {
               <span style="font-size:10px;color:#5eead4;padding:2px 6px;background:rgba(45,212,191,.1);border-radius:3px">vs</span>
               <span style="font-size:14px;font-weight:600;color:#e2e8f0">${visitante || '—'}</span>
             </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;font-family:monospace;font-size:10px;color:#94a3b8">
-              <span>📋 ${pt.liga || 'Liga'} · ⏱ ${fechaCompleta}${horaEvento ? ' ' + horaEvento : ''}</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-family:monospace;font-size:11px;color:#94a3b8">
+              <span>📋 ${pt.liga || p.liga || 'Liga'} · ⏱ ${fechaStr}${horaEvento ? ' · ' + horaEvento : ''}</span>
               <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);border-radius:4px;padding:2px 6px;color:#5eead4;font-size:9px">📤 ${pubDateTime}</span>
             </div>
           </div>
@@ -4040,10 +4041,11 @@ function renderPicksPanel(tipsterId) {
             </div>
           </div>`;
       } else {
-        // COMBINADA: Box horizontal para cada pronóstico
+        // COMBINADA: Un box por cada partido
         const partidosHtml = partidos.map(pt => {
           const dep = (pt.deporte || 'futbol').toLowerCase();
           const icon = deporteIcons[dep] || '⚽';
+          const cuotaPt = parseFloat(pt.cuota) || 1;
           return `
             <div style="background:rgba(13,32,26,.6);border:1px solid rgba(45,212,191,.2);border-radius:8px;padding:10px;margin-bottom:6px">
               <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
@@ -4051,7 +4053,7 @@ function renderPicksPanel(tipsterId) {
                   <span style="font-size:12px">${icon}</span>
                   <span style="font-size:12px;font-weight:600;color:#e2e8f0">${pt.equipo_local || '—'} vs ${pt.equipo_visitante || '—'}</span>
                 </div>
-                <span style="font-size:10px;color:#e2e8f0;background:rgba(45,212,191,.15);padding:4px 10px;border-radius:4px;border:1px solid rgba(45,212,191,.3)">${pt.seleccion || '—'} @ ${parseFloat(pt.cuota).toFixed(2) || '—'}</span>
+                <span style="font-size:10px;color:#e2e8f0;background:rgba(45,212,191,.15);padding:4px 10px;border-radius:4px;border:1px solid rgba(45,212,191,.3)">${pt.seleccion || '—'} @ ${cuotaPt.toFixed(2)}</span>
               </div>
             </div>`;
         }).join('');
@@ -4094,8 +4096,8 @@ function renderPicksPanel(tipsterId) {
             <div style="font-size:9px;color:#5eead4;font-family:monospace;letter-spacing:.06em">TRUESTATS AI VERIFIED</div>
           </div>
           <div style="display:flex;align-items:center;gap:5px">
-            <span style="font-family:monospace;font-size:9px;padding:5px 10px;border-radius:5px;background:${isCombo ? 'rgba(251,191,36,.15)' : 'rgba(45,212,191,.1)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.3)' : 'rgba(45,212,191,.25)'};display:flex;align-items:center;justify-content:center">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
-            <span style="font-family:monospace;font-size:9px;padding:5px 10px;border-radius:5px;background:${st === 'ganado' ? 'rgba(34,197,94,.2)' : st === 'perdido' ? 'rgba(239,68,68,.2)' : 'rgba(251,191,36,.15)'};color:${st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : '#fbbf24'};border:1px solid ${st === 'ganado' ? 'rgba(34,197,94,.4)' : st === 'perdido' ? 'rgba(239,68,68,.4)' : 'rgba(251,191,36,.3)'};display:flex;align-items:center;justify-content:center">${st === 'ganado' ? '✓ GANADA' : st === 'perdido' ? '✗ PERDIDA' : '⏳ PENDIENTE'}</span>
+            <span style="font-family:monospace;font-size:9px;padding:5px 10px;border-radius:5px;background:${isCombo ? 'rgba(251,191,36,.15)' : 'rgba(45,212,191,.1)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.3)' : 'rgba(45,212,191,.25)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
+            <span style="font-family:monospace;font-size:9px;padding:5px 10px;border-radius:5px;background:${st === 'ganado' ? 'rgba(34,197,94,.2)' : st === 'perdido' ? 'rgba(239,68,68,.2)' : 'rgba(251,191,36,.15)'};color:${st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : '#fbbf24'};border:1px solid ${st === 'ganado' ? 'rgba(34,197,94,.4)' : st === 'perdido' ? 'rgba(239,68,68,.4)' : 'rgba(251,191,36,.3)'}">${st === 'ganado' ? '✓ GANADA' : st === 'perdido' ? '✗ PERDIDA' : '⏳ PENDIENTE'}</span>
           </div>
         </div>
         
@@ -4113,12 +4115,12 @@ function renderPicksPanel(tipsterId) {
           <p style="font-size:11px;color:#e2e8f0;line-height:1.4;margin:0">${p.analisis}</p>
         </div>` : ''}
         
-        <!-- Badges verificación - alineados con iconos blancos -->
+        <!-- Badges verificación 10px -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
-          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">✓</span> Verificado</span>
-          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">⏱</span> Timestamp</span>
-          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">🔐</span> Inmutable</span>
-          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">◈</span> Auditado</span>
+          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">✓</span> Verificado</span>
+          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">⏱</span> Timestamp</span>
+          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🔐</span> Inmutable</span>
+          <span style="display:flex;align-items:center;gap:5px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:5px 10px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">◈</span> Auditado</span>
         </div>
         
         <!-- Footer -->
@@ -5053,9 +5055,9 @@ function roundRect(ctx, x, y, w, h, r) {
 
 async function sendToTelegram(pick) {
   try {
-    console.log('📸 Generando imagen del pick con Tipster Card...');
+    console.log('📸 Generando imagen del pick...');
     
-    // Crear contenedor temporal oculto para la card
+    // Crear contenedor temporal oculto
     let tempContainer = document.getElementById('temp-card-container');
     if (!tempContainer) {
       tempContainer = document.createElement('div');
@@ -5063,68 +5065,150 @@ async function sendToTelegram(pick) {
       tempContainer.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;';
       document.body.appendChild(tempContainer);
     }
-    tempContainer.innerHTML = '';
     
-    // Preparar datos para la Tipster Card
     const isCombo = pick.tipo === 'COMBINADA';
+    const stake = parseInt(pick.stake) || 1;
+    const cuotaTotal = parseFloat(pick.cuota) || 1;
     
-    // Obtener equipos - usar los campos directos
-    let equipoLocal = pick.equipo_local || 'Local';
-    let equipoVisitante = pick.equipo_visitante || 'Visitante';
-    
-    // Si es combinada, parsear partidos del JSON
+    // Parsear partidos para combinadas
     let partidos = [];
     if (isCombo && pick.partidos) {
       try { partidos = JSON.parse(pick.partidos); } catch(e) { partidos = []; }
     }
+    if (!isCombo || partidos.length === 0) {
+      partidos = [{
+        deporte: pick.deporte || 'futbol',
+        equipo_local: pick.equipo_local || '',
+        equipo_visitante: pick.equipo_visitante || '',
+        liga: pick.liga || '',
+        fecha: pick.fecha || '',
+        hora: pick.hora || '',
+        seleccion: pick.seleccion || '',
+        cuota: pick.cuota || ''
+      }];
+    }
     
-    // Formatear fecha
-    const fechaFormateada = pick.fecha 
-      ? new Date(pick.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
-      : new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-    
-    // Timestamp actual
-    const timestamp = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-    
-    // Generar ID único
     const pickId = pick.id ? `TRUEPICK-${pick.id.toString().slice(-6).toUpperCase()}` : `TS-${Date.now().toString(36).toUpperCase()}`;
+    const pubDateTime = new Date().toLocaleString('es-ES',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
     
-    // Renderizar la Tipster Card
-    const cardData = {
-      platform_name: 'Green Hunter Pro',
-      platform_subtitle: 'TrueStats Verified',
-      titulo: isCombo ? '📊 COMBINADA' : '📋 ANÁLISIS',
-      deporte: (pick.deporte || 'FÚTBOL').toUpperCase(),
-      equipo_local: equipoLocal,
-      equipo_visitante: equipoVisitante,
-      flag_local: '',
-      flag_visitante: '',
-      competicion: pick.liga || 'Liga',
-      fecha: fechaFormateada,
-      tipo_pick: isCombo ? `Combinada (${partidos.length || 2} picks)` : (pick.mercado || 'Apuesta'),
-      pick: isCombo 
-        ? (partidos.length > 0 ? partidos.map(p => p.seleccion).join(' + ') : pick.seleccion)
-        : (pick.seleccion || '—'),
-      cuota: pick.cuota || '1.00',
-      stake: pick.stake || '1',
-      comentario: pick.analisis || 'Sin comentario adicional',
-      tag_1: 'Tipster verificado',
-      tag_2: timestamp,
-      tag_3: 'Inmutable',
-      tag_4: 'Auditado por TrueStats',
-      pick_id: pickId
-    };
+    // Renderizar partidos
+    let partidosHtml = '';
+    if (!isCombo) {
+      const pt = partidos[0];
+      const fechaStr = pt.fecha ? new Date(pt.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : '';
+      const horaStr = pt.hora || pick.hora || '';
+      partidosHtml = `
+        <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:14px;margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:16px">⚽</span>
+            <span style="font-family:monospace;font-size:11px;color:#5eead4">FÚTBOL</span>
+            <span style="color:#5eead4;opacity:.5">·</span>
+            <span style="font-size:15px;font-weight:600;color:#e2e8f0">${pt.equipo_local || '—'}</span>
+            <span style="font-size:11px;color:#5eead4;padding:2px 8px;background:rgba(45,212,191,.15);border-radius:4px">vs</span>
+            <span style="font-size:15px;font-weight:600;color:#e2e8f0">${pt.equipo_visitante || '—'}</span>
+          </div>
+          <div style="font-family:monospace;font-size:11px;color:#94a3b8">
+            📋 ${pt.liga || pick.liga || 'Liga'} · ⏱ ${fechaStr}${horaStr ? ' · ' + horaStr : ''}
+          </div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(34,197,94,.08));border:1px solid rgba(45,212,191,.35);border-radius:10px;padding:14px;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-family:monospace;font-size:9px;color:#5eead4;margin-bottom:4px">SELECCIÓN</div>
+              <div style="font-size:16px;font-weight:600;color:#e2e8f0">${pt.seleccion || pick.seleccion || '—'}</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <div style="background:rgba(45,212,191,.15);border:1px solid rgba(45,212,191,.4);border-radius:6px;padding:8px 12px;text-align:center">
+                <div style="font-family:monospace;font-size:8px;color:#5eead4">CUOTA</div>
+                <div style="font-size:18px;font-weight:800;color:#5eead4">${cuotaTotal.toFixed(2)}</div>
+              </div>
+              <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:6px;padding:8px 12px;text-align:center">
+                <div style="font-family:monospace;font-size:8px;color:#94a3b8">STAKE</div>
+                <div style="font-size:18px;font-weight:800;color:#e2e8f0">${stake}</div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    } else {
+      // COMBINADA
+      partidosHtml = partidos.map(pt => `
+        <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:8px;padding:12px;margin-bottom:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:14px">⚽</span>
+              <span style="font-size:13px;font-weight:600;color:#e2e8f0">${pt.equipo_local || '—'} vs ${pt.equipo_visitante || '—'}</span>
+            </div>
+            <span style="font-size:11px;color:#e2e8f0;background:rgba(45,212,191,.2);padding:5px 12px;border-radius:5px;border:1px solid rgba(45,212,191,.4)">${pt.seleccion || '—'} @ ${parseFloat(pt.cuota).toFixed(2)}</span>
+          </div>
+        </div>`).join('');
+      
+      partidosHtml += `
+        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(34,197,94,.08));border:1px solid rgba(45,212,191,.4);border-radius:10px;padding:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-family:monospace;font-size:9px;color:#5eead4">CUOTA COMBINADA</div>
+            <div style="font-size:24px;font-weight:800;color:#5eead4">${cuotaTotal.toFixed(2)}</div>
+          </div>
+          <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:6px;padding:8px 14px;text-align:center">
+            <div style="font-family:monospace;font-size:8px;color:#94a3b8">STAKE</div>
+            <div style="font-size:20px;font-weight:800;color:#e2e8f0">${stake}</div>
+          </div>
+        </div>`;
+    }
     
-    const cardId = renderTipsterCard(cardData, 'temp-card-container');
+    // HTML completo del ticket
+    const cardHtml = `
+      <div id="telegram-card" style="width:440px;background:linear-gradient(160deg,#0a1612 0%,#0d1f18 50%,#0a1612 100%);border:2px solid #2dd4bf;border-radius:20px;padding:20px;font-family:'Inter',system-ui,sans-serif;box-shadow:0 0 40px rgba(45,212,191,.3)">
+        
+        <!-- Header -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(45,212,191,.2)">
+          <div style="width:44px;height:44px;border-radius:10px;border:2px solid rgba(74,222,128,.6);overflow:hidden;background:linear-gradient(135deg,#1a3f1c,#0d1a0f);display:flex;align-items:center;justify-content:center">
+            <span style="font-size:16px;font-weight:900;color:#4ade80">GH</span>
+          </div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:15px;color:#e2e8f0">Green Hunter Pro</div>
+            <div style="font-size:10px;color:#5eead4;font-family:monospace;letter-spacing:.08em">TRUESTATS AI VERIFIED</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:${isCombo ? 'rgba(251,191,36,.2)' : 'rgba(45,212,191,.15)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.4)' : 'rgba(45,212,191,.35)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
+            <span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(251,191,36,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.4)">⏳ PENDIENTE</span>
+          </div>
+        </div>
+        
+        <!-- Título -->
+        <div style="text-align:center;margin-bottom:14px">
+          <span style="font-size:13px;font-weight:700;color:#2dd4bf;letter-spacing:.15em">PRONÓSTICO</span>
+          ${isCombo ? `<span style="margin-left:10px;font-family:monospace;font-size:11px;color:#fbbf24;background:rgba(251,191,36,.15);padding:4px 12px;border-radius:5px;border:1px solid rgba(251,191,36,.3)">${partidos.length} PICKS</span>` : ''}
+        </div>
+        
+        ${partidosHtml}
+        
+        <!-- Timestamp -->
+        <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+          <span style="background:rgba(45,212,191,.15);border:1px solid rgba(45,212,191,.3);border-radius:5px;padding:4px 10px;color:#5eead4;font-size:10px;font-family:monospace">📤 ${pubDateTime}</span>
+        </div>
+        
+        <!-- Badges -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">✓</span> Verificado</span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">⏱</span> Timestamp</span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🔐</span> Inmutable</span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">◈</span> Auditado</span>
+        </div>
+        
+        <!-- Footer -->
+        <div style="padding-top:12px;border-top:1px solid rgba(45,212,191,.15)">
+          <span style="background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 14px;font-family:monospace;font-size:10px;color:#5eead4">ID: ${pickId}</span>
+        </div>
+        
+      </div>`;
     
-    // Esperar a que se renderice completamente
+    tempContainer.innerHTML = cardHtml;
+    
+    // Esperar renderizado
     await new Promise(r => setTimeout(r, 300));
     
-    // Generar imagen con html2canvas
-    const cardElement = document.getElementById(cardId);
-    if (!cardElement) {
-      throw new Error('Card element not found');
-    }
+    const cardElement = document.getElementById('telegram-card');
+    if (!cardElement) throw new Error('Card element not found');
     
     const canvas = await html2canvas(cardElement, {
       useCORS: true,
@@ -5137,12 +5221,10 @@ async function sendToTelegram(pick) {
     const imageDataUrl = canvas.toDataURL('image/png');
     const base64Data = imageDataUrl.split(',')[1];
     
-    // Limpiar card temporal
     tempContainer.innerHTML = '';
     
-    console.log('📤 Enviando imagen a Telegram via proxy...');
+    console.log('📤 Enviando imagen a Telegram...');
     
-    // Usar el proxy de Railway para evitar CORS
     const PROXY_URL = 'https://truestats-proxy-production.up.railway.app';
     const response = await fetch(`${PROXY_URL}/telegram-photo`, {
       method: 'POST',
@@ -5150,7 +5232,7 @@ async function sendToTelegram(pick) {
       body: JSON.stringify({
         chat_id: TELEGRAM_CHAT_ID,
         photo: base64Data,
-        caption: `🎯 ${isCombo ? 'COMBINADA' : 'PICK'} · ${equipoLocal} vs ${equipoVisitante}\n✅ Verificado por TrueStats · ID: ${pickId}`
+        caption: `🎯 ${isCombo ? 'COMBINADA (' + partidos.length + ' picks)' : partidos[0].equipo_local + ' vs ' + partidos[0].equipo_visitante}\n✅ Verificado por TrueStats · ID: ${pickId}`
       })
     });
     
@@ -5414,11 +5496,13 @@ async function publishPick() {
       equipo_local: pickFinal.equipo_local,
       equipo_visitante: pickFinal.equipo_visitante,
       fecha: pickFinal.fecha,
+      hora: pickFinal.hora,
       seleccion: pickFinal.seleccion,
       cuota: pickFinal.cuota,
       stake: pickFinal.stake,
       tipo: pickFinal.tipo,
-      analisis: pickFinal.analisis
+      analisis: pickFinal.analisis,
+      partidos: pickFinal.partidos
     }]).select();
 
     if (error) throw error;
