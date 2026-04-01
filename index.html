@@ -4943,16 +4943,17 @@ async function updatePickInSupabase(pick) {
   }
   try {
     const estadoNorm = (pick.estado || 'pendiente').toLowerCase();
-    const { error } = await getSbClient()
-      .from('picks')
-      .update({
-        estado: estadoNorm,
-        seleccion: pick.seleccion,
-        cuota: parseFloat(pick.cuota),
-        stake: parseInt(pick.stake),
-        analisis: pick.analisis || ''
-      })
-      .eq('id', pick.id);
+    
+    // Usar RPC para evitar problemas de CORS con PATCH
+    const { error } = await getSbClient().rpc('update_pick_estado', {
+      pick_id: pick.id,
+      nuevo_estado: estadoNorm,
+      nueva_seleccion: pick.seleccion || null,
+      nueva_cuota: parseFloat(pick.cuota) || null,
+      nuevo_stake: parseInt(pick.stake) || null,
+      nuevo_analisis: pick.analisis || null
+    });
+    
     if (error) throw error;
     console.log('Pick actualizado en Supabase ✅', pick.id);
   } catch (e) {
