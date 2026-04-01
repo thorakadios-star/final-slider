@@ -635,6 +635,7 @@ nav.sc{border-color:#243028}
 @keyframes glowWhite{0%,100%{box-shadow:0 0 14px rgba(192,200,212,.35),0 0 35px rgba(192,200,212,.16),0 0 70px rgba(192,200,212,.07)}50%{box-shadow:0 0 28px rgba(192,200,212,.6),0 0 65px rgba(192,200,212,.28),0 0 110px rgba(192,200,212,.12)}}
 @keyframes glowGreen{0%,100%{box-shadow:0 0 14px rgba(74,222,128,.38),0 0 35px rgba(74,222,128,.18),0 0 70px rgba(74,222,128,.08)}50%{box-shadow:0 0 28px rgba(74,222,128,.65),0 0 65px rgba(74,222,128,.32),0 0 110px rgba(74,222,128,.14)}}
 @keyframes glowBlue{0%,100%{box-shadow:0 0 14px rgba(96,165,250,.38),0 0 35px rgba(96,165,250,.18),0 0 70px rgba(96,165,250,.08)}50%{box-shadow:0 0 28px rgba(96,165,250,.65),0 0 65px rgba(96,165,250,.32),0 0 110px rgba(96,165,250,.14)}}
+@keyframes glowCyan{0%,100%{box-shadow:0 0 20px rgba(45,212,191,.25),0 0 40px rgba(45,212,191,.12),0 0 80px rgba(45,212,191,.06)}50%{box-shadow:0 0 35px rgba(45,212,191,.45),0 0 70px rgba(45,212,191,.22),0 0 120px rgba(45,212,191,.1)}}
 .slider-white .slider-inner{animation:glowWhite 3s ease-in-out infinite}
 .slider-green .slider-inner{animation:glowGreen 3s ease-in-out infinite}
 .slider-blue .slider-inner{animation:glowBlue 3s ease-in-out infinite}
@@ -1074,42 +1075,39 @@ nav.sc{border-color:#243028}
     <div class="grid-bg"></div>
     <div class="hero-glow"></div>
     <div class="hero-content">
-      <div class="badge">
-        <div class="bdot"></div>
-        <span>Pronósticos · Datos Reales · Resultados Verificados</span>
+      
+      <!-- BOX HERO con estilo ticket -->
+      <div style="background:linear-gradient(160deg,#0a1612 0%,#0d1f18 50%,#0a1612 100%);border:2px solid #2dd4bf;border-radius:20px;padding:32px 28px;max-width:700px;margin:0 auto 40px;box-shadow:0 0 40px rgba(45,212,191,.25),0 0 80px rgba(45,212,191,.1);animation:glowCyan 3s ease-in-out infinite">
+        
+        <div class="badge" style="background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);margin-bottom:20px">
+          <div class="bdot" style="background:#2dd4bf"></div>
+          <span style="color:#5eead4">Pronósticos · Datos Reales · Resultados Verificados</span>
+        </div>
+        
+        <h1 class="htitle" style="text-align:center;line-height:0.95;margin-bottom:24px;display:flex;flex-direction:column;align-items:center;gap:12px">
+          <span style="display:block;font-size:clamp(48px,8vw,72px);font-weight:900;letter-spacing:-0.04em;color:#ffffff;text-transform:uppercase;font-family:'Inter',system-ui;text-shadow:0 0 30px rgba(45,212,191,.3)">
+            True <span style="color:#2dd4bf;text-shadow:0 0 20px rgba(45,212,191,.6)">Stats</span> <span style="color:#5eead4;font-size:.5em">AI</span>
+          </span>
+          <span style="display:block;font-size:clamp(13px,2.2vw,15px);font-weight:500;color:#94a3b8;letter-spacing:0em;font-family:'IBM Plex Mono',monospace;text-transform:uppercase">
+            <strong style="color:#e2e8f0">La <span style="color:#2dd4bf;font-weight:700">verdad</span> detrás de cada <span style="color:#2dd4bf;font-weight:700">pick</span></strong>
+          </span>
+        </h1>
+
+        <p style="text-align:center;font-size:14px;line-height:1.7;color:#94a3b8;margin:0">
+          Estadísticas verificadas. <strong style="color:#22c55e">Resultados que no se pueden manipular</strong><br>
+          <strong style="color:#e2e8f0">Transparencia para tipsters</strong><br>
+          <strong style="color:#22c55e">Realidad para apostadores</strong>
+        </p>
+        
+        <!-- Badges verificación estilo ticket -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">✓</span> Verificado</span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">⏱</span> Timestamp</span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🔐</span> Inmutable</span>
+          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">◈</span> Auditado</span>
+        </div>
+        
       </div>
-    <h1 class="htitle" style="text-align: center; line-height: 0.95; margin-bottom: 40px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-  
-  <span style="
-    display: block; 
-    font-size: clamp(52px, 9vw, 82px); 
-    font-weight: 900; 
-    letter-spacing: -0.04em; 
-    color: #ffffff; 
-    text-transform: uppercase;
-    font-family: 'Inter', system-ui;
-  ">
-    True <span class="hgreen" style="color: #4ade80;">Stats</span>
-  </span>
-  
-  <span style="
-    display: block; 
-    font-size: clamp(14px, 2.5vw, 16px); 
-    font-weight: 500; 
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0em;
-    font-family: 'IBM Plex Mono', monospace;
-    text-transform: uppercase;
-  ">
-    <strong style="color: #ffffff;">La <span style="color: #4ade80; font-weight: 700;">verdad</span> detrás de cada <span style="color: #4ade80; font-weight: 700;">pick</span></strong>
-  </span>
-
-</h1>
-
-<p class="hsub" style="color: #ffffff;"> Estadísticas verificadas. <strong style="color: #4ade80;"> Resultados que no se pueden manipular</strong><br>
-  <strong style="color: #ffffff;">Transparencia para tipsters</strong><br>
-  <strong style="color: #4ade80;">Realidad para apostadores</strong>
-</p>
 
       <div class="metrics-bar">
         <div class="mpill">
@@ -1934,8 +1932,8 @@ nav.sc{border-color:#243028}
         <div class="tipster-hero-info">
           <h1 id="tipster-name">Green Hunter Pro</h1>
           <div class="subtitle" id="tipster-subtitle">PROFESSIONAL TIPSTER</div>
-          <div class="tipster-hero-badge" id="tipster-sport" style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60a5fa;box-shadow:0 0 12px rgba(59,130,246,.3)">
-            <span>⚽</span> Fútbol <span style="opacity:.4;margin:0 4px">|</span> <span>🏀</span> Basket
+          <div class="tipster-hero-badge" id="tipster-sport" style="background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.4);color:#5eead4;box-shadow:0 0 15px rgba(45,212,191,.3),0 0 30px rgba(45,212,191,.15);padding:8px 16px;border-radius:8px">
+            <span style="color:#e2e8f0">⚽</span> Fútbol <span style="opacity:.4;margin:0 6px;color:#2dd4bf">|</span> <span style="color:#e2e8f0">🏀</span> Basket
           </div>
         </div>
       </div>
