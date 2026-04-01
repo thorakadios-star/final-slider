@@ -4375,6 +4375,8 @@ function editPick(tipsterId, index) {
   const pick = picksStore[tipsterId][index];
   if (!pick) return;
 
+  const estado = (pick.estado || 'pendiente').toLowerCase();
+  
   const modal = document.createElement('div');
   modal.id = 'edit-pick-modal';
   modal.innerHTML = `
@@ -4390,14 +4392,15 @@ function editPick(tipsterId, index) {
           <div>
             <label class="flbl">Estado</label>
             <select id="edit-estado" class="fsel">
-              <option value="Pendiente" ${pick.estado === 'Pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
-              <option value="Ganado" ${pick.estado === 'Ganado' ? 'selected' : ''}>✅ Ganado</option>
-              <option value="Perdido" ${pick.estado === 'Perdido' ? 'selected' : ''}>❌ Perdido</option>
+              <option value="pendiente" ${estado === 'pendiente' ? 'selected' : ''}>⏳ Pendiente</option>
+              <option value="ganado" ${estado === 'ganado' ? 'selected' : ''}>✅ Ganado</option>
+              <option value="perdido" ${estado === 'perdido' ? 'selected' : ''}>❌ Perdido</option>
+              <option value="nulo" ${estado === 'nulo' ? 'selected' : ''}>⚪ Nulo</option>
             </select>
           </div>
           <div>
-            <label class="flbl">Mercado / Selección</label>
-            <input id="edit-mercado" type="text" class="finp" value="${pick.mercado}"/>
+            <label class="flbl">Selección</label>
+            <input id="edit-seleccion" type="text" class="finp" value="${pick.seleccion || ''}"/>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
             <div>
@@ -4406,7 +4409,7 @@ function editPick(tipsterId, index) {
             </div>
             <div>
               <label class="flbl">Stake</label>
-              <input id="edit-stake" type="text" class="finp" value="${pick.stake}"/>
+              <input id="edit-stake" type="number" class="finp" min="1" max="10" value="${pick.stake}"/>
             </div>
           </div>
           <div>
@@ -4425,28 +4428,57 @@ function editPick(tipsterId, index) {
   document.body.appendChild(modal);
 }
 
-function saveEditPick(tipsterId, index) {
+async function saveEditPick(tipsterId, index) {
   const pick = picksStore[tipsterId][index];
   if (!pick) return;
 
-  pick.estado = document.getElementById('edit-estado').value;
-  pick.mercado = document.getElementById('edit-mercado').value;
-  pick.cuota = document.getElementById('edit-cuota').value;
-  pick.stake = document.getElementById('edit-stake').value;
-  pick.analisis = document.getElementById('edit-analisis').value;
+  const nuevoEstado = document.getElementById('edit-estado').value;
+  const nuevaSeleccion = document.getElementById('edit-seleccion').value;
+  const nuevaCuota = parseFloat(document.getElementById('edit-cuota').value) || pick.cuota;
+  const nuevoStake = parseInt(document.getElementById('edit-stake').value) || pick.stake;
+  const nuevoAnalisis = document.getElementById('edit-analisis').value;
 
-  // Recalcular ganancias = stake × (cuota - 1)
-  const stakeNum = parseFloat(pick.stake) || 0;
-  const cuotaNum = parseFloat(pick.cuota) || 0;
-  if (stakeNum > 0 && cuotaNum > 1) {
-    pick.ganancias = '+' + (stakeNum * (cuotaNum - 1)).toFixed(2) + 'u';
+  // Actualizar objeto local
+  pick.estado = nuevoEstado;
+  pick.seleccion = nuevaSeleccion;
+  pick.cuota = nuevaCuota;
+  pick.stake = nuevoStake;
+  pick.analisis = nuevoAnalisis;
+
+  // Recalcular ganancias según estado
+  if (nuevoEstado === 'ganado') {
+    pick.ganancias = parseFloat((nuevoStake * (nuevaCuota - 1)).toFixed(2));
+  } else if (nuevoEstado === 'perdido') {
+    pick.ganancias = -nuevoStake;
+  } else {
+    pick.ganancias = 0;
   }
 
+  // Guardar en localStorage
   savePicksToStorage();
-  updatePickInSupabase(pick);
-  renderPicksPanel(tipsterId);
+  
+  // Cerrar modal y mostrar loading
   document.getElementById('edit-pick-modal')?.remove();
-  showToast('✅ Pick actualizado', 'success');
+  showToast('⏳ Guardando...', 'info');
+
+  // Actualizar en Supabase
+  try {
+    await updatePickInSupabase(pick);
+    
+    // Recargar stats desde Supabase para actualizar métricas
+    await loadTipsterStats();
+    
+    // Re-renderizar panel de picks
+    renderPicksPanel(tipsterId);
+    
+    // Actualizar cards de tipsters en la página de plataforma
+    updateTipsterCards();
+    
+    showToast('✅ Pick actualizado correctamente', 'success');
+  } catch(e) {
+    console.error('Error guardando:', e);
+    showToast('❌ Error al guardar', 'error');
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -4602,6 +4634,128 @@ async function loadPicksFromSupabase() {
   } catch (e) {
     console.warn('❌ Error cargando desde Supabase:', e.message);
   }
+}
+
+// Recargar solo las estadísticas desde las vistas de Supabase
+async function loadTipsterStats() {
+  try {
+    const client = getSbClient();
+    
+    // 1. Recargar picks actualizados
+    const { data: picks, error: errPicks } = await client
+      .from('picks') 
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (!errPicks && picks) {
+      picksStore.ghp = picks;
+      savePicksToStorage();
+    }
+
+    // 2. Cargar estadísticas de la vista (se actualizan automáticamente en Supabase)
+    const { data: stats, error: errStats } = await client
+      .from('tipster_stats')
+      .select('*')
+      .eq('tipster_id', 'ghp')
+      .single();
+
+    // 3. Cargar estadísticas mensuales para gráfica
+    const { data: monthly, error: errMonthly } = await client
+      .from('tipster_stats_cumulative')
+      .select('*')
+      .eq('tipster_id', 'ghp')
+      .order('mes', { ascending: true });
+
+    // 4. Cargar forma reciente
+    const { data: form, error: errForm } = await client
+      .from('tipster_recent_form')
+      .select('*')
+      .eq('tipster_id', 'ghp')
+      .single();
+
+    // Actualizar stats en window
+    if (stats) {
+      window.ghpStats = {
+        score: Math.round(stats.winrate || 0).toString(),
+        yield: `${stats.yield || 0}%`,
+        benefit: `${stats.beneficio_total >= 0 ? '+' : ''}${stats.beneficio_total || 0}u`,
+        bets: (stats.total_picks || 0).toString(),
+        winrate: `${stats.winrate || 0}%`,
+        stake: (stats.stake_medio || 0).toString(),
+        ganados: stats.ganados || 0,
+        perdidos: stats.perdidos || 0,
+        pendientes: stats.pendientes || 0
+      };
+      console.log('📊 Stats recargadas:', window.ghpStats);
+    }
+
+    if (monthly && monthly.length > 0) {
+      window.ghpMonthlyStats = monthly;
+    }
+
+    if (form && form.forma_reciente) {
+      window.ghpRecentForm = form.forma_reciente;
+    }
+
+    console.log('✅ Estadísticas recargadas desde Supabase');
+    
+  } catch (e) {
+    console.warn('Error recargando stats:', e.message);
+  }
+}
+
+// Actualizar las cards de tipsters en la página de plataforma
+function updateTipsterCards() {
+  const stats = window.ghpStats;
+  if (!stats) return;
+
+  // Actualizar card de Green Hunter Pro en pg-plat
+  const ghpScore = document.querySelector('#ghp-score, .tipster-card .stat-value');
+  const ghpYield = document.getElementById('ghp-yield');
+  const ghpBenefit = document.getElementById('ghp-benefit');
+  const ghpBets = document.getElementById('ghp-bets');
+  const ghpWinrate = document.getElementById('ghp-winrate');
+  const ghpStake = document.getElementById('ghp-stake');
+  
+  // Actualizar Hero Stats en pg-tipster
+  const heroYield = document.getElementById('hero-yield');
+  const heroProfit = document.getElementById('hero-profit');
+  const heroWinrate = document.getElementById('hero-winrate');
+  const heroBets = document.getElementById('hero-bets');
+  
+  if (heroYield) heroYield.textContent = stats.yield;
+  if (heroProfit) heroProfit.textContent = stats.benefit;
+  if (heroWinrate) heroWinrate.textContent = stats.winrate;
+  if (heroBets) heroBets.textContent = stats.bets;
+
+  // Actualizar stats globales de la landing
+  const globalPicks = document.getElementById('global-picks');
+  const globalWinrate = document.getElementById('global-winrate');
+  const globalProfit = document.getElementById('global-profit');
+  
+  if (globalPicks) globalPicks.textContent = stats.bets;
+  if (globalWinrate) globalWinrate.textContent = stats.winrate;
+  if (globalProfit) globalProfit.textContent = stats.benefit;
+  
+  // Actualizar puntos de forma reciente si existen
+  const formDots = document.querySelectorAll('.perf-dot');
+  const recentForm = window.ghpRecentForm || [];
+  formDots.forEach((dot, i) => {
+    dot.classList.remove('win', 'loss', 'void', 'pending');
+    if (recentForm[i]) {
+      if (recentForm[i] === 'W') dot.classList.add('win');
+      else if (recentForm[i] === 'L') dot.classList.add('loss');
+      else if (recentForm[i] === 'V') dot.classList.add('void');
+      else dot.classList.add('pending');
+    }
+  });
+
+  // Re-renderizar gráfica de estadísticas si estamos en esa pestaña
+  if (document.getElementById('tab-stats')?.style.display !== 'none') {
+    renderStatsChart();
+  }
+  
+  console.log('🔄 Cards de tipsters actualizadas');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -4783,22 +4937,27 @@ async function updatePickStatus(pickId, nuevoEstado) {
 
 // 4. ACTUALIZAR PICK COMPLETO (desde modal de edición)
 async function updatePickInSupabase(pick) {
-  if (!pick.id) return;
+  if (!pick.id) {
+    console.error('Pick sin ID, no se puede actualizar');
+    return;
+  }
   try {
-    const { error } = await sbClient
+    const estadoNorm = (pick.estado || 'pendiente').toLowerCase();
+    const { error } = await getSbClient()
       .from('picks')
       .update({
-        estado: pick.estado,
-        pronostico: pick.pronostico,
-        cuota: pick.cuota,
-        stake: pick.stake,
-        analisis: pick.analisis
+        estado: estadoNorm,
+        seleccion: pick.seleccion,
+        cuota: parseFloat(pick.cuota),
+        stake: parseInt(pick.stake),
+        analisis: pick.analisis || ''
       })
       .eq('id', pick.id);
     if (error) throw error;
-    console.log('Pick actualizado en Supabase ✅');
+    console.log('Pick actualizado en Supabase ✅', pick.id);
   } catch (e) {
     console.error('Error actualizando en Supabase:', e.message);
+    throw e;
   }
 }
 
