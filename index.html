@@ -4628,8 +4628,9 @@ async function loadPicksFromSupabase() {
       console.log('🎯 Forma reciente:', form.forma);
     }
 
-    // Renderizar panels
+    // Renderizar panels y actualizar cards
     renderPicksPanel('ghp');
+    updateTipsterCards();
 
   } catch (e) {
     console.warn('❌ Error cargando desde Supabase:', e.message);
@@ -4707,26 +4708,32 @@ async function loadTipsterStats() {
 // Actualizar las cards de tipsters en la página de plataforma
 function updateTipsterCards() {
   const stats = window.ghpStats;
-  if (!stats) return;
+  if (!stats) {
+    console.log('No hay stats para actualizar');
+    return;
+  }
 
   // Actualizar card de Green Hunter Pro en pg-plat
-  const ghpScore = document.querySelector('#ghp-score, .tipster-card .stat-value');
+  const ghpScore = document.getElementById('ghp-score');
   const ghpYield = document.getElementById('ghp-yield');
-  const ghpBenefit = document.getElementById('ghp-benefit');
-  const ghpBets = document.getElementById('ghp-bets');
-  const ghpWinrate = document.getElementById('ghp-winrate');
-  const ghpStake = document.getElementById('ghp-stake');
+  const ghpProfit = document.getElementById('ghp-profit');
+  const ghpPicks = document.getElementById('ghp-picks');
   
+  if (ghpScore) ghpScore.textContent = stats.score;
+  if (ghpYield) ghpYield.textContent = stats.yield;
+  if (ghpProfit) ghpProfit.textContent = stats.benefit;
+  if (ghpPicks) ghpPicks.textContent = stats.bets;
+
   // Actualizar Hero Stats en pg-tipster
-  const heroYield = document.getElementById('hero-yield');
-  const heroProfit = document.getElementById('hero-profit');
-  const heroWinrate = document.getElementById('hero-winrate');
-  const heroBets = document.getElementById('hero-bets');
+  const tipsterScore = document.getElementById('tipster-score');
+  const tipsterYield = document.getElementById('tipster-yield');
+  const tipsterBets = document.getElementById('tipster-bets');
+  const tipsterWinrate = document.getElementById('tipster-winrate');
   
-  if (heroYield) heroYield.textContent = stats.yield;
-  if (heroProfit) heroProfit.textContent = stats.benefit;
-  if (heroWinrate) heroWinrate.textContent = stats.winrate;
-  if (heroBets) heroBets.textContent = stats.bets;
+  if (tipsterScore) tipsterScore.textContent = stats.benefit.replace('u', '');
+  if (tipsterYield) tipsterYield.textContent = stats.yield;
+  if (tipsterBets) tipsterBets.textContent = stats.bets;
+  if (tipsterWinrate) tipsterWinrate.textContent = stats.winrate;
 
   // Actualizar stats globales de la landing
   const globalPicks = document.getElementById('global-picks');
@@ -4751,11 +4758,9 @@ function updateTipsterCards() {
   });
 
   // Re-renderizar gráfica de estadísticas si estamos en esa pestaña
-  if (document.getElementById('tab-stats')?.style.display !== 'none') {
-    renderStatsChart();
-  }
+  // La gráfica se actualiza con los datos de window.ghpMonthlyStats
   
-  console.log('🔄 Cards de tipsters actualizadas');
+  console.log('🔄 Cards de tipsters actualizadas:', stats);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
