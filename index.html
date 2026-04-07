@@ -17,7 +17,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#050708;color:#c8dcc4;o
 @keyframes shimmer{0%{background-position:-300% center}100%{background-position:300% center}}
 @keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(74,222,128,.15)}50%{box-shadow:0 0 35px rgba(74,222,128,.25)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(45,212,191,.15)}50%{box-shadow:0 0 35px rgba(45,212,191,.25)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 
 /* NAV */
@@ -25,11 +25,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .nav-inner{max-width:1300px;margin:0 auto;padding:0 20px;height:72px;display:flex;align-items:center;justify-content:space-between}
 .ts-logo{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
 .ts-name{font-weight:900;font-size:18px;letter-spacing:.06em;color:#e2f0de;font-family:'Montserrat',sans-serif;text-transform:uppercase}
-.ts-name .s{background:linear-gradient(110deg,#86efac,#22c55e,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ts-name .s{background:linear-gradient(110deg,#5eead4,#14b8a6,#0d9488);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .nav-links{display:flex;gap:8px}
 .nav-link{font-size:13px;color:#7a9280;padding:8px 16px;border-radius:6px;text-decoration:none;transition:all .2s;border:1px solid transparent}
-.nav-link:hover{color:#e2f0de;background:rgba(74,222,128,.05);border-color:rgba(74,222,128,.15)}
-.nav-link.active{color:#4ade80;background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.25)}
+.nav-link:hover{color:#e2f0de;background:rgba(45,212,191,.05);border-color:rgba(45,212,191,.15)}
+.nav-link.active{color:#2dd4bf;background:rgba(45,212,191,.1);border-color:rgba(45,212,191,.25)}
 
 /* Main Container */
 .main-container{max-width:900px;margin:0 auto;padding:40px 20px 80px}
@@ -37,14 +37,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 /* Page Header */
 .page-header{text-align:center;margin-bottom:50px;animation:fadeUp .6s ease forwards}
 .page-header h1{font-size:clamp(28px,5vw,42px);font-weight:800;color:#e8f5e4;margin-bottom:12px;letter-spacing:-.02em}
-.page-header h1 span{color:#4ade80}
+.page-header h1 span{color:#2dd4bf}
 .page-header p{font-size:15px;color:#FFFF;max-width:500px;margin:0 auto}
 
 /* Filter Bar */
 .filter-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;animation:fadeUp .6s .1s ease forwards;opacity:0}
 .filter-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 16px;border-radius:20px;border:1px solid #1a2620;background:transparent;color:#7a9280;cursor:pointer;transition:all .2s;letter-spacing:.05em;text-transform:uppercase}
 .filter-btn:hover{border-color:#2a3a30;color:#a8c4a8}
-.filter-btn.active{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.3);color:#4ade80}
+.filter-btn.active{background:rgba(45,212,191,.1);border-color:rgba(45,212,191,.3);color:#2dd4bf}
 
 /* ═══ TIPSTERS GRID - 3 POR FILA ════════════════════════════════════════════ */
 #pg-plat .tipsters-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -57,8 +57,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 #pg-plat .tipster-card:nth-child(4){animation-delay:.2s}
 #pg-plat .tipster-card:nth-child(5){animation-delay:.25s}
 #pg-plat .tipster-card:nth-child(6){animation-delay:.3s}
-#pg-plat .tipster-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#4ade80,#fbbf24);opacity:0;transition:opacity .3s}
-#pg-plat .tipster-card:hover{transform:translateY(-4px);border-color:rgba(74,222,128,.3);box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 30px rgba(74,222,128,.08)}
+#pg-plat .tipster-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2dd4bf,#fbbf24);opacity:0;transition:opacity .3s}
+#pg-plat .tipster-card:hover{transform:translateY(-4px);border-color:rgba(45,212,191,.3);box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 30px rgba(45,212,191,.08)}
 #pg-plat .tipster-card:hover::before{opacity:1}
 
 /* Banner */
@@ -72,7 +72,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 @keyframes glowBlue{0%,100%{box-shadow:0 0 8px rgba(96,165,250,.3)}50%{box-shadow:0 0 16px rgba(96,165,250,.5)}}
 #pg-plat .sport-badge{position:absolute;top:10px;right:10px;padding:4px 10px;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border-radius:100px;font-size:11px;display:flex;align-items:center;gap:4px;color:#e8f5e4;font-weight:500}
 #pg-plat .sport-badge.futbol{background:rgba(139,92,246,.25);border:1px solid rgba(139,92,246,.4)}
-#pg-plat .sport-badge.tenis{background:rgba(74,222,128,.25);border:1px solid rgba(74,222,128,.4)}
+#pg-plat .sport-badge.tenis{background:rgba(45,212,191,.25);border:1px solid rgba(45,212,191,.4)}
 #pg-plat .sport-badge.basket{background:rgba(251,146,60,.25);border:1px solid rgba(251,146,60,.4)}
 #pg-plat .sport-badge.f1{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.4)}
 #pg-plat .sport-badge.squash{background:rgba(96,165,250,.25);border:1px solid rgba(96,165,250,.4)}
@@ -80,10 +80,10 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 /* Card content */
 #pg-plat .card-content{padding:16px 18px 18px}
 #pg-plat .tipster-identity{display:flex;align-items:center;gap:12px;margin-top:-40px;margin-bottom:14px;position:relative;z-index:2}
-#pg-plat .tipster-identity .tipster-avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a2620,#0a0f0c);border:3px solid #0a0e0c;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#4ade80;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.4);flex-shrink:0}
+#pg-plat .tipster-identity .tipster-avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a2620,#0a0f0c);border:3px solid #0a0e0c;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#2dd4bf;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.4);flex-shrink:0}
 #pg-plat .tipster-identity .tipster-avatar img{width:100%;height:100%;object-fit:cover;border-radius:9px}
 #pg-plat .tipster-identity .tipster-avatar.verified{position:relative}
-#pg-plat .tipster-identity .tipster-avatar.verified::after{content:'✓';position:absolute;bottom:-3px;right:-3px;width:20px;height:20px;background:#4ade80;border-radius:50%;font-size:10px;color:#050708;display:flex;align-items:center;justify-content:center;border:2px solid #0a0e0c;font-weight:700}
+#pg-plat .tipster-identity .tipster-avatar.verified::after{content:'✓';position:absolute;bottom:-3px;right:-3px;width:20px;height:20px;background:#2dd4bf;border-radius:50%;font-size:10px;color:#050708;display:flex;align-items:center;justify-content:center;border:2px solid #0a0e0c;font-weight:700}
 #pg-plat .tipster-identity .tipster-info{flex:1;min-width:0}
 #pg-plat .tipster-identity .tipster-name{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:#e8f5e4;margin-bottom:3px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #pg-plat .tipster-rating{display:flex;align-items:center;gap:2px}
@@ -93,7 +93,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 /* Stats grid - CARDS */
 #pg-plat .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
 #pg-plat .stat-item{text-align:center;padding:10px 4px;background:#111916;border-radius:10px;border:1px solid #1a2620;transition:all .2s}
-#pg-plat .stat-item:hover{border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.03)}
+#pg-plat .stat-item:hover{border-color:rgba(45,212,191,.3);background:rgba(45,212,191,.03)}
 #pg-plat .stat-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:#e8f5e4;line-height:1.2}
 #pg-plat .stat-value.yield{color:#e8f5e4}
 #pg-plat .stat-value.profit{color:#e8f5e4}
@@ -106,15 +106,15 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 #pg-plat .performance-dots{display:flex;gap:4px}
 #pg-plat .perf-dot{width:8px;height:8px;border-radius:50%;transition:transform .2s;cursor:pointer}
 #pg-plat .perf-dot:hover{transform:scale(1.4)}
-#pg-plat .perf-dot.win{background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.5)}
+#pg-plat .perf-dot.win{background:#2dd4bf;box-shadow:0 0 8px rgba(45,212,191,.5)}
 #pg-plat .perf-dot.loss{background:#f87171;box-shadow:0 0 8px rgba(248,113,113,.5)}
 
 /* 3 botones */
 #pg-plat .card-actions{display:flex;gap:8px;justify-content:center}
 #pg-plat .btn-action{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:10px 8px;background:transparent;border:1px solid #1a2620;border-radius:8px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none}
-#pg-plat .btn-action:hover{border-color:rgba(74,222,128,.3);color:#4ade80;background:rgba(74,222,128,.12)}
-#pg-plat .btn-action.primary{background:linear-gradient(135deg,#4ade80,#22c55e);border-color:#4ade80;color:#050708;font-weight:600}
-#pg-plat .btn-action.primary:hover{box-shadow:0 4px 16px rgba(74,222,128,.3);transform:translateY(-1px)}
+#pg-plat .btn-action:hover{border-color:rgba(45,212,191,.3);color:#2dd4bf;background:rgba(45,212,191,.12)}
+#pg-plat .btn-action.primary{background:linear-gradient(135deg,#2dd4bf,#14b8a6);border-color:#2dd4bf;color:#050708;font-weight:600}
+#pg-plat .btn-action.primary:hover{box-shadow:0 4px 16px rgba(45,212,191,.3);transform:translateY(-1px)}
 #pg-plat .btn-action svg{width:14px;height:14px;flex-shrink:0}
 
 /* Stats banner */
@@ -122,11 +122,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .stat-pill{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#0a0e0c;border:1px solid #1a2620;border-radius:100px}
 .stat-pill-icon{font-size:16px}
 .stat-pill-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:#e8f5e4}
-.stat-pill-label{font-size:12px;color:#4ade80}
+.stat-pill-label{font-size:12px;color:#2dd4bf}
 
 /* Sort select */
 .sort-select{font-family:'Outfit',sans-serif;font-size:12px;padding:8px 32px 8px 14px;border-radius:100px;border:1px solid #1a2620;background:#0a0e0c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a5a52' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;color:#e8f5e4;cursor:pointer;appearance:none;outline:none;transition:all .2s}
-.sort-select:hover,.sort-select:focus{border-color:rgba(74,222,128,.3)}
+.sort-select:hover,.sort-select:focus{border-color:rgba(45,212,191,.3)}
 
 /* Logo img */
 .ts-logo-img{height:64px;width:auto;object-fit:contain}
@@ -175,24 +175,24 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .tipster-hero-avatar img{width:100%;height:100%;object-fit:cover}
 .tipster-hero-info h1{font-family:'Outfit',sans-serif;font-size:clamp(20px,5vw,32px);font-weight:800;color:#e8f5e4;margin-bottom:4px}
 .tipster-hero-info .subtitle{font-size:clamp(10px,2.5vw,14px);color:#7a9280;margin-bottom:8px}
-.tipster-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);border-radius:100px;font-size:11px;color:#e8f5e4;border:1px solid rgba(74,222,128,.3)}
+.tipster-hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);border-radius:100px;font-size:11px;color:#e8f5e4;border:1px solid rgba(45,212,191,.3)}
 .tipster-hero-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.btn-subscribe{padding:10px 18px;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:100px;color:#050708;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(74,222,128,.3)}
-.btn-subscribe:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(74,222,128,.4)}
+.btn-subscribe{padding:10px 18px;background:linear-gradient(135deg,#2dd4bf,#14b8a6);border:none;border-radius:100px;color:#050708;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(45,212,191,.3)}
+.btn-subscribe:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(45,212,191,.4)}
 /* Followers Box con botón seguir */
 .followers-box{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);border-radius:12px;border:1px solid #1a2620}
 .followers-info{display:flex;flex-direction:column;align-items:center}
-.followers-info .num{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#4ade80}
+.followers-info .num{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#2dd4bf}
 .followers-info .lbl{font-size:9px;color:#7a9280;text-transform:uppercase;letter-spacing:.06em}
-.btn-follow-icon{width:36px;height:36px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);border-radius:8px;color:#4ade80;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.btn-follow-icon:hover{background:rgba(74,222,128,.2);transform:scale(1.05);box-shadow:0 0 12px rgba(74,222,128,.4)}
+.btn-follow-icon{width:36px;height:36px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:8px;color:#2dd4bf;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.btn-follow-icon:hover{background:rgba(45,212,191,.2);transform:scale(1.05);box-shadow:0 0 12px rgba(45,212,191,.4)}
 
 /* Stats Row - PERFIL - optimizado móvil */
 .tipster-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:16px;background:#0a0e0c;border:1px solid #1a2620;border-radius:12px;margin:-30px 12px 0;position:relative;z-index:2}
 .tipster-stat-box{text-align:center;padding:10px 6px;background:#111916;border-radius:10px;border:1px solid #1a2620;transition:all .2s}
-.tipster-stat-box:hover{border-color:rgba(74,222,128,.3)}
+.tipster-stat-box:hover{border-color:rgba(45,212,191,.3)}
 .tipster-stat-box .val{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:#e8f5e4}
-.tipster-stat-box .val.green{color:#4ade80}
+.tipster-stat-box .val.green{color:#2dd4bf}
 .tipster-stat-box .val.red{color:#f87171}
 .tipster-stat-box .lbl{font-size:8px;color:#7a9280;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
 
@@ -201,8 +201,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .tipster-tab{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;padding:10px 16px;background:transparent;border:1px solid transparent;color:#7a9280;cursor:pointer;transition:all .2s;border-radius:100px;position:relative}
 .tipster-tab:hover{transform:scale(1.02)}
 /* Tab Verde - Picks */
-.tipster-tab.tab-green{border-color:rgba(74,222,128,.3);color:#4ade80}
-.tipster-tab.tab-green:hover,.tipster-tab.tab-green.active{background:rgba(74,222,128,.15);box-shadow:0 0 12px rgba(74,222,128,.4)}
+.tipster-tab.tab-green{border-color:rgba(45,212,191,.3);color:#2dd4bf}
+.tipster-tab.tab-green:hover,.tipster-tab.tab-green.active{background:rgba(45,212,191,.15);box-shadow:0 0 12px rgba(45,212,191,.4)}
 /* Tab Naranja - Stats */
 .tipster-tab.tab-orange{border-color:rgba(251,146,60,.3);color:#fb923c}
 .tipster-tab.tab-orange:hover,.tipster-tab.tab-orange.active{background:rgba(251,146,60,.15);box-shadow:0 0 12px rgba(251,146,60,.4)}
@@ -224,14 +224,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .picks-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#7a9280}
 .picks-toggle input[type="checkbox"]{width:36px;height:20px;appearance:none;background:#1a2620;border-radius:10px;position:relative;cursor:pointer;transition:background .2s}
 .picks-toggle input[type="checkbox"]::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#7a9280;border-radius:50%;transition:all .2s}
-.picks-toggle input[type="checkbox"]:checked{background:#4ade80}
+.picks-toggle input[type="checkbox"]:checked{background:#2dd4bf}
 .picks-toggle input[type="checkbox"]:checked::after{left:18px;background:#050708}
 
 #pg-tipster .picks-grid{display:flex;flex-direction:column;gap:12px}
 
 /* Pick Card Horizontal */
 .pick-card{background:#0a0e0c;border:1px solid #1a2620;border-radius:12px;overflow:hidden;transition:all .2s}
-.pick-card.win{border-color:rgba(74,222,128,.35)}
+.pick-card.win{border-color:rgba(45,212,191,.35)}
 .pick-card.loss{border-color:rgba(248,113,113,.35)}
 .pick-card.pending{border-color:rgba(251,191,36,.35)}
 
@@ -245,7 +245,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 /* Badges inline */
 .pick-h-badges{display:flex;gap:5px;flex-wrap:wrap}
 .pick-h-badge{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.06em;padding:4px 8px;border-radius:4px}
-.pick-h-badge.simple{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.25)}
+.pick-h-badge.simple{background:rgba(45,212,191,.12);color:#2dd4bf;border:1px solid rgba(45,212,191,.25)}
 .pick-h-badge.combo{background:rgba(168,85,247,.12);color:#a78bfa;border:1px solid rgba(168,85,247,.25)}
 .pick-h-badge.pre{background:rgba(96,165,250,.08);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
 .pick-h-badge.live{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.25)}
@@ -261,14 +261,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 
 /* Selección inline */
 .pick-h-sel{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.pick-h-sel-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:#4ade80;text-transform:uppercase;letter-spacing:.08em}
+.pick-h-sel-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:#2dd4bf;text-transform:uppercase;letter-spacing:.08em}
 .pick-h-sel-value{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:#fff;padding:6px 10px;background:#080c0a;border:1px solid #1a2620;border-radius:6px}
 
 /* Derecha - Stats verticales */
 .pick-h-right{display:flex;flex-direction:column;justify-content:center;padding:12px 16px;background:#080c0a;border-left:1px solid #1a2620;min-width:140px}
 @media(max-width:600px){.pick-h-right{border-left:none;border-top:1px solid #1a2620;flex-direction:row;justify-content:space-around;padding:10px 14px}}
 
-.pick-h-cuota{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:#4ade80;padding:6px 12px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);border-radius:6px;text-align:center;margin-bottom:10px}
+.pick-h-cuota{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:#2dd4bf;padding:6px 12px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);border-radius:6px;text-align:center;margin-bottom:10px}
 @media(max-width:600px){.pick-h-cuota{margin-bottom:0}}
 
 .pick-h-stats{display:flex;flex-direction:column;gap:6px}
@@ -280,7 +280,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .pick-h-stat .val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700}
 .pick-h-stat .val.orange{color:#fb923c}
 .pick-h-stat .val.white{color:#fff}
-.pick-h-stat .val.green{color:#4ade80}
+.pick-h-stat .val.green{color:#2dd4bf}
 .pick-h-stat .val.red{color:#f87171}
 
 /* Footer con timestamp y resultado */
@@ -288,7 +288,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .pick-h-timestamp{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#5a7265;display:flex;align-items:center;gap:5px}
 .pick-h-timestamp svg{width:11px;height:11px;opacity:.5}
 .pick-h-result{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px}
-.pick-h-result.win{background:rgba(74,222,128,.12);color:#4ade80}
+.pick-h-result.win{background:rgba(45,212,191,.12);color:#2dd4bf}
 .pick-h-result.loss{background:rgba(248,113,113,.12);color:#f87171}
 .pick-h-result.pending{background:rgba(251,191,36,.12);color:#fbbf24}
 /* Stats Tab */
@@ -297,12 +297,12 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .stats-chart-title{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;color:#e8f5e4}
 .stats-chart-filters{display:flex;gap:8px}
 .stats-chart-filters select{font-size:12px;padding:8px 28px 8px 12px;background:#111916 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%237a9280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 10px center;border:1px solid #1a2620;border-radius:8px;color:#e8f5e4;appearance:none;cursor:pointer}
-.stats-chart-placeholder{height:200px;background:linear-gradient(180deg,rgba(74,222,128,.05) 0%,transparent 100%);border-radius:12px;display:flex;align-items:flex-end;justify-content:center;padding:20px;position:relative}
-.stats-chart-placeholder::before{content:'';position:absolute;bottom:40px;left:40px;right:40px;height:2px;background:linear-gradient(90deg,#4ade80,#60a5fa);border-radius:1px}
+.stats-chart-placeholder{height:200px;background:linear-gradient(180deg,rgba(45,212,191,.05) 0%,transparent 100%);border-radius:12px;display:flex;align-items:flex-end;justify-content:center;padding:20px;position:relative}
+.stats-chart-placeholder::before{content:'';position:absolute;bottom:40px;left:40px;right:40px;height:2px;background:linear-gradient(90deg,#2dd4bf,#60a5fa);border-radius:1px}
 .stats-chart-legend{display:flex;justify-content:center;gap:24px;margin-top:16px}
 .stats-chart-legend span{display:flex;align-items:center;gap:6px;font-size:11px;color:#7a9280}
 .stats-chart-legend span::before{content:'';width:10px;height:10px;border-radius:50%}
-.stats-chart-legend .benefit::before{background:#4ade80}
+.stats-chart-legend .benefit::before{background:#2dd4bf}
 .stats-chart-legend .yield::before{background:#60a5fa}
 
 .stats-table-container{background:#0a0e0c;border:1px solid #1a2620;border-radius:16px;overflow:hidden}
@@ -312,8 +312,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .stats-table-tab{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;padding:8px 14px;background:transparent;border:1px solid transparent;color:#7a9280;cursor:pointer;border-radius:100px;transition:all .2s}
 .stats-table-tab:hover{transform:scale(1.02)}
 /* Tab Mes - Verde */
-.stats-table-tab.tab-green{border-color:rgba(74,222,128,.3);color:#4ade80}
-.stats-table-tab.tab-green:hover,.stats-table-tab.tab-green.active{background:rgba(74,222,128,.15);box-shadow:0 0 10px rgba(74,222,128,.4)}
+.stats-table-tab.tab-green{border-color:rgba(45,212,191,.3);color:#2dd4bf}
+.stats-table-tab.tab-green:hover,.stats-table-tab.tab-green.active{background:rgba(45,212,191,.15);box-shadow:0 0 10px rgba(45,212,191,.4)}
 /* Tab General - Naranja */
 .stats-table-tab.tab-orange{border-color:rgba(251,146,60,.3);color:#fb923c}
 .stats-table-tab.tab-orange:hover,.stats-table-tab.tab-orange.active{background:rgba(251,146,60,.15);box-shadow:0 0 10px rgba(251,146,60,.4)}
@@ -332,29 +332,29 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .stats-table td:first-child{text-align:left;padding-left:14px;border-radius:8px 0 0 8px}
 .stats-table td:last-child{border-radius:0 8px 8px 0;padding-right:14px}
 .stats-table tr:hover td{background:#162018}
-.stats-table td.green{color:#4ade80}
+.stats-table td.green{color:#2dd4bf}
 .stats-table td.red{color:#f87171}
 
 /* Canales Tab */
 .canales-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 .canal-card{background:#0a0e0c;border:1px solid #1a2620;border-radius:16px;padding:24px;transition:all .2s}
-.canal-card:hover{border-color:rgba(74,222,128,.3)}
+.canal-card:hover{border-color:rgba(45,212,191,.3)}
 .canal-card-header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .canal-card-header img{width:56px;height:56px;border-radius:12px;object-fit:cover}
 .canal-card-header .info h3{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;color:#e8f5e4;margin-bottom:2px}
 .canal-card-header .info p{font-size:12px;color:#7a9280}
 .canal-card-price{margin-bottom:16px}
-.canal-card-price.free{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#4ade80}
+.canal-card-price.free{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#2dd4bf}
 .canal-price-option{display:flex;align-items:center;gap:10px;padding:12px 16px;background:#111916;border:1px solid #1a2620;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .15s}
-.canal-price-option:hover,.canal-price-option.selected{border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.05)}
+.canal-price-option:hover,.canal-price-option.selected{border-color:rgba(45,212,191,.4);background:rgba(45,212,191,.05)}
 .canal-price-option input{display:none}
 .canal-price-option .radio{width:18px;height:18px;border-radius:50%;border:2px solid #1a2620;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.canal-price-option.selected .radio{border-color:#4ade80}
-.canal-price-option.selected .radio::after{content:'';width:10px;height:10px;background:#4ade80;border-radius:50%}
-.canal-price-option .price{font-family:'IBM Plex Mono',monospace;font-size:14px;color:#4ade80}
+.canal-price-option.selected .radio{border-color:#2dd4bf}
+.canal-price-option.selected .radio::after{content:'';width:10px;height:10px;background:#2dd4bf;border-radius:50%}
+.canal-price-option .price{font-family:'IBM Plex Mono',monospace;font-size:14px;color:#2dd4bf}
 .canal-price-option .period{font-size:12px;color:#7a9280}
-.btn-canal{width:100%;padding:14px;background:linear-gradient(135deg,#4ade80,#22c55e);border:none;border-radius:10px;color:#050708;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.05em}
-.btn-canal:hover{box-shadow:0 4px 20px rgba(74,222,128,.3)}
+.btn-canal{width:100%;padding:14px;background:linear-gradient(135deg,#2dd4bf,#14b8a6);border:none;border-radius:10px;color:#050708;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.05em}
+.btn-canal:hover{box-shadow:0 4px 20px rgba(45,212,191,.3)}
 
 /* Responsive Tipster Page */
 @media(max-width:1100px){
@@ -383,18 +383,18 @@ nav.sc{border-color:#243028}
 .ts-mark svg{width:100%;height:100%}
 .ts-wordmark{display:flex;flex-direction:column;gap:1px}
 .ts-name{font-weight:900;font-size:18px;letter-spacing:.06em;line-height:1;color:#e2f0de;font-family:'Montserrat',sans-serif;text-transform:uppercase}
-.ts-name .s{background:linear-gradient(110deg,#86efac,#22c55e,#16a34a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ts-name .s{background:linear-gradient(110deg,#5eead4,#14b8a6,#0d9488);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .ts-sub{font-family:'IBM Plex Mono',monospace;font-size:8px;color:#3a4840;letter-spacing:.18em;text-transform:uppercase}
 
 /* PLATFORM SHELL */
 .shell{display:flex;min-height:calc(100vh - 62px)}
 .sb{width:206px;flex-shrink:0;background:#070a09;border-right:1px solid #1a2620;display:flex;flex-direction:column;padding:18px 0;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto}
-.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#4ade80;letter-spacing:.13em;text-transform:uppercase;padding:0 14px;margin:14px 0 5px;display:block}
+.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#2dd4bf;letter-spacing:.13em;text-transform:uppercase;padding:0 14px;margin:14px 0 5px;display:block}
 .sb-item{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:1px 8px;border-radius:3px;cursor:pointer;color:#e2f0de;font-size:13px;border:1px solid transparent;transition:all .15s;font-family:'Inter',sans-serif}
 .sb-item svg{flex-shrink:0;opacity:.6;transition:opacity .15s}
 .sb-item:hover{background:#0e1812;color:#f0fdf4;border-color:#22362a}
 .sb-item:hover svg{opacity:1}
-.sb-item.act{background:rgba(74,222,128,.08);color:#86efac;border-color:rgba(74,222,128,.25)}
+.sb-item.act{background:rgba(45,212,191,.08);color:#5eead4;border-color:rgba(45,212,191,.25)}
 .sb-item.act svg{opacity:1}
 .sb-spacer{flex:1}
 .main{flex:1;min-width:0;padding:30px 34px;overflow-y:auto}
@@ -402,8 +402,8 @@ nav.sc{border-color:#243028}
 /* PAGE HEADER */
 .ph{margin-bottom:26px;animation:fadeUp .5s ease forwards}
 .ph h1{font-weight:700;font-size:24px;letter-spacing:-.03em;color:#e8f5e4;margin-bottom:4px}
-.ph h1 .b{color:#4ade80}
-.ph p{font-size:13px;color:#86efac;font-weight:400}
+.ph h1 .b{color:#2dd4bf}
+.ph p{font-size:13px;color:#5eead4;font-weight:400}
 
 /* TIPSTER GRID */
 .tgrid{display:flex;flex-direction:column;gap:20px}
@@ -437,7 +437,7 @@ nav.sc{border-color:#243028}
     font-weight: 500;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: #4ade80;
+    color: #2dd4bf;
 }
 
 .prono-count {
@@ -480,13 +480,13 @@ nav.sc{border-color:#243028}
 .pick-stake{font-family:'IBM Plex Mono',monospace;font-size:14px;color:#fbbf24;white-space:nowrap}
 .pick-estado{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap}
 .est-pend{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
-.est-win{background:rgba(74,222,128,.1);color:#86efac;border:1px solid rgba(74,222,128,.25)}
+.est-win{background:rgba(45,212,191,.1);color:#5eead4;border:1px solid rgba(45,212,191,.25)}
 .est-loss{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.25)}
-.pick-tipo-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#86efac;letter-spacing:.07em;text-transform:uppercase;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.22);padding:2px 6px;border-radius:2px}
+.pick-tipo-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#5eead4;letter-spacing:.07em;text-transform:uppercase;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.22);padding:2px 6px;border-radius:2px}
 
 /* ── TIPSTER CARD ── */
 .tc{width:240px;flex-shrink:0;background:#080c0a;border:1px solid #1a2e1f;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;opacity:0;animation:cardIn .4s ease forwards;transition:transform .22s,border-color .22s,box-shadow .22s}
-.tc:hover{transform:translateY(-5px);border-color:#2a4030;box-shadow:0 20px 48px rgba(0,0,0,.85),0 0 0 1px rgba(74,222,128,.15)}
+.tc:hover{transform:translateY(-5px);border-color:#2a4030;box-shadow:0 20px 48px rgba(0,0,0,.85),0 0 0 1px rgba(45,212,191,.15)}
 
 /* BANNER */
 .tc-banner{height:130px;position:relative;overflow:hidden;flex-shrink:0}
@@ -494,7 +494,7 @@ nav.sc{border-color:#243028}
 .tc-banner-bg{position:absolute;inset:0;z-index:0}
 .tc-banner-fade{position:absolute;inset:0;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,0) 30%,rgba(8,12,10,1) 100%)}
 .tc-badge-sport{position:absolute;top:10px;right:10px;z-index:4;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:2px}
-.tc-verified{position:absolute;top:10px;left:10px;z-index:4;width:20px;height:20px;border-radius:50%;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.4);display:flex;align-items:center;justify-content:center}
+.tc-verified{position:absolute;top:10px;left:10px;z-index:4;width:20px;height:20px;border-radius:50%;background:rgba(45,212,191,.15);border:1px solid rgba(45,212,191,.4);display:flex;align-items:center;justify-content:center}
 .tc-avatar{position:absolute;bottom:-16px;left:14px;z-index:4;width:38px;height:38px;border-radius:50%;border:2px solid #1a2e1f;background:#080c0a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#e8f5e4;overflow:hidden}
 .tc-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 
@@ -506,69 +506,69 @@ nav.sc{border-color:#243028}
 /* STATS GRID - Nuevo diseño con boxes coloreados */
 .tc-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0}
 .tc-stat{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;border-radius:6px}
-.tc-stat.st-green{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3)}
+.tc-stat.st-green{background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.3)}
 .tc-stat.st-blue{background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.3)}
 .tc-stat.st-orange{background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.3)}
 .tc-stat.st-white{background:rgba(248,250,252,.1);border:1px solid rgba(248,250,252,.2)}
 .tc-stat-v{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:15px;line-height:1}
-.tc-stat-v.v-green{color:#4ade80}
+.tc-stat-v.v-green{color:#2dd4bf}
 .tc-stat-v.v-blue{color:#93c5fd}
 .tc-stat-v.v-orange{color:#fb923c}
 .tc-stat-v.v-white{color:#f8fafc}
 .tc-stat-l{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
-.tc-stat.st-green .tc-stat-l{color:#4ade80}
+.tc-stat.st-green .tc-stat-l{color:#2dd4bf}
 .tc-stat.st-blue .tc-stat-l{color:#93c5fd}
 .tc-stat.st-orange .tc-stat-l{color:#fb923c}
 .tc-stat.st-white .tc-stat-l{color:#f8fafc}
 
 /* FOOTER */
 .tc-foot{padding-top:12px;border-top:1px solid #162820;display:flex;align-items:center;justify-content:space-between;margin-top:auto}
-.tc-foot-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#4ade80;letter-spacing:.08em;text-transform:uppercase;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);padding:3px 8px;border-radius:2px}
+.tc-foot-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#2dd4bf;letter-spacing:.08em;text-transform:uppercase;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);padding:3px 8px;border-radius:2px}
 .tc-foot-btn{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:#6a9a78;letter-spacing:.05em;text-transform:uppercase;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;transition:color .15s}
-.tc-foot-btn:hover{color:#86efac}
+.tc-foot-btn:hover{color:#5eead4}
 
 /* SPORT BADGES */
-.sp-fut{background:rgba(74,222,128,.12);color:#86efac;border:1px solid rgba(74,222,128,.25)}
-.sp-multi{background:rgba(134,239,172,.1);color:#86efac;border:1px solid rgba(134,239,172,.2)}
+.sp-fut{background:rgba(45,212,191,.12);color:#5eead4;border:1px solid rgba(45,212,191,.25)}
+.sp-multi{background:rgba(134,239,172,.1);color:#5eead4;border:1px solid rgba(134,239,172,.2)}
 
 /* LANDING */
 #pg-land{background:#050708;min-height:100vh}
 .grid-bg{position:absolute;inset:0;z-index:0;background-image:linear-gradient(#0e1812 1px,transparent 1px),linear-gradient(90deg,#0e1812 1px,transparent 1px);background-size:60px 60px;-webkit-mask-image:radial-gradient(ellipse 65% 55% at 50% 30%,black 10%,transparent 75%);mask-image:radial-gradient(ellipse 65% 55% at 50% 30%,black 10%,transparent 75%);opacity:.5}
 .hero{width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:90px 28px 80px;text-align:center;position:relative;overflow:hidden}
-.hero-glow{position:absolute;width:min(900px,130vw);height:min(600px,80vw);border-radius:50%;background:radial-gradient(ellipse,rgba(74,222,128,.06) 0%,transparent 65%);top:20%;left:50%;transform:translateX(-50%);pointer-events:none}
+.hero-glow{position:absolute;width:min(900px,130vw);height:min(600px,80vw);border-radius:50%;background:radial-gradient(ellipse,rgba(45,212,191,.06) 0%,transparent 65%);top:20%;left:50%;transform:translateX(-50%);pointer-events:none}
 .hero-content{position:relative;z-index:1;max-width:900px;width:100%;opacity:0;animation:fadeUp .85s cubic-bezier(.16,1,.3,1) .08s forwards}
-.badge{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#86efac;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.22);padding:7px 16px;border-radius:20px;margin-bottom:36px}
-.bdot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;animation:blink 1.6s ease-in-out infinite;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#5eead4;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.22);padding:7px 16px;border-radius:20px;margin-bottom:36px}
+.bdot{width:6px;height:6px;border-radius:50%;background:#2dd4bf;box-shadow:0 0 8px #2dd4bf;animation:blink 1.6s ease-in-out infinite;flex-shrink:0}
 .htitle{font-weight:800;font-size:clamp(40px,7vw,72px);letter-spacing:-.03em;line-height:1.06;margin-bottom:20px;font-family:'Inter',sans-serif;color:#f1f5f2}
-.hgreen{color:#4ade80}
-.hblue{background:linear-gradient(100deg,#86efac,#22c55e 40%,#16a34a 70%,#22c55e);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 5s linear infinite}
+.hgreen{color:#2dd4bf}
+.hblue{background:linear-gradient(100deg,#5eead4,#14b8a6 40%,#0d9488 70%,#14b8a6);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 5s linear infinite}
 .hsub{font-size:clamp(14px,1.7vw,17px);line-height:1.75;max-width:520px;margin:0 auto 52px;color:#6b7a71;font-weight:400}
 .hsub strong{color:#c8d4cc;font-weight:600}
 .hero-cards{display:flex;gap:20px;justify-content:center;width:100%;max-width:820px;margin:0 auto 40px}
 .hcard{flex:1;min-width:0;background:#0a0f0b;border-radius:14px;padding:28px 26px 24px;text-align:left;position:relative;overflow:hidden;transition:transform .2s}
 .hcard:hover{transform:translateY(-3px)}
-.hcard-green{border:1px solid rgba(74,222,128,.3);box-shadow:0 0 40px rgba(74,222,128,.08),inset 0 1px 0 rgba(74,222,128,.1)}
+.hcard-green{border:1px solid rgba(45,212,191,.3);box-shadow:0 0 40px rgba(45,212,191,.08),inset 0 1px 0 rgba(45,212,191,.1)}
 .hcard-blue{border:1px solid rgba(96,165,250,.3);box-shadow:0 0 40px rgba(96,165,250,.08),inset 0 1px 0 rgba(96,165,250,.1)}
-.hcard-glow-green{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.14) 0%,transparent 70%);top:-70px;left:-50px;pointer-events:none}
+.hcard-glow-green{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,.14) 0%,transparent 70%);top:-70px;left:-50px;pointer-events:none}
 .hcard-glow-blue{position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,.14) 0%,transparent 70%);top:-70px;left:-50px;pointer-events:none}
 .hcard h2{font-family:'Inter',sans-serif;font-weight:700;font-size:clamp(18px,2.2vw,22px);line-height:1.25;color:#e8f0ea;margin-bottom:12px;position:relative;z-index:1}
-.hcard h2 .accent-green{color:#4ade80}
+.hcard h2 .accent-green{color:#2dd4bf}
 .hcard h2 .accent-blue{color:#60a5fa}
 .hcard p{font-size:13px;color:#5a7265;line-height:1.65;margin-bottom:20px;position:relative;z-index:1}
 .hcard p strong{color:#8aaa90;font-weight:500}
 .hcard-checks{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;position:relative;z-index:1}
 .hcard-checks li{display:flex;align-items:center;gap:8px;font-size:13px;color:#7a9280;font-weight:400}
 .hcard-checks li::before{content:'✓';font-size:13px;font-weight:700;flex-shrink:0}
-.hcard-green .hcard-checks li::before{color:#4ade80}
+.hcard-green .hcard-checks li::before{color:#2dd4bf}
 .hcard-blue .hcard-checks li::before{color:#60a5fa}
 .btn-card{width:100%;padding:13px 20px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s;position:relative;z-index:1}
-.btn-card-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#f0fdf4}
-.btn-card-green:hover{background:linear-gradient(135deg,#4ade80,#22c55e);box-shadow:0 0 24px rgba(74,222,128,.35)}
+.btn-card-green{background:linear-gradient(135deg,#14b8a6,#0d9488);color:#f0fdf4}
+.btn-card-green:hover{background:linear-gradient(135deg,#2dd4bf,#14b8a6);box-shadow:0 0 24px rgba(45,212,191,.35)}
 .btn-card-blue{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#eff6ff}
 .btn-card-blue:hover{background:linear-gradient(135deg,#60a5fa,#3b82f6);box-shadow:0 0 24px rgba(96,165,250,.35)}
 .hero-footer{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#60a5fa;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.22);padding:7px 16px;border-radius:20px;margin-top:36px}
-.btn-hero{background:linear-gradient(135deg,#22c55e,#16a34a);color:#f0fdf4;font-family:'Inter',sans-serif;font-size:16px;font-weight:600;padding:14px 50px;border-radius:4px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:all .18s;position:relative;overflow:hidden}
-.btn-hero:hover{background:linear-gradient(135deg,#4ade80,#22c55e);transform:translateY(-1px);box-shadow:0 0 36px rgba(74,222,128,.4)}
+.btn-hero{background:linear-gradient(135deg,#14b8a6,#0d9488);color:#f0fdf4;font-family:'Inter',sans-serif;font-size:16px;font-weight:600;padding:14px 50px;border-radius:4px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:all .18s;position:relative;overflow:hidden}
+.btn-hero:hover{background:linear-gradient(135deg,#2dd4bf,#14b8a6);transform:translateY(-1px);box-shadow:0 0 36px rgba(45,212,191,.4)}
 .btn-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.08),transparent);pointer-events:none}
 @media(max-width:640px){.hero-cards{flex-direction:column}.hcard{padding:22px 18px 20px}}
 
@@ -609,16 +609,16 @@ nav.sc{border-color:#243028}
 .slide-cta{margin-top:auto}
 
 /* Green Box */
-.slider-green .slider-inner{background:#080c0a;border:1px solid rgba(74,222,128,.3)}
+.slider-green .slider-inner{background:#080c0a;border:1px solid rgba(45,212,191,.3)}
 .slider-green .slide h2{font-family:'Inter',sans-serif;font-weight:700;font-size:clamp(17px,2vw,20px);line-height:1.25;color:#e8f0ea;margin:0}
 .slider-green .slide p{font-size:12.5px;color:#5a7265;line-height:1.65;margin:0}
-.slider-green .slide .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#4ade80;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
-.slider-green .slide .tag-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;flex-shrink:0}
+.slider-green .slide .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#2dd4bf;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.slider-green .slide .tag-dot{width:5px;height:5px;border-radius:50%;background:#2dd4bf;flex-shrink:0}
 .slider-green ul.sc{list-style:none;display:flex;flex-direction:column;gap:6px;margin:0}
 .slider-green ul.sc li{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#7a9280;font-weight:400}
-.slider-green ul.sc li::before{content:'✓';color:#4ade80;font-weight:700;flex-shrink:0}
+.slider-green ul.sc li::before{content:'✓';color:#2dd4bf;font-weight:700;flex-shrink:0}
 .slider-white .feat-icon{width:44px;height:44px;border-radius:10px;background:rgba(192,200,212,.1);border:1px solid rgba(192,200,212,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.slider-green .feat-icon{width:44px;height:44px;border-radius:10px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.slider-green .feat-icon{width:44px;height:44px;border-radius:10px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* Blue Box */
 .slider-blue .slider-inner{background:#080c0a;border:1px solid rgba(96,165,250,.3)}
@@ -633,7 +633,7 @@ nav.sc{border-color:#243028}
 
 /* Glow Borders (Neón Perimetral) */
 @keyframes glowWhite{0%,100%{box-shadow:0 0 14px rgba(192,200,212,.35),0 0 35px rgba(192,200,212,.16),0 0 70px rgba(192,200,212,.07)}50%{box-shadow:0 0 28px rgba(192,200,212,.6),0 0 65px rgba(192,200,212,.28),0 0 110px rgba(192,200,212,.12)}}
-@keyframes glowGreen{0%,100%{box-shadow:0 0 14px rgba(74,222,128,.38),0 0 35px rgba(74,222,128,.18),0 0 70px rgba(74,222,128,.08)}50%{box-shadow:0 0 28px rgba(74,222,128,.65),0 0 65px rgba(74,222,128,.32),0 0 110px rgba(74,222,128,.14)}}
+@keyframes glowGreen{0%,100%{box-shadow:0 0 14px rgba(45,212,191,.38),0 0 35px rgba(45,212,191,.18),0 0 70px rgba(45,212,191,.08)}50%{box-shadow:0 0 28px rgba(45,212,191,.65),0 0 65px rgba(45,212,191,.32),0 0 110px rgba(45,212,191,.14)}}
 @keyframes glowBlue{0%,100%{box-shadow:0 0 14px rgba(96,165,250,.38),0 0 35px rgba(96,165,250,.18),0 0 70px rgba(96,165,250,.08)}50%{box-shadow:0 0 28px rgba(96,165,250,.65),0 0 65px rgba(96,165,250,.32),0 0 110px rgba(96,165,250,.14)}}
 @keyframes glowCyan{0%,100%{box-shadow:0 0 20px rgba(45,212,191,.25),0 0 40px rgba(45,212,191,.12),0 0 80px rgba(45,212,191,.06)}50%{box-shadow:0 0 35px rgba(45,212,191,.45),0 0 70px rgba(45,212,191,.22),0 0 120px rgba(45,212,191,.1)}}
 .slider-white .slider-inner{animation:glowWhite 3s ease-in-out infinite}
@@ -645,16 +645,16 @@ nav.sc{border-color:#243028}
 .slide-arrow{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .22s;flex-shrink:0;background:transparent}
 .slider-white .slide-arrow{border:1px solid rgba(192,200,212,.3);color:#c0c8d4}
 .slider-white .slide-arrow:hover{background:rgba(192,200,212,.1);border-color:rgba(192,200,212,.5);transform:scale(1.08)}
-.slider-green .slide-arrow{border:1px solid rgba(74,222,128,.3);color:#4ade80}
-.slider-green .slide-arrow:hover{background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.5);transform:scale(1.08)}
+.slider-green .slide-arrow{border:1px solid rgba(45,212,191,.3);color:#2dd4bf}
+.slider-green .slide-arrow:hover{background:rgba(45,212,191,.12);border-color:rgba(45,212,191,.5);transform:scale(1.08)}
 .slider-blue .slide-arrow{border:1px solid rgba(96,165,250,.3);color:#60a5fa}
 .slider-blue .slide-arrow:hover{background:rgba(96,165,250,.12);border-color:rgba(96,165,250,.5);transform:scale(1.08)}
 .dots-bar{display:flex;gap:5px;align-items:center}
 .dot-pip{height:6px;border-radius:3px;transition:all .3s;cursor:pointer;width:6px}
 .slider-white .dot-pip{background:rgba(192,200,212,.2)}
 .slider-white .dot-pip.on{background:#c0c8d4;width:18px}
-.slider-green .dot-pip{background:rgba(74,222,128,.2)}
-.slider-green .dot-pip.on{background:#4ade80;width:18px}
+.slider-green .dot-pip{background:rgba(45,212,191,.2)}
+.slider-green .dot-pip.on{background:#2dd4bf;width:18px}
 .slider-blue .dot-pip{background:rgba(96,165,250,.2)}
 .slider-blue .dot-pip.on{background:#60a5fa;width:18px}
 
@@ -860,8 +860,8 @@ nav.sc{border-color:#243028}
   background: linear-gradient(145deg, #0a0f0c, #0c1410);
   border: 1px solid rgba(74, 222, 128, 0.25);
   box-shadow:
-    0 0 20px rgba(74,222,128,0.15),
-    inset 0 0 25px rgba(74,222,128,0.05);
+    0 0 20px rgba(45,212,191,0.15),
+    inset 0 0 25px rgba(45,212,191,0.05);
   color: #d1fae5;
   font-family: 'Segoe UI', sans-serif;
   overflow: hidden;
@@ -870,7 +870,7 @@ nav.sc{border-color:#243028}
 .tipster-card .card-glow {
   position:absolute;
   inset:0;
-  background: radial-gradient(circle at 80% 0%, rgba(74,222,128,0.15), transparent 60%);
+  background: radial-gradient(circle at 80% 0%, rgba(45,212,191,0.15), transparent 60%);
   pointer-events: none;
 }
 
@@ -886,7 +886,7 @@ nav.sc{border-color:#243028}
   width:42px;
   height:42px;
   border-radius:10px;
-  background: linear-gradient(135deg,#4ade80,#22c55e);
+  background: linear-gradient(135deg,#2dd4bf,#14b8a6);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -902,7 +902,7 @@ nav.sc{border-color:#243028}
   text-align:center;
   margin:18px 0;
   letter-spacing:2px;
-  color:#4ade80;
+  color:#2dd4bf;
   font-size: 14px;
   font-weight: 600;
   position: relative;
@@ -911,7 +911,7 @@ nav.sc{border-color:#243028}
 
 .tipster-card .match-box {
   background: rgba(255,255,255,0.03);
-  border:1px solid rgba(74,222,128,0.15);
+  border:1px solid rgba(45,212,191,0.15);
   padding:14px;
   border-radius:14px;
   position: relative;
@@ -943,7 +943,7 @@ nav.sc{border-color:#243028}
 }
 
 .tipster-card .vs {
-  color:#4ade80;
+  color:#2dd4bf;
   font-weight:600;
 }
 
@@ -959,7 +959,7 @@ nav.sc{border-color:#243028}
   margin-top:15px;
   padding:14px;
   border-radius:14px;
-  border:1px solid #4ade80;
+  border:1px solid #2dd4bf;
   display:flex;
   justify-content:space-between;
   align-items: center;
@@ -988,7 +988,7 @@ nav.sc{border-color:#243028}
 .tipster-card .odds {
   font-size:32px;
   font-weight:bold;
-  color:#4ade80;
+  color:#2dd4bf;
 }
 
 .tipster-card .stake-box {
@@ -996,7 +996,7 @@ nav.sc{border-color:#243028}
   display:flex;
   justify-content:space-between;
   padding:12px;
-  border-top:1px solid rgba(74,222,128,0.2);
+  border-top:1px solid rgba(45,212,191,0.2);
   position: relative;
   z-index: 1;
 }
@@ -1013,7 +1013,7 @@ nav.sc{border-color:#243028}
 }
 
 .tipster-card .section-title {
-  color:#4ade80;
+  color:#2dd4bf;
   font-size:12px;
   margin-bottom:6px;
   letter-spacing: 1px;
@@ -1248,13 +1248,13 @@ nav.sc{border-color:#243028}
 
         <!-- 1/5 -->
         <div class="slide" style="justify-content:center;align-items:center;text-align:center;gap:14px">
-          <div class="hcard-glow-green" style="position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.1) 0%,transparent 70%);top:-70px;left:-50px;pointer-events:none"></div>
+          <div class="hcard-glow-green" style="position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,.1) 0%,transparent 70%);top:-70px;left:-50px;pointer-events:none"></div>
           <div class="tag" style="position:absolute;top:28px;left:26px"><span class="tag-dot"></span>Sección Tipsters</div>
-          <div style="width:52px;height:52px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(45,212,191,.1);border:2px solid rgba(45,212,191,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
           <div>
-            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Demuestra que eres <span style="color:#4ade80">rentable</span></h2>
+            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Demuestra que eres <span style="color:#2dd4bf">rentable</span></h2>
             <p style="font-size:12px;color:#5a7265;line-height:1.7">Publica tus picks con datos sellados. Tu historial habla por ti.</p>
           </div>
         </div>
@@ -1262,11 +1262,11 @@ nav.sc{border-color:#243028}
         <!-- 2/5 -->
         <div class="slide" style="justify-content:center;align-items:center;text-align:center;gap:14px">
           <div class="tag" style="position:absolute;top:28px;left:26px"><span class="tag-dot"></span>Sé Creíble</div>
-          <div style="width:52px;height:52px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(45,212,191,.1);border:2px solid rgba(45,212,191,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <div>
-            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Historial <span style="color:#4ade80">Inalterable</span></h2>
+            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Historial <span style="color:#2dd4bf">Inalterable</span></h2>
             <p style="font-size:12px;color:#5a7265;line-height:1.7">✓ Sello automático · ✓ Picks blindados · ✓ Registro inmutable</p>
           </div>
         </div>
@@ -1274,11 +1274,11 @@ nav.sc{border-color:#243028}
         <!-- 3/5 -->
         <div class="slide" style="justify-content:center;align-items:center;text-align:center;gap:14px">
           <div class="tag" style="position:absolute;top:28px;left:26px"><span class="tag-dot"></span>Automatiza con IA</div>
-          <div style="width:52px;height:52px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(45,212,191,.1);border:2px solid rgba(45,212,191,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
           </div>
           <div>
-            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Stats <span style="color:#4ade80">Auditadas</span> en Tiempo Real</h2>
+            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Stats <span style="color:#2dd4bf">Auditadas</span> en Tiempo Real</h2>
             <p style="font-size:12px;color:#5a7265;line-height:1.7">✓ % Acierto automático · ✓ Yield real · ✓ WinRate transparente · ✓ Beneficio verificado</p>
           </div>
         </div>
@@ -1286,23 +1286,23 @@ nav.sc{border-color:#243028}
         <!-- 4/5 -->
         <div class="slide" style="justify-content:center;align-items:center;text-align:center;gap:14px">
           <div class="tag" style="position:absolute;top:28px;left:26px"><span class="tag-dot"></span>Diferénciate</div>
-          <div style="width:52px;height:52px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(45,212,191,.1);border:2px solid rgba(45,212,191,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
           <div>
-            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">🔐 TimeStamp <span style="color:#4ade80">Automático</span></h2>
+            <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">🔐 TimeStamp <span style="color:#2dd4bf">Automático</span></h2>
             <p style="font-size:12px;color:#5a7265;line-height:1.7">El sistema sella cada pick en el momento exacto. Siempre antes del evento.</p>
           </div>
-          <div style="padding:8px 16px;background:rgba(74,222,128,.07);border:1px solid rgba(74,222,128,.2);border-radius:6px">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4ade80">✓ Garantizado por sistema</span>
+          <div style="padding:8px 16px;background:rgba(45,212,191,.07);border:1px solid rgba(45,212,191,.2);border-radius:6px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2dd4bf">✓ Garantizado por sistema</span>
           </div>
         </div>
 
         <!-- 5/5 -->
         <div class="slide" style="justify-content:center;align-items:center;text-align:center;gap:14px">
           <div class="tag" style="position:absolute;top:28px;left:26px"><span class="tag-dot"></span>Únete</div>
-          <div style="width:52px;height:52px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(45,212,191,.1);border:2px solid rgba(45,212,191,.4);display:flex;align-items:center;justify-content:center;margin:0 auto">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
           <div>
             <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Únete como Tipster</h2>
@@ -1437,7 +1437,7 @@ nav.sc{border-color:#243028}
       <a href="#" class="ts-logo" onclick="go('land');return false;">
         <img src="logo-truestats.png" alt="TrueStats AI" class="ts-logo-img">
       </a>
-      <button onclick="go('land')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(74,222,128,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
+      <button onclick="go('land')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(45,212,191,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Volver
       </button>
@@ -1817,7 +1817,7 @@ nav.sc{border-color:#243028}
 
     <!-- Back Button -->
     <div style="display:flex;justify-content:center;margin-top:40px;padding-top:32px;border-top:1px solid #1a2620">
-      <button onclick="go('land')" style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(74,222,128,.3)';this.style.color='#e8f5e4';this.style.background='rgba(74,222,128,.12)'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280';this.style.background='transparent'">
+      <button onclick="go('land')" style="display:flex;align-items:center;gap:10px;padding:12px 24px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(45,212,191,.3)';this.style.color='#e8f5e4';this.style.background='rgba(45,212,191,.12)'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280';this.style.background='transparent'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Volver al Inicio
       </button>
@@ -1833,7 +1833,7 @@ nav.sc{border-color:#243028}
       <a href="#" class="ts-logo" onclick="go('land');return false;">
         <img src="logo-truestats.png" alt="TrueStats AI" class="ts-logo-img">
       </a>
-      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(74,222,128,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
+      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(45,212,191,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Volver a Tipsters
       </button>
@@ -1864,10 +1864,10 @@ nav.sc{border-color:#243028}
             <span style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:#e8f5e4" id="tipster-followers">5.537</span>
             <span style="font-size:11px;color:#5a7265">Followers</span>
           </div>
-          <button style="width:36px;height:36px;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);border-radius:8px;color:#4ade80;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Seguir">
+          <button style="width:36px;height:36px;background:rgba(45,212,191,.15);border:1px solid rgba(45,212,191,.3);border-radius:8px;color:#2dd4bf;cursor:pointer;display:flex;align-items:center;justify-content:center" title="Seguir">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
           </button>
-          <button class="btn-subscribe" id="tipster-subscribe" style="padding:10px 20px;background:linear-gradient(135deg,#22c55e,#15803d);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer">SUSCRÍBETE</button>
+          <button class="btn-subscribe" id="tipster-subscribe" style="padding:10px 20px;background:linear-gradient(135deg,#14b8a6,#0f766e);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer">SUSCRÍBETE</button>
           <button onclick="go('picks')" style="padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             CREAR PICK
@@ -1993,7 +1993,7 @@ nav.sc{border-color:#243028}
       <a href="#" class="ts-logo" onclick="go('land');return false;">
         <img src="logo-truestats.png" alt="TrueStats AI" class="ts-logo-img">
       </a>
-      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(74,222,128,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
+      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(45,212,191,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
         Volver
       </button>
@@ -2369,8 +2369,8 @@ function updateStatsTable(statsData) {
   if (!tbody || !statsData) return;
   
   tbody.innerHTML = statsData.map(row => {
-    const beneficioClass = row.beneficio >= 0 ? 'color:#22c55e' : 'color:#ef4444';
-    const yieldClass = row.yield >= 0 ? 'color:#22c55e' : 'color:#ef4444';
+    const beneficioClass = row.beneficio >= 0 ? 'color:#14b8a6' : 'color:#ef4444';
+    const yieldClass = row.yield >= 0 ? 'color:#14b8a6' : 'color:#ef4444';
     const beneficioSign = row.beneficio >= 0 ? '+' : '';
     const yieldSign = row.yield >= 0 ? '+' : '';
     
@@ -3023,8 +3023,8 @@ function buildBoxPick(num) {
     <div id="${id}-auto" style="display:none;animation:fadeUp .35s ease forwards">
       <div style="background:#080c0a;border:1px solid rgba(16,185,129,.13);border-radius:6px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div style="grid-column:1/-1;display:flex;align-items:center;gap:7px;margin-bottom:2px">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#22c55e;letter-spacing:.1em;text-transform:uppercase">Partido seleccionado</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#14b8a6;letter-spacing:.1em;text-transform:uppercase">Partido seleccionado</span>
         </div>
         <div><label class="flbl">Local</label><div id="${id}-home" class="fval">—</div></div>
         <div><label class="flbl">Visitante</label><div id="${id}-away" class="fval">—</div></div>
@@ -3188,15 +3188,15 @@ function buildVistaPrevia() {
 <div id="vista-previa" style="position:relative;background:linear-gradient(160deg,#0a1612 0%,#0d1f18 50%,#0a1612 100%);border:2px solid #2dd4bf;border-radius:20px;padding:0;box-shadow:0 0 40px rgba(45,212,191,.2),0 0 80px rgba(45,212,191,.08);overflow:hidden;margin-top:18px">
   
   <!-- Efectos de luz -->
-  <div style="position:absolute;top:0;right:0;width:60%;height:100%;background:linear-gradient(135deg,transparent 0%,rgba(45,212,191,.03) 50%,rgba(34,197,94,.05) 100%);pointer-events:none"></div>
+  <div style="position:absolute;top:0;right:0;width:60%;height:100%;background:linear-gradient(135deg,transparent 0%,rgba(45,212,191,.03) 50%,rgba(20,184,166,.05) 100%);pointer-events:none"></div>
   <div style="position:absolute;top:-100px;right:-100px;width:300px;height:300px;background:radial-gradient(circle,rgba(45,212,191,.08) 0%,transparent 70%);pointer-events:none"></div>
   
   <div style="position:relative;padding:18px">
     
     <!-- Header con logo -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(45,212,191,.15)">
-      <div style="width:40px;height:40px;border-radius:10px;border:2px solid rgba(74,222,128,.5);overflow:hidden;box-shadow:0 0 15px rgba(74,222,128,.3)">
-        <img src="hunter.JPG" alt="GHP" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a3f1c,#0d1a0f)\\';font-size:14px;font-weight:900;color:#4ade80\\'>GH</div>'">
+      <div style="width:40px;height:40px;border-radius:10px;border:2px solid rgba(45,212,191,.5);overflow:hidden;box-shadow:0 0 15px rgba(45,212,191,.3)">
+        <img src="hunter.JPG" alt="GHP" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a3f1c,#0d1a0f)\\';font-size:14px;font-weight:900;color:#2dd4bf\\'>GH</div>'">
       </div>
       <div style="flex:1">
         <div style="font-weight:700;font-size:14px;color:#e2e8f0">Green Hunter Pro</div>
@@ -3221,7 +3221,7 @@ function buildVistaPrevia() {
     </div>
     
     <!-- Box Pick (se llenará dinámicamente) -->
-    <div id="prev-pick-box" style="background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(34,197,94,.05));border:1px solid rgba(45,212,191,.25);border-radius:10px;padding:12px;margin-bottom:12px;display:none">
+    <div id="prev-pick-box" style="background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(20,184,166,.05));border:1px solid rgba(45,212,191,.25);border-radius:10px;padding:12px;margin-bottom:12px;display:none">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
         <div style="flex:1">
           <div id="prev-mercado" style="font-family:monospace;font-size:8px;color:#5eead4;margin-bottom:4px">SELECCIÓN</div>
@@ -3242,10 +3242,10 @@ function buildVistaPrevia() {
     
     <!-- Badges verificación -->
     <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px">
-      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#22c55e">✓</span> Verificado</span>
-      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#22c55e">⏱</span> Timestamp</span>
-      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#22c55e">🔒</span> Inmutable</span>
-      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#22c55e">◇</span> Auditado</span>
+      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#14b8a6">✓</span> Verificado</span>
+      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#14b8a6">⏱</span> Timestamp</span>
+      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#14b8a6">🔒</span> Inmutable</span>
+      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#14b8a6">◇</span> Auditado</span>
     </div>
     
     <!-- Footer con ID -->
@@ -3259,12 +3259,12 @@ function buildVistaPrevia() {
     
     <!-- Checkbox Telegram -->
     <div style="display:flex;align-items:center;gap:10px;padding:12px;background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.2);border-radius:8px;margin-bottom:12px">
-      <input type="checkbox" id="pub-telegram" style="width:18px;height:18px;accent-color:#22c55e">
+      <input type="checkbox" id="pub-telegram" style="width:18px;height:18px;accent-color:#14b8a6">
       <label for="pub-telegram" style="font-size:13px;color:#e2e8f0;cursor:pointer">📤 Enviar a Telegram</label>
     </div>
     
     <!-- Botón Publicar -->
-    <button type="button" id="btn-publicar" onclick="publishPick()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 20px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:10px;color:white;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(34,197,94,.4)" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(34,197,94,.5)'" onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(34,197,94,.4)'">
+    <button type="button" id="btn-publicar" onclick="publishPick()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 20px;background:linear-gradient(135deg,#14b8a6,#0d9488);border:none;border-radius:10px;color:white;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(20,184,166,.4)" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(20,184,166,.5)'" onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(20,184,166,.4)'">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
       Publicar Pronóstico
     </button>
@@ -3446,7 +3446,7 @@ async function fillSports(pid) {
       catSel.appendChild(o);
     });
     unlockStep(`${pid}-step-category`);
-    setBadge(`${pid}-status`, `✓ ${cats.length} países`, '#22c55e');
+    setBadge(`${pid}-status`, `✓ ${cats.length} países`, '#14b8a6');
   } catch(e) {
     console.error('fillSports error:', e);
     setBadge(`${pid}-status`, `✗ ${e.message.slice(0,50)}`, '#ef4444');
@@ -3800,15 +3800,15 @@ function updatePreview() {
         <div style="background:#080c0a;border:1px solid #1a2e1f;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
           ${isCombo ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:#a855f7;text-transform:uppercase;letter-spacing:.1em">PICK ${i}</div>` : ''}
           <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#93c5fd">
-            <span style="color:#4ade80">⚽</span>
+            <span style="color:#2dd4bf">⚽</span>
             ${home} vs ${away}
           </div>
           <div style="font-size:10px;color:#fb923c;padding-left:22px;font-family:'IBM Plex Mono',monospace">${date || '—'}</div>
           <div style="margin-top:6px;padding:10px 12px;background:#0c1210;border:1px solid #1a2e1f;border-radius:6px">
-            <div style="font-size:9px;color:#4ade80;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Selección</div>
+            <div style="font-size:9px;color:#2dd4bf;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Selección</div>
             <div style="font-size:13px;color:#ffffff;font-weight:600">${mercadoCompleto}</div>
           </div>
-          <div style="align-self:flex-end;margin-top:4px;padding:5px 12px;background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.25);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:#4ade80">${cuota > 0 ? '@' + cuota.toFixed(2) : '—'}</div>
+          <div style="align-self:flex-end;margin-top:4px;padding:5px 12px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.25);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:#2dd4bf">${cuota > 0 ? '@' + cuota.toFixed(2) : '—'}</div>
         </div>`;
       }
     }
@@ -3930,9 +3930,9 @@ function renderPicksPanel(tipsterId) {
     // Sello para ganada/perdida
     const selloHtml = hasResult ? `
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);z-index:10;pointer-events:none">
-        <div style="border:4px solid ${isWin ? 'rgba(34,197,94,.8)' : 'rgba(239,68,68,.8)'};border-radius:12px;padding:12px 28px;background:rgba(10,22,18,.9)">
-          <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:${isWin ? '#22c55e' : '#ef4444'};letter-spacing:.15em;text-shadow:0 0 30px ${isWin ? 'rgba(34,197,94,.8)' : 'rgba(239,68,68,.8)'}">${isWin ? 'GANADA' : 'PERDIDA'}</div>
-          <div style="text-align:center;font-family:monospace;font-size:11px;color:${isWin ? '#22c55e' : '#ef4444'};margin-top:4px">${isWin ? '+' : ''}${ganancias.toFixed(2)}u</div>
+        <div style="border:4px solid ${isWin ? 'rgba(20,184,166,.8)' : 'rgba(239,68,68,.8)'};border-radius:12px;padding:12px 28px;background:rgba(10,22,18,.9)">
+          <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:${isWin ? '#14b8a6' : '#ef4444'};letter-spacing:.15em;text-shadow:0 0 30px ${isWin ? 'rgba(20,184,166,.8)' : 'rgba(239,68,68,.8)'}">${isWin ? 'GANADA' : 'PERDIDA'}</div>
+          <div style="text-align:center;font-family:monospace;font-size:11px;color:${isWin ? '#14b8a6' : '#ef4444'};margin-top:4px">${isWin ? '+' : ''}${ganancias.toFixed(2)}u</div>
         </div>
       </div>` : '';
     
@@ -3972,7 +3972,7 @@ function renderPicksPanel(tipsterId) {
             </div>
           </div>
           
-          <div style="background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(34,197,94,.05));border:1px solid rgba(45,212,191,.25);border-radius:10px;padding:12px;margin-bottom:12px">
+          <div style="background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(20,184,166,.05));border:1px solid rgba(45,212,191,.25);border-radius:10px;padding:12px;margin-bottom:12px">
             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
               <div style="flex:1">
                 <div style="font-family:monospace;font-size:8px;color:#5eead4;margin-bottom:4px">SELECCIÓN</div>
@@ -4010,7 +4010,7 @@ function renderPicksPanel(tipsterId) {
         
         return `
           ${partidosHtml}
-          <div style="background:linear-gradient(135deg,rgba(45,212,191,.1),rgba(34,197,94,.06));border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+          <div style="background:linear-gradient(135deg,rgba(45,212,191,.1),rgba(20,184,166,.06));border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
             <div>
               <div style="font-family:monospace;font-size:8px;color:#5eead4">CUOTA COMBINADA</div>
               <div style="font-size:22px;font-weight:800;color:#5eead4;text-shadow:0 0 20px rgba(45,212,191,.4)">${cuotaTotal.toFixed(2)}</div>
@@ -4029,7 +4029,7 @@ function renderPicksPanel(tipsterId) {
     return `
     <div style="position:relative;background:linear-gradient(160deg,#0a1612 0%,#0d1f18 50%,#0a1612 100%);border:2px solid #2dd4bf;border-radius:20px;padding:0;box-shadow:0 0 40px rgba(45,212,191,.2),0 0 80px rgba(45,212,191,.08);overflow:hidden" data-pick-index="${index}">
       
-      <div style="position:absolute;top:0;right:0;width:60%;height:100%;background:linear-gradient(135deg,transparent 0%,rgba(45,212,191,.03) 50%,rgba(34,197,94,.05) 100%);pointer-events:none"></div>
+      <div style="position:absolute;top:0;right:0;width:60%;height:100%;background:linear-gradient(135deg,transparent 0%,rgba(45,212,191,.03) 50%,rgba(20,184,166,.05) 100%);pointer-events:none"></div>
       <div style="position:absolute;top:-100px;right:-100px;width:300px;height:300px;background:radial-gradient(circle,rgba(45,212,191,.08) 0%,transparent 70%);pointer-events:none"></div>
       
       ${selloHtml}
@@ -4038,8 +4038,8 @@ function renderPicksPanel(tipsterId) {
         
         <!-- Header -->
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(45,212,191,.15)">
-          <div style="width:40px;height:40px;border-radius:10px;border:2px solid rgba(74,222,128,.5);overflow:hidden;box-shadow:0 0 15px rgba(74,222,128,.3)">
-            <img src="hunter.JPG" alt="GHP" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:14px;font-weight:900;color:#4ade80;display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg,#1a3f1c,#0d1a0f)\\'>GH</span>'">
+          <div style="width:40px;height:40px;border-radius:10px;border:2px solid rgba(45,212,191,.5);overflow:hidden;box-shadow:0 0 15px rgba(45,212,191,.3)">
+            <img src="hunter.JPG" alt="GHP" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:14px;font-weight:900;color:#2dd4bf;display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg,#1a3f1c,#0d1a0f)\\'>GH</span>'">
           </div>
           <div style="flex:1">
             <div style="font-weight:700;font-size:14px;color:#e2e8f0">Green Hunter Pro</div>
@@ -4047,7 +4047,7 @@ function renderPicksPanel(tipsterId) {
           </div>
           <div style="display:flex;align-items:center;gap:5px">
             <span style="font-family:monospace;font-size:9px;padding:5px 10px;border-radius:5px;background:${isCombo ? 'rgba(251,191,36,.15)' : 'rgba(45,212,191,.1)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.3)' : 'rgba(45,212,191,.25)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
-            <span style="font-family:monospace;font-size:9px;padding:5px 10px;border-radius:5px;background:${st === 'ganado' ? 'rgba(34,197,94,.2)' : st === 'perdido' ? 'rgba(239,68,68,.2)' : 'rgba(251,191,36,.15)'};color:${st === 'ganado' ? '#22c55e' : st === 'perdido' ? '#ef4444' : '#fbbf24'};border:1px solid ${st === 'ganado' ? 'rgba(34,197,94,.4)' : st === 'perdido' ? 'rgba(239,68,68,.4)' : 'rgba(251,191,36,.3)'}">${st === 'ganado' ? '✓ GANADA' : st === 'perdido' ? '✗ PERDIDA' : '⏳ PENDIENTE'}</span>
+            <span style="font-family:monospace;font-size:9px;padding:5px 10px;border-radius:5px;background:${st === 'ganado' ? 'rgba(20,184,166,.2)' : st === 'perdido' ? 'rgba(239,68,68,.2)' : 'rgba(251,191,36,.15)'};color:${st === 'ganado' ? '#14b8a6' : st === 'perdido' ? '#ef4444' : '#fbbf24'};border:1px solid ${st === 'ganado' ? 'rgba(20,184,166,.4)' : st === 'perdido' ? 'rgba(239,68,68,.4)' : 'rgba(251,191,36,.3)'}">${st === 'ganado' ? '✓ GANADA' : st === 'perdido' ? '✗ PERDIDA' : '⏳ PENDIENTE'}</span>
           </div>
         </div>
         
@@ -4126,7 +4126,7 @@ function viewPick(tipsterId, index) {
           
           <div style="background:#080c0a;border:1px solid #162018;border-radius:8px;padding:14px;margin-bottom:16px">
             <div style="font-size:9px;color:#4a7d52;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Selección</div>
-            <div style="font-size:14px;font-weight:600;color:#22c55e">${pick.mercado}</div>
+            <div style="font-size:14px;font-weight:600;color:#14b8a6">${pick.mercado}</div>
           </div>
 
           <!-- Stats -->
@@ -4139,9 +4139,9 @@ function viewPick(tipsterId, index) {
               <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#fff;text-transform:uppercase;margin-bottom:4px">Cuota</div>
               <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:#fff">${pick.cuota}</div>
             </div>
-            <div style="text-align:center;padding:12px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:6px">
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#22c55e;text-transform:uppercase;margin-bottom:4px">Ganancia</div>
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:#22c55e">${pick.ganancias || '—'}</div>
+            <div style="text-align:center;padding:12px;background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.25);border-radius:6px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#14b8a6;text-transform:uppercase;margin-bottom:4px">Ganancia</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:#14b8a6">${pick.ganancias || '—'}</div>
             </div>
           </div>
 
@@ -4153,8 +4153,8 @@ function viewPick(tipsterId, index) {
           ` : ''}
 
           <!-- Estado -->
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:${pick.estado === 'Ganado' ? 'rgba(34,197,94,.1)' : pick.estado === 'Perdido' ? 'rgba(239,68,68,.1)' : 'rgba(249,115,22,.1)'};border:1px solid ${pick.estado === 'Ganado' ? 'rgba(34,197,94,.25)' : pick.estado === 'Perdido' ? 'rgba(239,68,68,.25)' : 'rgba(249,115,22,.25)'};border-radius:8px">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:${pick.estado === 'Ganado' ? '#22c55e' : pick.estado === 'Perdido' ? '#ef4444' : '#f59e0b'};text-transform:uppercase;letter-spacing:.1em;font-weight:600">${pick.estado}</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:${pick.estado === 'Ganado' ? 'rgba(20,184,166,.1)' : pick.estado === 'Perdido' ? 'rgba(239,68,68,.1)' : 'rgba(249,115,22,.1)'};border:1px solid ${pick.estado === 'Ganado' ? 'rgba(20,184,166,.25)' : pick.estado === 'Perdido' ? 'rgba(239,68,68,.25)' : 'rgba(249,115,22,.25)'};border-radius:8px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:${pick.estado === 'Ganado' ? '#14b8a6' : pick.estado === 'Perdido' ? '#ef4444' : '#f59e0b'};text-transform:uppercase;letter-spacing:.1em;font-weight:600">${pick.estado}</span>
             <span style="font-size:10px;color:#6a8a78">${pick.timestamp ? new Date(pick.timestamp).toLocaleString('es-ES') : ''}</span>
           </div>
         </div>
@@ -4846,7 +4846,7 @@ function updateTipsterCardUI(tipsterId, stats) {
     profitEl.textContent = stats.profit;
     // Color según beneficio
     if (parseFloat(stats.profit) > 0) {
-      profitEl.style.color = '#22c55e';
+      profitEl.style.color = '#14b8a6';
     } else if (parseFloat(stats.profit) < 0) {
       profitEl.style.color = '#ef4444';
     }
@@ -5020,7 +5020,7 @@ async function generatePickImage(pick) {
   ctx.stroke();
   
   ctx.font = 'bold 11px Inter, sans-serif';
-  ctx.fillStyle = '#4ade80';
+  ctx.fillStyle = '#2dd4bf';
   ctx.textAlign = 'center';
   ctx.fillText('GH', padding + 18, y + 22);
   
@@ -5044,7 +5044,7 @@ async function generatePickImage(pick) {
   ctx.fillStyle = 'rgba(74, 222, 128, 0.15)';
   roundRect(ctx, width - padding - tipoWidth - 45, y + 4, tipoWidth, 18, 3);
   ctx.fill();
-  ctx.fillStyle = '#4ade80';
+  ctx.fillStyle = '#2dd4bf';
   ctx.textAlign = 'center';
   ctx.fillText(tipoText, width - padding - tipoWidth/2 - 45, y + 16);
   
@@ -5083,7 +5083,7 @@ async function generatePickImage(pick) {
       ctx.fillText(partidoText, padding, y + 26);
       
       ctx.font = '11px Inter, sans-serif';
-      ctx.fillStyle = '#22c55e';
+      ctx.fillStyle = '#14b8a6';
       ctx.fillText(mercados[i] || '—', padding, y + 42);
       
       y += 50;
@@ -5102,7 +5102,7 @@ async function generatePickImage(pick) {
     
     // Selección
     ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillStyle = '#22c55e';
+    ctx.fillStyle = '#14b8a6';
     const mercadoText = pick.mercado && pick.mercado.length > 40 ? pick.mercado.substring(0, 40) + '...' : (pick.mercado || '—');
     ctx.fillText(mercadoText, padding, y + 50);
     
@@ -5140,7 +5140,7 @@ async function generatePickImage(pick) {
   roundRect(ctx, padding + statBoxWidth * 2 + 16, y, statBoxWidth, 42, 4);
   ctx.fill();
   ctx.font = '8px IBM Plex Mono, monospace';
-  ctx.fillStyle = '#22c55e';
+  ctx.fillStyle = '#14b8a6';
   ctx.fillText('GANANCIA', padding + statBoxWidth * 2.5 + 16, y + 14);
   ctx.font = 'bold 14px IBM Plex Mono, monospace';
   ctx.fillText(pick.ganancias || '+0', padding + statBoxWidth * 2.5 + 16, y + 32);
@@ -5174,7 +5174,7 @@ async function generatePickImage(pick) {
   
   ctx.textAlign = 'left';
   ctx.font = 'bold 10px IBM Plex Mono, monospace';
-  ctx.fillStyle = isGanado ? '#22c55e' : isPerdido ? '#ef4444' : '#fbbf24';
+  ctx.fillStyle = isGanado ? '#14b8a6' : isPerdido ? '#ef4444' : '#fbbf24';
   ctx.fillText('⏳ ' + estadoUpper, padding, y + 20);
   
   // Verificado
@@ -5260,7 +5260,7 @@ async function sendToTelegram(pick) {
     
     // Badge de estado
     const estadoBadge = estado === 'ganado' 
-      ? `<span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(34,197,94,.2);color:#22c55e;border:1px solid rgba(34,197,94,.4)">✓ GANADA</span>`
+      ? `<span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(20,184,166,.2);color:#14b8a6;border:1px solid rgba(20,184,166,.4)">✓ GANADA</span>`
       : estado === 'perdido'
       ? `<span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(239,68,68,.2);color:#ef4444;border:1px solid rgba(239,68,68,.4)">✗ PERDIDA</span>`
       : `<span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(251,191,36,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.4)">⏳ PENDIENTE</span>`;
@@ -5268,9 +5268,9 @@ async function sendToTelegram(pick) {
     // Sello para ganada/perdida
     const selloHtml = hasResult ? `
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);z-index:10;pointer-events:none">
-        <div style="border:4px solid ${isWin ? 'rgba(34,197,94,.8)' : 'rgba(239,68,68,.8)'};border-radius:12px;padding:12px 28px;background:rgba(10,22,18,.95)">
-          <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:${isWin ? '#22c55e' : '#ef4444'};letter-spacing:.15em;text-shadow:0 0 30px ${isWin ? 'rgba(34,197,94,.8)' : 'rgba(239,68,68,.8)'}">${isWin ? 'GANADA' : 'PERDIDA'}</div>
-          <div style="text-align:center;font-family:monospace;font-size:11px;color:${isWin ? '#22c55e' : '#ef4444'};margin-top:4px">${isWin ? '+' : ''}${ganancias}u</div>
+        <div style="border:4px solid ${isWin ? 'rgba(20,184,166,.8)' : 'rgba(239,68,68,.8)'};border-radius:12px;padding:12px 28px;background:rgba(10,22,18,.95)">
+          <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:${isWin ? '#14b8a6' : '#ef4444'};letter-spacing:.15em;text-shadow:0 0 30px ${isWin ? 'rgba(20,184,166,.8)' : 'rgba(239,68,68,.8)'}">${isWin ? 'GANADA' : 'PERDIDA'}</div>
+          <div style="text-align:center;font-family:monospace;font-size:11px;color:${isWin ? '#14b8a6' : '#ef4444'};margin-top:4px">${isWin ? '+' : ''}${ganancias}u</div>
         </div>
       </div>` : '';
     
@@ -5297,7 +5297,7 @@ async function sendToTelegram(pick) {
             📋 ${pt.liga || pick.liga || 'Liga'} · ⏱ ${fechaStr}${horaStr ? ' · ' + horaStr : ''}
           </div>
         </div>
-        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(34,197,94,.08));border:1px solid rgba(45,212,191,.35);border-radius:10px;padding:14px;margin-bottom:14px">
+        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(20,184,166,.08));border:1px solid rgba(45,212,191,.35);border-radius:10px;padding:14px;margin-bottom:14px">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
               <div style="font-family:monospace;font-size:9px;color:#5eead4;margin-bottom:4px">SELECCIÓN</div>
@@ -5333,7 +5333,7 @@ async function sendToTelegram(pick) {
       }).join('');
       
       partidosHtml += `
-        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(34,197,94,.08));border:1px solid rgba(45,212,191,.4);border-radius:10px;padding:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
+        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(20,184,166,.08));border:1px solid rgba(45,212,191,.4);border-radius:10px;padding:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
           <div>
             <div style="font-family:monospace;font-size:9px;color:#5eead4">CUOTA COMBINADA</div>
             <div style="font-size:24px;font-weight:800;color:#5eead4">${cuotaTotal.toFixed(2)}</div>
@@ -5355,8 +5355,8 @@ async function sendToTelegram(pick) {
         
         <!-- Header -->
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(45,212,191,.2)">
-          <div style="width:44px;height:44px;border-radius:10px;border:2px solid rgba(74,222,128,.6);overflow:hidden;background:linear-gradient(135deg,#1a3f1c,#0d1a0f)">
-            <img src="hunter.JPG" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:16px;font-weight:900;color:#4ade80;display:flex;align-items:center;justify-content:center;height:100%\\'>GH</span>'"/>
+          <div style="width:44px;height:44px;border-radius:10px;border:2px solid rgba(45,212,191,.6);overflow:hidden;background:linear-gradient(135deg,#1a3f1c,#0d1a0f)">
+            <img src="hunter.JPG" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:16px;font-weight:900;color:#2dd4bf;display:flex;align-items:center;justify-content:center;height:100%\\'>GH</span>'"/>
           </div>
           <div style="flex:1">
             <div style="font-weight:700;font-size:15px;color:#e2e8f0">Green Hunter Pro</div>
@@ -5728,7 +5728,7 @@ async function publishPick() {
 
     // Feedback y Reset
     if (btn) {
-      btn.style.background = '#16a34a';
+      btn.style.background = '#0d9488';
       btn.innerHTML = '¡Pick Publicado!';
       
       setTimeout(() => {
@@ -5764,7 +5764,7 @@ function showToast(message, type = 'info') {
   if (existingToast) existingToast.remove();
 
   const colors = {
-    success: { bg: 'rgba(34,197,94,.95)', border: '#22c55e' },
+    success: { bg: 'rgba(20,184,166,.95)', border: '#14b8a6' },
     warning: { bg: 'rgba(249,115,22,.95)', border: '#f97316' },
     error: { bg: 'rgba(239,68,68,.95)', border: '#ef4444' },
     info: { bg: 'rgba(59,130,246,.95)', border: '#3b82f6' }
@@ -5857,7 +5857,7 @@ function shakeElement(id) {
 
 // ═══ CONFETTI ═══
 function launchConfetti() {
-  const colors = ['#10b981', '#22c55e', '#f97316', '#60a5fa', '#fbbf24', '#ffffff'];
+  const colors = ['#10b981', '#14b8a6', '#f97316', '#60a5fa', '#fbbf24', '#ffffff'];
   const container = document.createElement('div');
   container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;overflow:hidden';
   document.body.appendChild(container);
@@ -5890,8 +5890,8 @@ function showPublishModal(pick) {
       <div style="background:#0a0e0b;border:1px solid #1e3028;border-radius:12px;max-width:400px;width:100%;padding:24px;animation:scaleIn .3s ease" onclick="event.stopPropagation()">
         
         <div style="text-align:center;margin-bottom:20px">
-          <div style="width:60px;height:60px;border-radius:50%;background:rgba(34,197,94,.15);border:2px solid #22c55e;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          <div style="width:60px;height:60px;border-radius:50%;background:rgba(20,184,166,.15);border:2px solid #14b8a6;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
           </div>
           <h3 style="color:#d6e3d2;font-size:18px;font-weight:700;margin-bottom:4px">¡Pick Publicado!</h3>
           <p style="color:#6a8a78;font-size:12px;font-family:'IBM Plex Mono',monospace">${new Date().toLocaleString('es-ES')}</p>
@@ -5899,11 +5899,11 @@ function showPublishModal(pick) {
 
         <div style="background:#080c0a;border:1px solid #162018;border-radius:8px;padding:14px;margin-bottom:16px">
           <div style="font-size:14px;font-weight:600;color:#d6e3d2;margin-bottom:8px">${pick.partido}</div>
-          <div style="font-size:12px;color:#22c55e;margin-bottom:4px">${pick.mercado}</div>
+          <div style="font-size:12px;color:#14b8a6;margin-bottom:4px">${pick.mercado}</div>
           <div style="display:flex;gap:8px;margin-top:12px">
             <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;background:rgba(249,115,22,.1);border:1px solid rgba(249,115,22,.25);border-radius:4px;color:#f97316">${pick.stake}</span>
             <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:4px;color:#fff">@ ${pick.cuota}</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);border-radius:4px;color:#22c55e">→ ${pick.ganancias}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.25);border-radius:4px;color:#14b8a6">→ ${pick.ganancias}</span>
           </div>
         </div>
 
