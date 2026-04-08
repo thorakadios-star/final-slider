@@ -842,7 +842,19 @@ nav.sc{border-color:#243028}
    LANDING PAGE - MOBILE OPTIMIZADO
    ═══════════════════════════════════════════════════════════════════════════════ */
 
+/* Desktop: mostrar botones, ocultar hamburguesa */
+@media(min-width:769px){
+  #pg-land #hamburger-btn{display:none !important}
+  #pg-land #nav-slogan{display:none !important}
+  #pg-land #nav-desktop-btns{display:flex !important}
+  #pg-land #mobile-menu{display:none !important}
+}
+
+/* Mobile */
 @media(max-width:768px){
+  #pg-land #hamburger-btn{display:flex !important}
+  #pg-land #nav-slogan{display:block !important}
+  #pg-land #nav-desktop-btns{display:none !important}
   /* NAV - Botones en fila, más pequeños */
   #pg-land nav .nav-inner{
     padding:0 12px;
@@ -1180,27 +1192,44 @@ if (typeof html2canvas === 'undefined') {
 
 <!-- LANDING -->
 <div id="pg-land">
-  <!-- Nav con logo -->
-  <nav style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,7,8,.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(26,38,32,.5)">
-    <div style="max-width:1400px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;justify-content:space-between">
-      <a href="#" class="ts-logo" onclick="go('land');return false;">
-        <img src="logo-truestats.png" alt="TrueStats AI" class="ts-logo-img">
+  <!-- Nav con logo + slogan + hamburguesa -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,7,8,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(45,212,191,.2)">
+    <div style="max-width:1400px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between">
+      
+      <!-- Logo izquierda -->
+      <a href="#" class="ts-logo" onclick="go('land');return false;" style="flex-shrink:0">
+        <img src="logo-truestats.png" alt="TrueStats AI" style="height:32px">
       </a>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <button onclick="go('plat')" style="padding:10px 18px;background:#0d1014;border:2px solid #c0c8d4;color:#e8ecf2;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(192,200,212,.2),0 0 40px rgba(192,200,212,.1),inset 0 0 20px rgba(192,200,212,.05);text-shadow:0 0 10px rgba(192,200,212,.5)" onmouseenter="this.style.boxShadow='0 0 30px rgba(192,200,212,.4),0 0 60px rgba(192,200,212,.2),inset 0 0 30px rgba(192,200,212,.1)';this.style.borderColor='#ffffff';this.style.textShadow='0 0 15px rgba(255,255,255,.8)'" onmouseleave="this.style.boxShadow='0 0 20px rgba(192,200,212,.2),0 0 40px rgba(192,200,212,.1),inset 0 0 20px rgba(192,200,212,.05)';this.style.borderColor='#c0c8d4';this.style.textShadow='0 0 10px rgba(192,200,212,.5)'">🎓 Academia</button>
-        <button onclick="go('plat')" 
-  style="padding: 10px 18px; background: rgb(8, 12, 10); border: 2px solid #2dd4bf; color: #2dd4bf; font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.3s ease 0s; box-shadow: rgba(45, 212, 191, 0.3) 0px 0px 20px, rgba(45, 212, 191, 0.15) 0px 0px 40px, rgba(45, 212, 191, 0.05) 0px 0px 20px inset; text-shadow: rgba(45, 212, 191, 0.6) 0px 0px 10px;" 
-  onmouseenter="this.style.boxShadow='0 0 35px rgba(45,212,191,.5), 0 0 70px rgba(45,212,191,.25), inset 0 0 30px rgba(45,212,191,.1)'; this.style.borderColor='#5eead4'; this.style.textShadow='0 0 20px rgba(45,212,191,1)'" 
-  onmouseleave="this.style.boxShadow='0 0 20px rgba(45,212,191,.3), 0 0 40px rgba(45,212,191,.15), inset 0 0 20px rgba(45,212,191,.05)'; this.style.borderColor='#2dd4bf'; this.style.textShadow='0 0 10px rgba(45,212,191,.6)'">
-  📊 Zona Tipsters
-</button>
-        <button onclick="go('plat')" style="padding:10px 18px;background:#080c0a;border:2px solid #60a5fa;color:#60a5fa;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(96,165,250,.3),0 0 40px rgba(96,165,250,.15),inset 0 0 20px rgba(96,165,250,.05);text-shadow:0 0 10px rgba(96,165,250,.6)" onmouseenter="this.style.boxShadow='0 0 35px rgba(96,165,250,.5),0 0 70px rgba(96,165,250,.25),inset 0 0 30px rgba(96,165,250,.1)';this.style.borderColor='#93c5fd';this.style.textShadow='0 0 20px rgba(96,165,250,1)'" onmouseleave="this.style.boxShadow='0 0 20px rgba(96,165,250,.3),0 0 40px rgba(96,165,250,.15),inset 0 0 20px rgba(96,165,250,.05)';this.style.borderColor='#60a5fa';this.style.textShadow='0 0 10px rgba(96,165,250,.6)'">🎯 Zona Apostadores</button>
-        <button onclick="go('plat')" style="padding:10px 18px;background:#080c0a;border:2px solid #fbbf24;color:#fbbf24;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(251,191,36,.3),0 0 40px rgba(251,191,36,.15),inset 0 0 20px rgba(251,191,36,.05);text-shadow:0 0 10px rgba(251,191,36,.6)" onmouseenter="this.style.boxShadow='0 0 35px rgba(251,191,36,.5),0 0 70px rgba(251,191,36,.25),inset 0 0 30px rgba(251,191,36,.1)';this.style.borderColor='#fcd34d';this.style.textShadow='0 0 20px rgba(251,191,36,1)'" onmouseleave="this.style.boxShadow='0 0 20px rgba(251,191,36,.3),0 0 40px rgba(251,191,36,.15),inset 0 0 20px rgba(251,191,36,.05)';this.style.borderColor='#fbbf24';this.style.textShadow='0 0 10px rgba(251,191,36,.6)'">🏆 Hall of Fame</button>
+      
+      <!-- Slogan centro -->
+      <span id="nav-slogan" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#2dd4bf;text-transform:uppercase;letter-spacing:.08em;text-shadow:0 0 15px rgba(45,212,191,.6);animation:shimmer 5s linear infinite;background:linear-gradient(100deg,#5eead4,#2dd4bf 40%,#14b8a6 70%,#2dd4bf);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Cambiamos las reglas</span>
+      
+      <!-- Hamburguesa derecha -->
+      <button id="hamburger-btn" onclick="toggleMobileMenu()" style="width:40px;height:40px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:all .3s">
+        <span style="width:18px;height:2px;background:#2dd4bf;border-radius:1px;transition:all .3s"></span>
+        <span style="width:18px;height:2px;background:#2dd4bf;border-radius:1px;transition:all .3s"></span>
+        <span style="width:18px;height:2px;background:#2dd4bf;border-radius:1px;transition:all .3s"></span>
+      </button>
+      
+      <!-- Botones desktop (ocultos en móvil) -->
+      <div id="nav-desktop-btns" style="display:none;gap:12px;flex-wrap:wrap">
+        <button onclick="go('plat')" style="padding:10px 18px;background:#0d1014;border:2px solid #c0c8d4;color:#e8ecf2;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(192,200,212,.2),0 0 40px rgba(192,200,212,.1),inset 0 0 20px rgba(192,200,212,.05);text-shadow:0 0 10px rgba(192,200,212,.5)">🎓 Academia</button>
+        <button onclick="go('plat')" style="padding:10px 18px;background:rgb(8,12,10);border:2px solid #2dd4bf;color:#2dd4bf;font-family:Inter,sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(45,212,191,.3),0 0 40px rgba(45,212,191,.15),inset 0 0 20px rgba(45,212,191,.05);text-shadow:0 0 10px rgba(45,212,191,.6)">📊 Zona Tipsters</button>
+        <button onclick="go('plat')" style="padding:10px 18px;background:#080c0a;border:2px solid #60a5fa;color:#60a5fa;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(96,165,250,.3),0 0 40px rgba(96,165,250,.15),inset 0 0 20px rgba(96,165,250,.05);text-shadow:0 0 10px rgba(96,165,250,.6)">🎯 Zona Apostadores</button>
+        <button onclick="go('plat')" style="padding:10px 18px;background:#080c0a;border:2px solid #fbbf24;color:#fbbf24;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(251,191,36,.3),0 0 40px rgba(251,191,36,.15),inset 0 0 20px rgba(251,191,36,.05);text-shadow:0 0 10px rgba(251,191,36,.6)">🏆 Hall of Fame</button>
       </div>
+    </div>
+    
+    <!-- Menú móvil desplegable -->
+    <div id="mobile-menu" style="display:none;position:absolute;top:100%;left:0;right:0;background:rgba(5,7,8,.98);border-bottom:1px solid rgba(45,212,191,.2);padding:16px;flex-direction:column;gap:10px">
+      <button onclick="go('plat');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:#0d1014;border:2px solid #c0c8d4;color:#e8ecf2;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(192,200,212,.15)">🎓 Academia</button>
+      <button onclick="go('plat');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:rgb(8,12,10);border:2px solid #2dd4bf;color:#2dd4bf;font-family:Inter,sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(45,212,191,.2)">📊 Zona Tipsters</button>
+      <button onclick="go('plat');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:#080c0a;border:2px solid #60a5fa;color:#60a5fa;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(96,165,250,.2)">🎯 Zona Apostadores</button>
+      <button onclick="go('plat');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:#080c0a;border:2px solid #fbbf24;color:#fbbf24;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(251,191,36,.2)">🏆 Hall of Fame</button>
     </div>
   </nav>
 
-  <section class="hero" style="padding-top:100px">
+  <section class="hero" style="padding-top:80px">
     <div class="grid-bg"></div>
     <div class="hero-glow"></div>
     <div class="hero-content">
@@ -2512,9 +2541,26 @@ function updateStatsTable(statsData) {
   }).join('');
 }
 
+// ── MENÚ HAMBURGUESA MOBILE ─────────────────────────────────────────────────────
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger-btn');
+  if (menu.style.display === 'flex') {
+    menu.style.display = 'none';
+    btn.style.background = 'rgba(45,212,191,.1)';
+  } else {
+    menu.style.display = 'flex';
+    btn.style.background = 'rgba(45,212,191,.25)';
+  }
+}
+
 // ── NAVEGACIÓN ─────────────────────────────────────────────────────────────────
 function go(p) {
   try {
+    // Cerrar menú móvil si está abierto
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (mobileMenu) mobileMenu.style.display = 'none';
+    
     const pgLand = document.getElementById('pg-land');
     const pgPlat = document.getElementById('pg-plat');
     const pgPicks = document.getElementById('pg-picks');
