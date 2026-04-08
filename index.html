@@ -3227,21 +3227,21 @@ function buildVistaPrevia() {
     </div>
     
     <!-- Box Pick (se llenará dinámicamente) -->
-    <div id="prev-pick-box" style="background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(20,184,166,.05));border:1px solid rgba(45,212,191,.25);border-radius:10px;padding:12px;margin-bottom:12px;display:none">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-        <div style="flex:1">
-          <div id="prev-mercado" style="font-family:monospace;font-size:8px;color:#5eead4;margin-bottom:4px">SELECCIÓN</div>
-          <div id="prev-seleccion" style="font-size:16px;font-weight:700;color:#2dd4bf">—</div>
+    <div id="prev-pick-box" style="background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(20,184,166,.05));border:1px solid rgba(45,212,191,.25);border-radius:10px;padding:12px;margin-bottom:12px">
+      <!-- Fechas y Horas -->
+      <div style="margin-bottom:10px;padding:8px 10px;background:rgba(13,32,26,.6);border:1px solid rgba(45,212,191,.15);border-radius:6px;text-align:center">
+        <div style="font-family:monospace;font-size:8px;color:#5eead4;margin-bottom:4px">FECHA / HORA</div>
+        <div id="prev-fechas" style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.5">—</div>
+      </div>
+      <!-- Cuota y Stake -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:6px;padding:10px;text-align:center">
+          <div style="font-family:monospace;font-size:8px;color:#5eead4;margin-bottom:4px">CUOTA</div>
+          <div id="prev-cuota" style="font-size:18px;font-weight:800;color:#5eead4">—</div>
         </div>
-        <div style="display:flex;gap:6px">
-          <div style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:5px;padding:6px 10px;text-align:center">
-            <div style="font-family:monospace;font-size:7px;color:#5eead4">CUOTA</div>
-            <div id="prev-cuota" style="font-size:16px;font-weight:800;color:#5eead4">—</div>
-          </div>
-          <div style="background:rgba(13,32,26,.6);border:1px solid rgba(45,212,191,.2);border-radius:5px;padding:6px 10px;text-align:center">
-            <div style="font-family:monospace;font-size:7px;color:#94a3b8">STAKE</div>
-            <div id="prev-stake" style="font-size:16px;font-weight:800;color:#e2e8f0">—</div>
-          </div>
+        <div style="background:rgba(13,32,26,.6);border:1px solid rgba(45,212,191,.2);border-radius:6px;padding:10px;text-align:center">
+          <div style="font-family:monospace;font-size:8px;color:#94a3b8;margin-bottom:4px">STAKE</div>
+          <div id="prev-stake" style="font-size:18px;font-weight:800;color:#e2e8f0">—</div>
         </div>
       </div>
     </div>
@@ -3748,23 +3748,26 @@ function updatePreview() {
     let picksHTML = '';
     let cuotaTotal = 1;
     let hasValidPick = false;
+    let allDates = [];
 
     for (let i = 1; i <= pronosticoCount; i++) {
       const pid = `p${i}`;
       const isManual = toggleState.modo === 'manual';
 
       // Obtener local y visitante según modo
-      let home, away, date;
+      let home, away, dateStr, timeStr;
       if (isManual) {
         home = document.getElementById(`${pid}-home`)?.value?.trim() || '';
         away = document.getElementById(`${pid}-away`)?.value?.trim() || '';
-        const dateVal = document.getElementById(`${pid}-date-manual`)?.value || '';
-        const timeVal = document.getElementById(`${pid}-time-manual`)?.value || '';
-        date = dateVal ? `${dateVal}${timeVal ? ' ' + timeVal : ''}` : '';
+        dateStr = document.getElementById(`${pid}-date-manual`)?.value || '';
+        timeStr = document.getElementById(`${pid}-time-manual`)?.value || '';
       } else {
         home = document.getElementById(`${pid}-home`)?.textContent || '';
         away = document.getElementById(`${pid}-away`)?.textContent || '';
-        date = document.getElementById(`${pid}-date`)?.textContent || '';
+        const fullDate = document.getElementById(`${pid}-date`)?.textContent || '';
+        const parts = fullDate.split(' ');
+        dateStr = parts[0] || '';
+        timeStr = parts[1] || '';
       }
 
       const comp = pronosticoData[pid]?.compName || document.getElementById(`${pid}-manual-liga`)?.value?.trim() || '';
@@ -3802,6 +3805,7 @@ function updatePreview() {
       if (validHome) {
         hasValidPick = true;
         if (cuota > 0) cuotaTotal *= cuota;
+        allDates.push({ date: dateStr, time: timeStr });
         picksHTML += `
         <div style="background:#080c0a;border:1px solid #1a2e1f;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
           ${isCombo ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:#a855f7;text-transform:uppercase;letter-spacing:.1em">PICK ${i}</div>` : ''}
@@ -3809,12 +3813,10 @@ function updatePreview() {
             <span style="color:#2dd4bf">⚽</span>
             ${home} vs ${away}
           </div>
-          <div style="font-size:10px;color:#fb923c;padding-left:22px;font-family:'IBM Plex Mono',monospace">${date || '—'}</div>
           <div style="margin-top:6px;padding:10px 12px;background:#0c1210;border:1px solid #1a2e1f;border-radius:6px">
             <div style="font-size:9px;color:#2dd4bf;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Selección</div>
             <div style="font-size:13px;color:#ffffff;font-weight:600">${mercadoCompleto}</div>
           </div>
-          <div style="align-self:flex-end;margin-top:4px;padding:5px 12px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.25);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:#2dd4bf">${cuota > 0 ? '@' + cuota.toFixed(2) : '—'}</div>
         </div>`;
       }
     }
@@ -3830,6 +3832,20 @@ function updatePreview() {
       ? document.getElementById('combo-stake')
       : document.getElementById('p1-stake');
     const stake = parseFloat(stakeInput?.value) || 0;
+
+    // Actualizar box de fechas/horas
+    const prevFechas = document.getElementById('prev-fechas');
+    if (prevFechas && hasValidPick) {
+      if (allDates.length === 1) {
+        // Una sola fecha: en línea
+        prevFechas.innerHTML = `<span style="color:#fb923c">${allDates[0].date || '—'}</span> <span style="color:#94a3b8">${allDates[0].time || ''}</span>`;
+      } else {
+        // Múltiples fechas: una debajo de otra
+        prevFechas.innerHTML = allDates.map(d => `<div><span style="color:#fb923c">${d.date || '—'}</span> <span style="color:#94a3b8">${d.time || ''}</span></div>`).join('');
+      }
+    } else if (prevFechas) {
+      prevFechas.innerHTML = '—';
+    }
 
     const prevStake = document.getElementById('prev-stake');
     const prevCuota = document.getElementById('prev-cuota');
