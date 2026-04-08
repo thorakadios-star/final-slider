@@ -1198,7 +1198,7 @@ if (typeof html2canvas === 'undefined') {
       
       <!-- Logo izquierda -->
       <a href="#" class="ts-logo" onclick="go('land');return false;" style="flex-shrink:0">
-       <img src="logo-truestats.png" alt="TrueStats AI" style="height:80px;width:80px;object-fit:contain">
+        <img src="logo-truestats.png" alt="TrueStats AI" style="height:32px">
       </a>
       
       <!-- Slogan centro -->
@@ -1655,7 +1655,7 @@ if (typeof html2canvas === 'undefined') {
     <div class="tipsters-grid">
 
       <!-- TIPSTER 1 - Green Hunter Pro -->
-      <div class="tipster-card">
+      <div class="tipster-card" data-tipster-id="ghp">
         <div class="card-banner">
           <div class="card-banner-bg" style="background:linear-gradient(135deg,#1a3020 0%,#081810 100%)"></div>
           <div class="card-banner-overlay"></div>
@@ -1693,11 +1693,11 @@ if (typeof html2canvas === 'undefined') {
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-action primary" id="ghp-btn-picks" onclick="openTipsterProfile({name:'Green Hunter Pro',subtitle:'PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})">
+            <button class="btn-action primary" id="ghp-btn-picks" onclick="openTipsterProfile({id:'ghp',name:'Green Hunter Pro',subtitle:'PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               Ver Picks
             </button>
-            <button class="btn-action" id="ghp-btn-stats" onclick="openTipsterProfile({name:'Green Hunter Pro',subtitle:'PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});showTipsterTab('stats')">
+            <button class="btn-action" id="ghp-btn-stats" onclick="openTipsterProfile({id:'ghp',name:'Green Hunter Pro',subtitle:'PROFESSIONAL TIPSTER',avatar:'hunter.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});showTipsterTab('stats')">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
               Estadísticas
             </button>
@@ -1707,7 +1707,7 @@ if (typeof html2canvas === 'undefined') {
             </button>
           </div>
           <div style="display:flex;justify-content:center;margin-top:10px">
-            <button class="btn-action primary" onclick="go('picks')" style="width:100%;max-width:280px">
+            <button class="btn-action primary" onclick="setActiveTipster('ghp');go('picks')" style="width:100%;max-width:280px">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Crear Pick
             </button>
@@ -1715,12 +1715,62 @@ if (typeof html2canvas === 'undefined') {
         </div>
       </div>
 
-      <!-- TIPSTER 2 - TipsTopPremium -->
-      <div class="tipster-card">
+      <!-- TIPSTER 2 - Spider Tips -->
+      <div class="tipster-card" data-tipster-id="spider">
+        <div class="card-banner">
+          <div class="card-banner-bg" style="background:linear-gradient(135deg,#1a2a1a 0%,#0a150a 100%)"></div>
+          <div class="card-banner-overlay"></div>
+          <div class="tipster-rank top3">🥈 #2</div>
+          <div class="verified-badge">🔰 Verificado</div>
+          <div class="sport-badge basket">🏀 Basket</div>
+        </div>
+        <div class="card-content">
+          <div class="tipster-identity">
+            <div class="tipster-avatar verified"><img src="spt.JPG" alt="Spider Tips"></div>
+            <div class="tipster-info">
+              <div class="tipster-name">Spider Tips</div>
+              <div class="tipster-rating">
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="stats-grid" id="spider-stats-grid">
+            <div class="stat-item"><div class="stat-value" id="spider-score">0</div><div class="stat-label">Score</div></div>
+            <div class="stat-item"><div class="stat-value yield" id="spider-yield">0%</div><div class="stat-label">Yield</div></div>
+            <div class="stat-item"><div class="stat-value profit" id="spider-profit">0</div><div class="stat-label">Beneficio</div></div>
+            <div class="stat-item"><div class="stat-value" id="spider-picks">0</div><div class="stat-label">Picks</div></div>
+          </div>
+          <div class="performance-section">
+            <span class="performance-label">Últimos 10</span>
+            <div class="performance-dots" id="spider-dots">
+              <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
+              <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-action primary" onclick="openTipsterProfile({id:'spider',name:'Spider Tips',subtitle:'BASKETBALL PROFESSIONAL TIPSTER',avatar:'spt.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'basket'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
+            <button class="btn-action" onclick="openTipsterProfile({id:'spider',name:'Spider Tips',subtitle:'BASKETBALL PROFESSIONAL TIPSTER',avatar:'spt.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'basket'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
+            <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
+          </div>
+          <div style="display:flex;justify-content:center;margin-top:10px">
+            <button class="btn-action primary" onclick="setActiveTipster('spider');go('picks')" style="width:100%;max-width:280px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Crear Pick
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIPSTER 3 - TipsTopPremium -->
+      <div class="tipster-card" data-tipster-id="tipstop">
         <div class="card-banner">
           <div class="card-banner-bg" style="background:linear-gradient(135deg,#3a2510 0%,#1a0f05 100%)"></div>
           <div class="card-banner-overlay"></div>
-          <div class="tipster-rank top3">🥈 #2</div>
+          <div class="tipster-rank top3">🥉 #3</div>
           <div class="verified-badge">🔰 Verificado</div>
           <div class="sport-badge futbol">⚽ Fútbol</div>
         </div>
@@ -1740,66 +1790,22 @@ if (typeof html2canvas === 'undefined') {
               </div>
             </div>
           </div>
-          <div class="stats-grid">
-            <div class="stat-item"><div class="stat-value">0</div><div class="stat-label">Score</div></div>
-            <div class="stat-item"><div class="stat-value yield">0%</div><div class="stat-label">Yield</div></div>
-            <div class="stat-item"><div class="stat-value profit">0</div><div class="stat-label">Beneficio</div></div>
-            <div class="stat-item"><div class="stat-value">0</div><div class="stat-label">Picks</div></div>
+          <div class="stats-grid" id="tipstop-stats-grid">
+            <div class="stat-item"><div class="stat-value" id="tipstop-score">0</div><div class="stat-label">Score</div></div>
+            <div class="stat-item"><div class="stat-value yield" id="tipstop-yield">0%</div><div class="stat-label">Yield</div></div>
+            <div class="stat-item"><div class="stat-value profit" id="tipstop-profit">0</div><div class="stat-label">Beneficio</div></div>
+            <div class="stat-item"><div class="stat-value" id="tipstop-picks">0</div><div class="stat-label">Picks</div></div>
           </div>
           <div class="performance-section">
             <span class="performance-label">Últimos 10</span>
-            <div class="performance-dots">
+            <div class="performance-dots" id="tipstop-dots">
               <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
               <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-action primary" onclick="openTipsterProfile({name:'TipsTopPremium',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
-            <button class="btn-action" onclick="openTipsterProfile({name:'TipsTopPremium',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
-            <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TIPSTER 3 - Spider Tips -->
-      <div class="tipster-card">
-        <div class="card-banner">
-          <div class="card-banner-bg" style="background:linear-gradient(135deg,#1a2a1a 0%,#0a150a 100%)"></div>
-          <div class="card-banner-overlay"></div>
-          <div class="tipster-rank top3">🥉 #3</div>
-          <div class="verified-badge">🔰 Verificado</div>
-          <div class="sport-badge basket">🏀 Basket</div>
-        </div>
-        <div class="card-content">
-          <div class="tipster-identity">
-            <div class="tipster-avatar verified"><img src="spt.JPG" alt="Spider Tips"></div>
-            <div class="tipster-info">
-              <div class="tipster-name">Spider Tips</div>
-              <div class="tipster-rating">
-                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              </div>
-            </div>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-item"><div class="stat-value">0</div><div class="stat-label">Score</div></div>
-            <div class="stat-item"><div class="stat-value yield">0%</div><div class="stat-label">Yield</div></div>
-            <div class="stat-item"><div class="stat-value profit">0</div><div class="stat-label">Beneficio</div></div>
-            <div class="stat-item"><div class="stat-value">0</div><div class="stat-label">Picks</div></div>
-          </div>
-          <div class="performance-section">
-            <span class="performance-label">Últimos 10</span>
-            <div class="performance-dots">
-              <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
-              <div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div><div class="perf-dot"></div>
-            </div>
-          </div>
-          <div class="card-actions">
-            <button class="btn-action primary" onclick="openTipsterProfile({name:'Spider Tips',subtitle:'BASKETBALL PROFESSIONAL TIPSTER',avatar:'spt.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'basket'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
-            <button class="btn-action" onclick="openTipsterProfile({name:'Spider Tips',subtitle:'BASKETBALL PROFESSIONAL TIPSTER',avatar:'spt.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'basket'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
+            <button class="btn-action primary" onclick="openTipsterProfile({id:'tipstop',name:'TipsTopPremium',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
+            <button class="btn-action" onclick="openTipsterProfile({id:'tipstop',name:'TipsTopPremium',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
             <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
           </div>
         </div>
@@ -2201,7 +2207,7 @@ if (typeof html2canvas === 'undefined') {
       <div class="ph" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
         <div>
           <h1>Crear <span class="b">Pick</span></h1>
-          <p>Green Hunter Pro · Publicación auditada por TrueStats AI</p>
+          <p id="picks-header-subtitle">Green Hunter Pro · Publicación auditada por TrueStats AI</p>
         </div>
         <button onclick="go('plat')" style="display:flex;align-items:center;gap:7px;background:transparent;border:1px solid #162018;color:#a1a1aa;font-family:'Inter',sans-serif;font-size:13px;padding:8px 16px;border-radius:4px;cursor:pointer;transition:all .15s" onmouseenter="this.style.borderColor='#2a3830';this.style.color='#d6e3d2'" onmouseleave="this.style.borderColor='#162018';this.style.color='#a1a1aa'">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -2554,6 +2560,31 @@ function toggleMobileMenu() {
   }
 }
 
+// ── TIPSTER ACTIVO PARA CREAR PICKS ─────────────────────────────────────────────
+let activeTipsterId = 'ghp'; // Default: Green Hunter Pro
+
+const tipsterNames = {
+  'ghp': 'Green Hunter Pro',
+  'spider': 'Spider Tips',
+  'tipstop': 'TipsTopPremium'
+};
+
+function setActiveTipster(tipsterId) {
+  activeTipsterId = tipsterId;
+  console.log('Tipster activo:', tipsterId);
+  
+  // Actualizar header de la página Crear Pick
+  const subtitle = document.getElementById('picks-header-subtitle');
+  if (subtitle) {
+    const name = tipsterNames[tipsterId] || tipsterId;
+    subtitle.textContent = name + ' · Publicación auditada por TrueStats AI';
+  }
+}
+
+function getActiveTipster() {
+  return activeTipsterId;
+}
+
 // ── NAVEGACIÓN ─────────────────────────────────────────────────────────────────
 function go(p) {
   try {
@@ -2718,16 +2749,22 @@ function calculateChartData() {
 }
 
 // Abrir perfil de tipster con datos
+let currentProfileTipsterId = 'ghp'; // Tipster actual en perfil
+
 function openTipsterProfile(tipsterData) {
+  // Guardar el tipster_id actual
+  currentProfileTipsterId = tipsterData.id || 'ghp';
+  
   // Actualizar datos del tipster en la página
   if (tipsterData) {
     document.getElementById('tipster-name').textContent = tipsterData.name || 'Tipster';
     document.getElementById('tipster-subtitle').textContent = tipsterData.subtitle || '';
     if (tipsterData.avatar) document.getElementById('tipster-avatar').src = tipsterData.avatar;
     
-    // Usar stats calculadas desde Supabase si existen (para Green Hunter Pro)
-    if (tipsterData.name === 'Green Hunter Pro' && window.ghpStats) {
-      const stats = window.ghpStats;
+    // Usar stats calculadas desde Supabase según tipster_id
+    const statsKey = currentProfileTipsterId + 'Stats';
+    if (window[statsKey]) {
+      const stats = window[statsKey];
       document.getElementById('tipster-score').textContent = stats.score || '0';
       document.getElementById('tipster-yield').textContent = stats.yield || '0%';
       document.getElementById('tipster-benefit').textContent = stats.benefit || '0';
@@ -2756,7 +2793,8 @@ function renderTipsterPicks() {
   const container = document.getElementById('tipster-picks-container');
   if (!container) return;
   
-  const picks = picksStore.ghp || [];
+  // Filtrar picks por el tipster actual
+  const picks = picksStore[currentProfileTipsterId] || [];
   
   if (picks.length === 0) {
     container.innerHTML = `
@@ -4683,7 +4721,7 @@ async function savePickToSupabase(pick) {
 // 2. CARGAR PICKS Y ESTADÍSTICAS
 async function loadPicksFromSupabase() {
   try {
-    // 1. Cargar picks de la tabla
+    // 1. Cargar TODOS los picks de la tabla
     const { data: picks, error: errPicks } = await sbClient
       .from('picks') 
       .select('*')
@@ -4691,90 +4729,96 @@ async function loadPicksFromSupabase() {
 
     if (errPicks) throw errPicks;
 
-    // 2. Cargar estadísticas de la vista
-    const { data: stats, error: errStats } = await sbClient
-      .from('tipster_stats')
-      .select('*')
-      .eq('tipster_id', 'ghp')
-      .single();
+    // 2. Organizar picks por tipster_id
+    if (picks && picks.length > 0) {
+      // Limpiar stores
+      picksStore.ghp = [];
+      picksStore.spider = [];
+      picksStore.tipstop = [];
+      
+      // Distribuir picks por tipster
+      picks.forEach(pick => {
+        const tid = pick.tipster_id || 'ghp';
+        if (!picksStore[tid]) picksStore[tid] = [];
+        picksStore[tid].push(pick);
+      });
+      
+      savePicksToStorage();
+      console.log('✅ Picks cargados - GHP:', picksStore.ghp.length, '| Spider:', picksStore.spider.length, '| TipsTop:', picksStore.tipstop.length);
+    } else {
+      picksStore.ghp = [];
+      picksStore.spider = [];
+      picksStore.tipstop = [];
+      console.log('📭 No hay picks en Supabase');
+    }
 
-    // 3. Cargar estadísticas mensuales para gráfica
-    const { data: monthly, error: errMonthly } = await sbClient
+    // 3. Cargar estadísticas para cada tipster
+    const tipsters = ['ghp', 'spider', 'tipstop'];
+    for (const tid of tipsters) {
+      const { data: stats } = await sbClient
+        .from('tipster_stats')
+        .select('*')
+        .eq('tipster_id', tid)
+        .single();
+      
+      if (stats) {
+        const beneficio = stats.beneficio_total ?? stats.beneficio ?? 0;
+        window[tid + 'Stats'] = {
+          score: Math.round(stats.winrate || 0).toString(),
+          yield: `${stats.yield || 0}%`,
+          benefit: `${beneficio >= 0 ? '+' : ''}${parseFloat(beneficio).toFixed(2)}u`,
+          picks: (stats.total_picks || 0).toString(),
+          bets: (stats.total_picks || 0).toString(),
+          winrate: `${stats.winrate || 0}%`,
+          avgStake: (stats.stake_medio || 0).toString(),
+          ganados: stats.ganados || 0,
+          perdidos: stats.perdidos || 0,
+          pendientes: stats.pendientes || 0
+        };
+      } else if (picksStore[tid] && picksStore[tid].length > 0) {
+        // Calcular stats desde picks si no hay vista
+        const tpicks = picksStore[tid];
+        const ganados = tpicks.filter(p => p.estado === 'ganado');
+        const perdidos = tpicks.filter(p => p.estado === 'perdido');
+        const resueltos = ganados.length + perdidos.length;
+        const winrate = resueltos > 0 ? ((ganados.length / resueltos) * 100).toFixed(1) : 0;
+        let beneficio = 0;
+        tpicks.forEach(p => {
+          if (p.ganancias !== undefined) beneficio += parseFloat(p.ganancias) || 0;
+        });
+        window[tid + 'Stats'] = {
+          score: Math.round(parseFloat(winrate)).toString(),
+          yield: '0%',
+          benefit: `${beneficio >= 0 ? '+' : ''}${beneficio.toFixed(2)}u`,
+          picks: tpicks.length.toString(),
+          bets: tpicks.length.toString(),
+          winrate: `${winrate}%`,
+          avgStake: '0',
+          ganados: ganados.length,
+          perdidos: perdidos.length,
+          pendientes: tpicks.filter(p => p.estado === 'pendiente').length
+        };
+      }
+    }
+
+    // 4. Cargar datos mensuales para GHP (gráfica)
+    const { data: monthly } = await sbClient
       .from('tipster_stats_cumulative')
       .select('*')
       .eq('tipster_id', 'ghp')
       .order('mes', { ascending: true });
+    if (monthly && monthly.length > 0) {
+      window.ghpMonthlyStats = monthly;
+    }
 
-    // 4. Cargar forma reciente
-    const { data: form, error: errForm } = await sbClient
+    // 5. Cargar forma reciente para GHP
+    const { data: form } = await sbClient
       .from('tipster_recent_form')
       .select('*')
       .eq('tipster_id', 'ghp')
       .single();
-
-    // Actualizar store local
-    if (picks && picks.length > 0) {
-      picksStore.ghp = picks;
-      savePicksToStorage();
-      console.log('✅ Picks cargados:', picks.length);
-    } else {
-      picksStore.ghp = [];
-      console.log('📭 No hay picks en Supabase');
-    }
-
-    // Guardar estadísticas en window para uso global
-    if (stats) {
-      // beneficio_total es el nombre en la vista tipster_stats
-      const beneficio = stats.beneficio_total ?? stats.beneficio ?? 0;
-      window.ghpStats = {
-        score: Math.round(stats.winrate || 0).toString(),
-        yield: `${stats.yield || 0}%`,
-        benefit: `${beneficio >= 0 ? '+' : ''}${parseFloat(beneficio).toFixed(2)}u`,
-        bets: (stats.total_picks || 0).toString(),
-        winrate: `${stats.winrate || 0}%`,
-        stake: (stats.stake_medio || 0).toString(),
-        ganados: stats.ganados || 0,
-        perdidos: stats.perdidos || 0,
-        pendientes: stats.pendientes || 0,
-        nulos: stats.nulos || 0
-      };
-      console.log('📊 Stats cargadas:', window.ghpStats);
-    } else if (picks && picks.length > 0) {
-      // Calcular stats desde picks si no hay vista
-      const ganados = picks.filter(p => p.estado === 'ganado');
-      const perdidos = picks.filter(p => p.estado === 'perdido');
-      const resueltos = ganados.length + perdidos.length;
-      const winrate = resueltos > 0 ? ((ganados.length / resueltos) * 100).toFixed(1) : 0;
-      let beneficio = 0;
-      picks.forEach(p => {
-        if (p.ganancias !== undefined && p.ganancias !== null) {
-          beneficio += parseFloat(p.ganancias) || 0;
-        }
-      });
-      window.ghpStats = {
-        score: Math.round(parseFloat(winrate)).toString(),
-        yield: '0%',
-        benefit: `${beneficio >= 0 ? '+' : ''}${beneficio.toFixed(2)}u`,
-        bets: picks.length.toString(),
-        winrate: `${winrate}%`,
-        stake: '0',
-        ganados: ganados.length,
-        perdidos: perdidos.length,
-        pendientes: picks.filter(p => p.estado === 'pendiente').length
-      };
-      console.log('📊 Stats calculadas desde picks:', window.ghpStats);
-    }
-
-    // Guardar datos mensuales para gráfica
-    if (monthly && monthly.length > 0) {
-      window.ghpMonthlyStats = monthly;
-      console.log('📈 Stats mensuales:', monthly.length, 'meses');
-    }
-
-    // Guardar forma reciente
     if (form && form.forma) {
       window.ghpRecentForm = form.forma;
-      console.log('🎯 Forma reciente:', form.forma);
     }
 
     // Renderizar panels y actualizar cards
@@ -4881,60 +4925,56 @@ async function loadTipsterStats() {
 
 // Actualizar las cards de tipsters en la página de plataforma
 function updateTipsterCards() {
-  const stats = window.ghpStats;
-  if (!stats) {
-    console.log('No hay stats para actualizar');
-    return;
-  }
-
-  // Actualizar card de Green Hunter Pro en pg-plat
-  const ghpScore = document.getElementById('ghp-score');
-  const ghpYield = document.getElementById('ghp-yield');
-  const ghpProfit = document.getElementById('ghp-profit');
-  const ghpPicks = document.getElementById('ghp-picks');
+  // Actualizar cada tipster
+  const tipsters = [
+    { id: 'ghp', prefix: 'ghp' },
+    { id: 'spider', prefix: 'spider' },
+    { id: 'tipstop', prefix: 'tipstop' }
+  ];
   
-  if (ghpScore) ghpScore.textContent = stats.score;
-  if (ghpYield) ghpYield.textContent = stats.yield;
-  if (ghpProfit) ghpProfit.textContent = stats.benefit;
-  if (ghpPicks) ghpPicks.textContent = stats.bets;
+  tipsters.forEach(t => {
+    const stats = window[t.id + 'Stats'];
+    if (!stats) return;
+    
+    const scoreEl = document.getElementById(t.prefix + '-score');
+    const yieldEl = document.getElementById(t.prefix + '-yield');
+    const profitEl = document.getElementById(t.prefix + '-profit');
+    const picksEl = document.getElementById(t.prefix + '-picks');
+    
+    if (scoreEl) scoreEl.textContent = stats.score;
+    if (yieldEl) yieldEl.textContent = stats.yield;
+    if (profitEl) profitEl.textContent = stats.benefit;
+    if (picksEl) picksEl.textContent = stats.picks || stats.bets;
+    
+    // Actualizar dots de forma reciente
+    const dotsContainer = document.getElementById(t.prefix + '-dots');
+    if (dotsContainer) {
+      const formKey = t.id + 'RecentForm';
+      const recentForm = window[formKey] || [];
+      const dots = dotsContainer.querySelectorAll('.perf-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.remove('win', 'loss', 'void', 'pending');
+        if (recentForm[i]) {
+          if (recentForm[i] === 'W') dot.classList.add('win');
+          else if (recentForm[i] === 'L') dot.classList.add('loss');
+          else if (recentForm[i] === 'V') dot.classList.add('void');
+          else dot.classList.add('pending');
+        }
+      });
+    }
+  });
 
-  // Actualizar Hero Stats en pg-tipster
-  const tipsterScore = document.getElementById('tipster-score');
-  const tipsterYield = document.getElementById('tipster-yield');
-  const tipsterBets = document.getElementById('tipster-bets');
-  const tipsterWinrate = document.getElementById('tipster-winrate');
-  
-  if (tipsterScore) tipsterScore.textContent = stats.benefit.replace('u', '');
-  if (tipsterYield) tipsterYield.textContent = stats.yield;
-  if (tipsterBets) tipsterBets.textContent = stats.bets;
-  if (tipsterWinrate) tipsterWinrate.textContent = stats.winrate;
-
-  // Actualizar stats globales de la landing
+  // Stats globales en landing (suma de todos)
+  const ghpStats = window.ghpStats || {};
   const globalPicks = document.getElementById('global-picks');
   const globalWinrate = document.getElementById('global-winrate');
   const globalProfit = document.getElementById('global-profit');
   
-  if (globalPicks) globalPicks.textContent = stats.bets;
-  if (globalWinrate) globalWinrate.textContent = stats.winrate;
-  if (globalProfit) globalProfit.textContent = stats.benefit;
+  if (globalPicks) globalPicks.textContent = ghpStats.bets || '0';
+  if (globalWinrate) globalWinrate.textContent = ghpStats.winrate || '0%';
+  if (globalProfit) globalProfit.textContent = ghpStats.benefit || '0';
   
-  // Actualizar puntos de forma reciente si existen
-  const formDots = document.querySelectorAll('.perf-dot');
-  const recentForm = window.ghpRecentForm || [];
-  formDots.forEach((dot, i) => {
-    dot.classList.remove('win', 'loss', 'void', 'pending');
-    if (recentForm[i]) {
-      if (recentForm[i] === 'W') dot.classList.add('win');
-      else if (recentForm[i] === 'L') dot.classList.add('loss');
-      else if (recentForm[i] === 'V') dot.classList.add('void');
-      else dot.classList.add('pending');
-    }
-  });
-
-  // Re-renderizar gráfica de estadísticas si estamos en esa pestaña
-  // La gráfica se actualiza con los datos de window.ghpMonthlyStats
-  
-  console.log('🔄 Cards de tipsters actualizadas:', stats);
+  console.log('🔄 Cards de tipsters actualizadas');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -5851,8 +5891,9 @@ async function publishPick() {
 
   // 4. Preparar objeto para Supabase
   const firstPick = picksData[0];
+  const currentTipster = getActiveTipster(); // Usar tipster activo
   const pickFinal = {
-    tipster_id: 'ghp',
+    tipster_id: currentTipster,
     deporte: firstPick.deporte,
     pais: firstPick.pais,
     liga: firstPick.liga,
