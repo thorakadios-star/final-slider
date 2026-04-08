@@ -5657,7 +5657,7 @@ async function publishPick() {
   }
 
   const stakeInput = isCombo ? document.getElementById('combo-stake') : document.getElementById('p1-stake');
-  const stakeVal = parseFloat(stakeInput?.value) || 1;
+  const stakeVal = Math.round(parseFloat(stakeInput?.value) || 1);
 
   // 3. Calcular cuota total
   const cuotaTotal = isCombo 
