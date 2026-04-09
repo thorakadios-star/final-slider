@@ -1176,38 +1176,41 @@ nav.sc{border-color:#243028}
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 /* ── LOGOS MÁS GRANDES EN TODAS LAS PÁGINAS ────────────────────────────────────── */
+/* ── LOGO GLOBAL - IGUAL QUE HAMBURGUESA (40px) ────────────────────────────────── */
 @media(max-width:768px){
-  .ts-logo-img{height:36px !important}
+  .ts-logo-img{height:40px !important;width:40px !important;object-fit:contain}
+  img[alt="TrueStats AI"]{height:40px !important;width:40px !important;object-fit:contain}
 }
 
 /* ── PÁGINA TIPSTERS (#pg-plat) ─────────────────────────────────────────────────── */
 @media(max-width:768px){
   #pg-plat nav>div{padding:0 16px;height:60px}
   #pg-plat nav button{padding:8px 14px;font-size:11px}
-  #pg-plat>div{padding:24px 16px 60px}
-  #pg-plat .page-header{margin-bottom:24px}
-  #pg-plat .page-header h1{font-size:24px}
-  #pg-plat .page-header p{font-size:12px}
-  #pg-plat .stats-banner{flex-direction:column;gap:8px;padding:16px}
-  #pg-plat .stat-pill{width:100%;justify-content:center;padding:10px 16px}
-  #pg-plat .filter-section{flex-direction:column;gap:12px}
-  #pg-plat .filter-bar{flex-wrap:wrap;justify-content:center;gap:6px}
-  #pg-plat .filter-btn{padding:6px 12px;font-size:10px}
-  #pg-plat .sort-select{width:100%;padding:10px}
-  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:16px}
-  #pg-plat .tipster-card{border-radius:12px}
-  #pg-plat .card-banner{height:60px}
-  #pg-plat .tipster-rank{font-size:9px;padding:3px 8px}
-  #pg-plat .verified-badge{font-size:8px;padding:3px 8px;left:65px}
-  #pg-plat .sport-badge{font-size:9px;padding:3px 8px}
-  #pg-plat .card-content{padding:14px}
-  #pg-plat .tipster-identity{gap:10px;margin-bottom:12px}
-  #pg-plat .tipster-avatar{width:50px;height:50px}
-  #pg-plat .tipster-name{font-size:15px}
-  #pg-plat .tipster-rating .star{width:12px;height:12px}
-  #pg-plat .stats-grid{grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-  #pg-plat .stat-item{padding:8px 4px}
-  #pg-plat .stat-value{font-size:13px}
+  #pg-plat>div{padding:24px 12px 60px}
+  #pg-plat .page-header{margin-bottom:20px}
+  #pg-plat .page-header h1{font-size:22px}
+  #pg-plat .page-header p{font-size:11px}
+  #pg-plat .stats-banner{flex-direction:column;gap:6px;padding:12px}
+  #pg-plat .stat-pill{width:100%;justify-content:center;padding:8px 12px;font-size:12px}
+  #pg-plat .filter-section{flex-direction:column;gap:10px}
+  #pg-plat .filter-bar{flex-wrap:wrap;justify-content:center;gap:5px}
+  #pg-plat .filter-btn{padding:5px 10px;font-size:9px}
+  #pg-plat .sort-select{width:100%;padding:8px;font-size:11px}
+  /* Cards de tipsters 15% más pequeñas y centradas */
+  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:12px;max-width:320px;margin:0 auto}
+  #pg-plat .tipster-card{border-radius:10px;transform:scale(0.85);transform-origin:center top;margin-bottom:-20px}
+  #pg-plat .card-banner{height:50px}
+  #pg-plat .tipster-rank{font-size:8px;padding:2px 6px}
+  #pg-plat .verified-badge{font-size:7px;padding:2px 6px;left:55px}
+  #pg-plat .sport-badge{font-size:8px;padding:2px 6px}
+  #pg-plat .card-content{padding:10px}
+  #pg-plat .tipster-identity{gap:8px;margin-bottom:10px}
+  #pg-plat .tipster-avatar{width:42px;height:42px}
+  #pg-plat .tipster-name{font-size:13px}
+  #pg-plat .tipster-rating .star{width:10px;height:10px}
+  #pg-plat .stats-grid{grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+  #pg-plat .stat-item{padding:6px 3px}
+  #pg-plat .stat-value{font-size:11px}
   #pg-plat .stat-label{font-size:8px}
   #pg-plat .performance-section{margin-bottom:12px}
   #pg-plat .performance-label{font-size:9px}
@@ -1296,7 +1299,8 @@ nav.sc{border-color:#243028}
   #pg-picks .ph p{font-size:11px}
   #pg-picks .finp{font-size:14px;padding:12px}
   #pg-picks .flbl{font-size:11px}
-  #pg-picks #vista-previa{border-radius:14px;margin-top:16px}
+  /* Boleto 40% más pequeño y centrado */
+  #pg-picks #vista-previa{transform:scale(0.6);transform-origin:center top;margin:16px auto -40%;max-width:100%}
   #pg-picks #vista-previa>div{padding:14px}
   #pg-picks .pronostico-card{padding:14px;border-radius:12px}
 }
@@ -1304,7 +1308,7 @@ nav.sc{border-color:#243028}
 @media(max-width:480px){
   #pg-picks .main{padding:16px 12px}
   #pg-picks .ph h1{font-size:20px}
-  #pg-picks #vista-previa{border-radius:12px}
+  #pg-picks #vista-previa{transform:scale(0.55);margin-bottom:-45%}
 }
 
 /* ── PÁGINAS PRÓXIMAMENTE (#pg-academia, #pg-hall) ──────────────────────────────── */
@@ -1312,7 +1316,7 @@ nav.sc{border-color:#243028}
   #pg-academia nav>div,
   #pg-hall nav>div{padding:0 16px;height:56px}
   #pg-academia nav img,
-  #pg-hall nav img{height:28px}
+  #pg-hall nav img{height:40px;width:40px;object-fit:contain}
   #pg-academia nav button,
   #pg-hall nav button{padding:8px 14px;font-size:11px}
   #pg-academia>div:last-child,
@@ -4856,11 +4860,16 @@ async function saveEditPick(tipsterId, index) {
   const pick = picksStore[tipsterId][index];
   if (!pick) return;
 
+  const estadoAnterior = (pick.estado || 'pendiente').toLowerCase();
   const nuevoEstado = document.getElementById('edit-estado').value;
   const nuevaSeleccion = document.getElementById('edit-seleccion').value;
   const nuevaCuota = parseFloat(document.getElementById('edit-cuota').value) || pick.cuota;
   const nuevoStake = parseInt(document.getElementById('edit-stake').value) || pick.stake;
   const nuevoAnalisis = document.getElementById('edit-analisis').value;
+
+  // Detectar si el estado cambió a un resultado final
+  const estadoCambioAResultado = estadoAnterior === 'pendiente' && 
+    (nuevoEstado === 'ganado' || nuevoEstado === 'perdido' || nuevoEstado === 'nulo');
 
   // Actualizar objeto local
   pick.estado = nuevoEstado;
@@ -4899,6 +4908,18 @@ async function saveEditPick(tipsterId, index) {
     updateTipsterCards();
     
     showToast('✅ Pick actualizado correctamente', 'success');
+    
+    // ENVIAR RESULTADO A TELEGRAM si el estado cambió a resultado final
+    if (estadoCambioAResultado) {
+      console.log('📤 Enviando resultado a Telegram:', nuevoEstado);
+      try {
+        await sendToTelegram(pick);
+        showToast('📤 Resultado enviado a Telegram', 'success');
+      } catch (telegramErr) {
+        console.error('Error enviando a Telegram:', telegramErr);
+        showToast('⚠️ Pick guardado, pero error enviando a Telegram', 'warning');
+      }
+    }
   } catch(e) {
     console.error('Error guardando:', e);
     showToast('❌ Error al guardar', 'error');
@@ -6215,9 +6236,11 @@ async function publishPick() {
       ganancias: null
     };
 
-    // Actualizar lista local
-    picksStore.ghp.unshift(pickCompleto);
+    // Actualizar lista local - USAR EL TIPSTER CORRECTO
+    if (!picksStore[currentTipster]) picksStore[currentTipster] = [];
+    picksStore[currentTipster].unshift(pickCompleto);
     savePicksToStorage();
+    console.log('✅ Pick añadido a', currentTipster, '- Total:', picksStore[currentTipster].length);
 
     // Enviar a Telegram si marcado
     const telegramCheckbox = document.getElementById('pub-telegram');
