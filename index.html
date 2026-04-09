@@ -229,24 +229,23 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .picks-toggle input[type="checkbox"]:checked{background:#2dd4bf}
 .picks-toggle input[type="checkbox"]:checked::after{left:18px;background:#050708}
 
-#pg-tipster .picks-grid{display:flex;flex-direction:column;gap:12px}
+#pg-tipster .picks-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:flex-start}
 
 /* Pick Card Horizontal */
-.pick-card{background:#0a0e0c;border:1px solid #1a2620;border-radius:12px;overflow:hidden;transition:all .2s}
+.pick-card{background:#0a0e0c;border:1px solid #1a2620;border-radius:12px;overflow:hidden;transition:all .2s;max-width:324px;min-height:177px}
 .pick-card.win{border-color:rgba(45,212,191,.35)}
 .pick-card.loss{border-color:rgba(248,113,113,.35)}
 .pick-card.pending{border-color:rgba(251,191,36,.35)}
 
 /* Layout horizontal: izquierda (info) + derecha (stats) */
-.pick-h-layout{display:flex;flex-direction:row}
-@media(max-width:600px){.pick-h-layout{flex-direction:column}}
+.pick-h-layout{display:flex;flex-direction:column}
 
 /* Izquierda */
-.pick-h-left{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pick-h-left{flex:1;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
 
 /* Badges inline */
-.pick-h-badges{display:flex;gap:5px;flex-wrap:wrap}
-.pick-h-badge{font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.06em;padding:4px 8px;border-radius:4px}
+.pick-h-badges{display:flex;gap:4px;flex-wrap:wrap}
+.pick-h-badge{font-family:'IBM Plex Mono',monospace;font-size:7px;font-weight:600;letter-spacing:.05em;padding:3px 6px;border-radius:3px}
 .pick-h-badge.simple{background:rgba(45,212,191,.12);color:#2dd4bf;border:1px solid rgba(45,212,191,.25)}
 .pick-h-badge.combo{background:rgba(168,85,247,.12);color:#a78bfa;border:1px solid rgba(168,85,247,.25)}
 .pick-h-badge.pre{background:rgba(96,165,250,.08);color:#93c5fd;border:1px solid rgba(96,165,250,.2)}
@@ -256,40 +255,36 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .pick-h-badge.auditado{background:rgba(168,85,247,.1);color:#c084fc;border:1px solid rgba(168,85,247,.2)}
 
 /* Partido */
-.pick-h-match{display:flex;align-items:center;gap:8px}
-.pick-h-match .icon{font-size:18px}
-.pick-h-match .teams{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#93c5fd}
-.pick-h-date{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#fb923c}
+.pick-h-match{display:flex;align-items:center;gap:6px}
+.pick-h-match .icon{font-size:14px}
+.pick-h-match .teams{font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#93c5fd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick-h-date{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#fb923c}
 
 /* Selección inline */
-.pick-h-sel{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.pick-h-sel-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:#2dd4bf;text-transform:uppercase;letter-spacing:.08em}
-.pick-h-sel-value{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:#fff;padding:6px 10px;background:#080c0a;border:1px solid #1a2620;border-radius:6px}
+.pick-h-sel{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pick-h-sel-label{font-family:'IBM Plex Mono',monospace;font-size:7px;color:#2dd4bf;text-transform:uppercase;letter-spacing:.06em}
+.pick-h-sel-value{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:#fff;padding:4px 8px;background:#080c0a;border:1px solid #1a2620;border-radius:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
 
-/* Derecha - Stats verticales */
-.pick-h-right{display:flex;flex-direction:column;justify-content:center;padding:12px 16px;background:#080c0a;border-left:1px solid #1a2620;min-width:140px}
-@media(max-width:600px){.pick-h-right{border-left:none;border-top:1px solid #1a2620;flex-direction:row;justify-content:space-around;padding:10px 14px}}
+/* Derecha - Stats horizontales */
+.pick-h-right{display:flex;flex-direction:row;align-items:center;justify-content:space-between;padding:8px 12px;background:#080c0a;border-top:1px solid #1a2620}
 
-.pick-h-cuota{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;color:#2dd4bf;padding:6px 12px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);border-radius:6px;text-align:center;margin-bottom:10px}
-@media(max-width:600px){.pick-h-cuota{margin-bottom:0}}
+.pick-h-cuota{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;color:#2dd4bf;padding:4px 10px;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);border-radius:5px;text-align:center}
 
-.pick-h-stats{display:flex;flex-direction:column;gap:6px}
-@media(max-width:600px){.pick-h-stats{flex-direction:row;gap:16px}}
+.pick-h-stats{display:flex;flex-direction:row;gap:12px}
 
-.pick-h-stat{display:flex;justify-content:space-between;align-items:center;gap:8px}
-@media(max-width:600px){.pick-h-stat{flex-direction:column;gap:2px}}
-.pick-h-stat .lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:#5a7a65;text-transform:uppercase;letter-spacing:.05em}
-.pick-h-stat .val{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700}
+.pick-h-stat{display:flex;flex-direction:column;align-items:center;gap:1px}
+.pick-h-stat .lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:#5a7a65;text-transform:uppercase;letter-spacing:.04em}
+.pick-h-stat .val{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700}
 .pick-h-stat .val.orange{color:#fb923c}
 .pick-h-stat .val.white{color:#fff}
 .pick-h-stat .val.green{color:#2dd4bf}
 .pick-h-stat .val.red{color:#f87171}
 
 /* Footer con timestamp y resultado */
-.pick-h-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#070a08;border-top:1px solid #111916}
-.pick-h-timestamp{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#5a7265;display:flex;align-items:center;gap:5px}
-.pick-h-timestamp svg{width:11px;height:11px;opacity:.5}
-.pick-h-result{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px}
+.pick-h-footer{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:#070a08;border-top:1px solid #111916}
+.pick-h-timestamp{font-family:'IBM Plex Mono',monospace;font-size:8px;color:#5a7265;display:flex;align-items:center;gap:4px}
+.pick-h-timestamp svg{width:10px;height:10px;opacity:.5}
+.pick-h-result{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:3px}
 .pick-h-result.win{background:rgba(45,212,191,.12);color:#2dd4bf}
 .pick-h-result.loss{background:rgba(248,113,113,.12);color:#f87171}
 .pick-h-result.pending{background:rgba(251,191,36,.12);color:#fbbf24}
@@ -1262,10 +1257,17 @@ nav.sc{border-color:#243028}
   #pg-tipster .pick-card .pick-odds{font-size:14px}
   #pg-tipster .pick-card .pick-stake{font-size:10px}
   #pg-tipster .pick-card .pick-status{font-size:9px;padding:4px 8px}
-  /* Gráfico estadísticas más horizontal */
-  #pg-tipster .stats-chart-container{height:200px;overflow-x:auto}
-  #pg-tipster .stats-chart{min-width:500px;height:180px}
-  #pg-tipster .stats-chart-placeholder{height:180px}
+  /* Gráfico estadísticas más horizontal - scroll en móvil */
+  #pg-tipster .stats-chart-container{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:10px}
+  #pg-tipster #stats-chart{min-width:450px;height:220px}
+  #pg-tipster .stats-chart-placeholder{height:180px;min-width:450px}
+  #pg-tipster .stats-chart-header{flex-direction:column;align-items:flex-start;gap:10px}
+  #pg-tipster .stats-chart-filters{width:100%}
+  #pg-tipster .stats-chart-filters select{flex:1}
+  #pg-tipster .stats-chart-legend{gap:16px;flex-wrap:wrap}
+  /* Pick cards en grid 2 columnas en tablet */
+  #pg-tipster .picks-grid{justify-content:center}
+  #pg-tipster .pick-card{width:100%;max-width:324px}
 }
 
 @media(max-width:480px){
@@ -1273,10 +1275,10 @@ nav.sc{border-color:#243028}
   #pg-tipster .tipster-hero-avatar{width:80px;height:80px}
   #pg-tipster .tipster-hero-avatar img{width:80px;height:80px}
   #pg-tipster .tipster-hero-info h1{font-size:20px}
-  /* Picks aún más compactos */
-  #pg-tipster .pick-card{padding:8px}
-  #pg-tipster .pick-card .pick-match{font-size:11px}
-  #pg-tipster .pick-card .pick-odds{font-size:13px}
+  /* Pick cards full width en móvil pequeño */
+  #pg-tipster .pick-card{max-width:100%}
+  /* Gráfico aún más compacto */
+  #pg-tipster #stats-chart{min-width:400px;height:200px}
 }
 
 /* ── PÁGINA CREAR PICK (#pg-picks) ──────────────────────────────────────────────── */
