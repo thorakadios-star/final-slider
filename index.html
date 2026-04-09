@@ -1176,6 +1176,157 @@ nav.sc{border-color:#243028}
   z-index: 1;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE MOBILE - TODAS LAS PÁGINAS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── PÁGINA TIPSTERS (#pg-plat) ─────────────────────────────────────────────────── */
+@media(max-width:768px){
+  #pg-plat nav>div{padding:0 16px;height:60px}
+  #pg-plat nav .ts-logo-img{height:28px}
+  #pg-plat nav button{padding:8px 14px;font-size:11px}
+  #pg-plat>div{padding:24px 16px 60px}
+  #pg-plat .page-header{margin-bottom:24px}
+  #pg-plat .page-header h1{font-size:24px}
+  #pg-plat .page-header p{font-size:12px}
+  #pg-plat .stats-banner{flex-direction:column;gap:8px;padding:16px}
+  #pg-plat .stat-pill{width:100%;justify-content:center;padding:10px 16px}
+  #pg-plat .filter-section{flex-direction:column;gap:12px}
+  #pg-plat .filter-bar{flex-wrap:wrap;justify-content:center;gap:6px}
+  #pg-plat .filter-btn{padding:6px 12px;font-size:10px}
+  #pg-plat .sort-select{width:100%;padding:10px}
+  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:16px}
+  #pg-plat .tipster-card{border-radius:12px}
+  #pg-plat .card-banner{height:60px}
+  #pg-plat .tipster-rank{font-size:9px;padding:3px 8px}
+  #pg-plat .verified-badge{font-size:8px;padding:3px 8px;left:65px}
+  #pg-plat .sport-badge{font-size:9px;padding:3px 8px}
+  #pg-plat .card-content{padding:14px}
+  #pg-plat .tipster-identity{gap:10px;margin-bottom:12px}
+  #pg-plat .tipster-avatar{width:50px;height:50px}
+  #pg-plat .tipster-name{font-size:15px}
+  #pg-plat .tipster-rating .star{width:12px;height:12px}
+  #pg-plat .stats-grid{grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+  #pg-plat .stat-item{padding:8px 4px}
+  #pg-plat .stat-value{font-size:13px}
+  #pg-plat .stat-label{font-size:8px}
+  #pg-plat .performance-section{margin-bottom:12px}
+  #pg-plat .performance-label{font-size:9px}
+  #pg-plat .perf-dot{width:8px;height:8px}
+  #pg-plat .card-actions{gap:6px}
+  #pg-plat .btn-action{padding:8px 10px;font-size:10px}
+  #pg-plat .btn-action svg{width:12px;height:12px}
+}
+
+@media(max-width:480px){
+  #pg-plat .stats-grid{grid-template-columns:repeat(2,1fr)}
+  #pg-plat .card-actions{flex-wrap:wrap}
+  #pg-plat .btn-action{flex:1 1 45%;justify-content:center}
+}
+
+/* ── PÁGINA PERFIL TIPSTER (#pg-tipster) ────────────────────────────────────────── */
+@media(max-width:768px){
+  #pg-tipster nav>div{padding:0 16px;height:60px}
+  #pg-tipster nav .ts-logo-img{height:28px}
+  #pg-tipster nav button{padding:8px 14px;font-size:11px}
+  #pg-tipster .tipster-hero{padding:20px 16px}
+  #pg-tipster .tipster-hero-content{flex-direction:column;gap:16px;align-items:center;text-align:center}
+  #pg-tipster .tipster-hero-left{flex-direction:column;align-items:center;gap:12px}
+  #pg-tipster .tipster-hero-avatar{width:70px;height:70px}
+  #pg-tipster .tipster-hero-avatar img{width:70px;height:70px}
+  #pg-tipster .tipster-hero-info{align-items:center}
+  #pg-tipster .tipster-hero-info h1{font-size:22px}
+  #pg-tipster .tipster-hero-info .subtitle{font-size:10px}
+  #pg-tipster .tipster-hero-badge{padding:6px 12px;font-size:11px}
+  #pg-tipster .tipster-hero-right>div{flex-direction:column;gap:10px;padding:14px;width:100%}
+  #pg-tipster .tipster-hero-right button{width:100%}
+  #pg-tipster .tipster-stats-row{flex-wrap:wrap;gap:8px;padding:16px;margin-top:16px}
+  #pg-tipster .tipster-stat-box{flex:1 1 45%;min-width:0;padding:12px 8px}
+  #pg-tipster .tipster-stat-box .val{font-size:16px}
+  #pg-tipster .tipster-stat-box .lbl{font-size:9px}
+  #pg-tipster .tipster-tabs{padding:0 16px}
+  #pg-tipster .tipster-tabs-header{gap:0}
+  #pg-tipster .tipster-tabs-header button{padding:12px 16px;font-size:11px}
+  #pg-tipster .tipster-tab-content{padding:16px}
+  #pg-tipster .picks-grid{gap:10px}
+  #pg-tipster .pick-card{padding:14px}
+}
+
+@media(max-width:480px){
+  #pg-tipster .tipster-stat-box{flex:1 1 100%}
+  #pg-tipster .tipster-hero-avatar{width:60px;height:60px}
+  #pg-tipster .tipster-hero-avatar img{width:60px;height:60px}
+  #pg-tipster .tipster-hero-info h1{font-size:20px}
+}
+
+/* ── PÁGINA CREAR PICK (#pg-picks) ──────────────────────────────────────────────── */
+@media(max-width:768px){
+  #pg-picks nav>div{padding:0 16px;height:60px}
+  #pg-picks nav .ts-logo-img{height:28px}
+  #pg-picks nav button{padding:8px 14px;font-size:11px}
+  #pg-picks .shell{flex-direction:column}
+  #pg-picks .sb{display:none}
+  #pg-picks .main{padding:20px 16px;width:100%}
+  #pg-picks .ph{margin-bottom:20px}
+  #pg-picks .ph h1{font-size:22px}
+  #pg-picks .ph p{font-size:11px}
+  #pg-picks .finp{font-size:14px;padding:12px}
+  #pg-picks .flbl{font-size:11px}
+  #pg-picks #vista-previa{border-radius:14px;margin-top:16px}
+  #pg-picks #vista-previa>div{padding:14px}
+  #pg-picks .pronostico-card{padding:14px;border-radius:12px}
+}
+
+@media(max-width:480px){
+  #pg-picks .main{padding:16px 12px}
+  #pg-picks .ph h1{font-size:20px}
+  #pg-picks #vista-previa{border-radius:12px}
+}
+
+/* ── PÁGINAS PRÓXIMAMENTE (#pg-academia, #pg-hall) ──────────────────────────────── */
+@media(max-width:768px){
+  #pg-academia nav>div,
+  #pg-hall nav>div{padding:0 16px;height:56px}
+  #pg-academia nav img,
+  #pg-hall nav img{height:28px}
+  #pg-academia nav button,
+  #pg-hall nav button{padding:8px 14px;font-size:11px}
+  #pg-academia>div:last-child,
+  #pg-hall>div:last-child{padding:16px}
+  #pg-academia>div:last-child img,
+  #pg-hall>div:last-child img{width:150px;margin-bottom:30px}
+  #pg-academia>div:last-child>div:nth-child(2),
+  #pg-hall>div:last-child>div:nth-child(2){font-size:22px}
+  #pg-academia>div:last-child p,
+  #pg-hall>div:last-child p{font-size:13px}
+}
+
+/* ── LANDING PAGE (#pg-land) - Refuerzo ─────────────────────────────────────────── */
+@media(max-width:768px){
+  #pg-land .hero{padding:70px 16px 32px}
+  #pg-land .hero-content>div:first-child{padding:20px 16px;border-radius:14px;margin-bottom:24px}
+  #pg-land .htitle span:first-child{font-size:36px !important}
+  #pg-land .badge{padding:8px 14px;margin-bottom:16px}
+  #pg-land .badge span{font-size:10px}
+  #pg-land .metrics-bar{flex-direction:column;gap:8px;padding:12px}
+  #pg-land .mpill{width:100%;justify-content:center}
+  #pg-land .slider-wrap{padding:0 8px;margin-bottom:20px}
+  #pg-land .hcard-slider{border-radius:12px}
+  #pg-land .slide{padding:18px 14px;min-height:220px}
+  #pg-land .slide h2{font-size:15px !important}
+  #pg-land .slide p{font-size:11px !important}
+  #pg-land .slide-controls{padding:8px 0}
+  #pg-land .slide-arrow{width:28px;height:28px}
+  #pg-land .hero-footer{font-size:9px;padding:6px 12px;margin-top:20px}
+}
+
+@media(max-width:480px){
+  #pg-land .hero{padding:60px 12px 24px}
+  #pg-land .htitle span:first-child{font-size:30px !important}
+  #pg-land .hero-content>div:first-child{padding:16px 14px}
+  #pg-land .slide{min-height:200px;padding:14px 12px}
+}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
