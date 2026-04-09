@@ -1257,15 +1257,16 @@ nav.sc{border-color:#243028}
   #pg-tipster .pick-card .pick-odds{font-size:14px}
   #pg-tipster .pick-card .pick-stake{font-size:10px}
   #pg-tipster .pick-card .pick-status{font-size:9px;padding:4px 8px}
-  /* Gráfico estadísticas más horizontal - scroll en móvil */
-  #pg-tipster .stats-chart-container{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:10px}
-  #pg-tipster #stats-chart{min-width:450px;height:220px}
-  #pg-tipster .stats-chart-placeholder{height:180px;min-width:450px}
+  /* Gráfico estadísticas - ajustado al ancho sin scroll */
+  #pg-tipster .stats-chart-container{overflow:hidden;padding:16px}
+  #pg-tipster #stats-chart{width:100%;height:200px;min-width:0}
+  #pg-tipster #statsCanvas{width:100% !important;height:100% !important}
+  #pg-tipster .stats-chart-placeholder{height:160px;width:100%}
   #pg-tipster .stats-chart-header{flex-direction:column;align-items:flex-start;gap:10px}
   #pg-tipster .stats-chart-filters{width:100%}
-  #pg-tipster .stats-chart-filters select{flex:1}
-  #pg-tipster .stats-chart-legend{gap:16px;flex-wrap:wrap}
-  /* Pick cards en grid 2 columnas en tablet */
+  #pg-tipster .stats-chart-filters select{flex:1;font-size:11px}
+  #pg-tipster .stats-chart-legend{gap:12px;flex-wrap:wrap;font-size:10px}
+  /* Pick cards */
   #pg-tipster .picks-grid{justify-content:center}
   #pg-tipster .pick-card{width:100%;max-width:324px}
 }
@@ -1277,8 +1278,9 @@ nav.sc{border-color:#243028}
   #pg-tipster .tipster-hero-info h1{font-size:20px}
   /* Pick cards full width en móvil pequeño */
   #pg-tipster .pick-card{max-width:100%}
-  /* Gráfico aún más compacto */
-  #pg-tipster #stats-chart{min-width:400px;height:200px}
+  /* Gráfico más compacto */
+  #pg-tipster #stats-chart{height:180px}
+  #pg-tipster .stats-chart-placeholder{height:140px}
 }
 
 /* ── PÁGINA CREAR PICK (#pg-picks) ──────────────────────────────────────────────── */
@@ -2221,7 +2223,7 @@ if (typeof html2canvas === 'undefined') {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
           </button>
           <button class="btn-subscribe" id="tipster-subscribe" style="padding:10px 20px;background:linear-gradient(135deg,#14b8a6,#0f766e);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer">SUSCRÍBETE</button>
-          <button onclick="go('picks')" style="padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+          <button onclick="setActiveTipster(currentProfileTipsterId);go('picks')" style="padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             CREAR PICK
           </button>
@@ -2579,7 +2581,11 @@ function drawStatsChart(statsData) {
   
   const width = rect.width;
   const height = rect.height;
-  const padding = { top: 30, right: 70, bottom: 50, left: 70 };
+  // Padding adaptativo para móvil
+  const isMobile = width < 400;
+  const padding = isMobile 
+    ? { top: 20, right: 40, bottom: 35, left: 40 }
+    : { top: 30, right: 70, bottom: 50, left: 70 };
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
   
@@ -2720,47 +2726,55 @@ function drawStatsChart(statsData) {
   }
   
   // ═══ EJE Y IZQUIERDO (Beneficio) ═══
-  ctx.font = '11px IBM Plex Mono, monospace';
+  const fontSize = isMobile ? '9px' : '11px';
+  const labelFontSize = isMobile ? '9px' : '11px';
+  ctx.font = fontSize + ' IBM Plex Mono, monospace';
   ctx.fillStyle = '#a78bfa';
   ctx.textAlign = 'right';
-  ctx.fillText('+' + beneficioMax.toFixed(0), padding.left - 10, padding.top + 4);
-  ctx.fillText('0', padding.left - 10, zeroY + 4);
-  ctx.fillText('-' + beneficioMax.toFixed(0), padding.left - 10, padding.top + chartHeight + 4);
+  ctx.fillText('+' + beneficioMax.toFixed(0), padding.left - 8, padding.top + 4);
+  ctx.fillText('0', padding.left - 8, zeroY + 4);
+  ctx.fillText('-' + beneficioMax.toFixed(0), padding.left - 8, padding.top + chartHeight + 4);
   
-  // Label eje Y izquierdo
-  ctx.save();
-  ctx.translate(14, height / 2);
-  ctx.rotate(-Math.PI / 2);
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#a78bfa';
-  ctx.font = '11px Inter, sans-serif';
-  ctx.fillText('Beneficio acumulado (Uds.)', 0, 0);
-  ctx.restore();
+  // Label eje Y izquierdo (ocultar en móvil para dar más espacio)
+  if (!isMobile) {
+    ctx.save();
+    ctx.translate(14, height / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#a78bfa';
+    ctx.font = labelFontSize + ' Inter, sans-serif';
+    ctx.fillText('Beneficio acumulado (Uds.)', 0, 0);
+    ctx.restore();
+  }
   
   // ═══ EJE Y DERECHO (Yield) ═══
   ctx.fillStyle = '#60a5fa';
   ctx.textAlign = 'left';
-  ctx.font = '11px IBM Plex Mono, monospace';
-  ctx.fillText('+' + yieldMax.toFixed(0) + '%', width - padding.right + 10, padding.top + 4);
-  ctx.fillText('0%', width - padding.right + 10, zeroY + 4);
-  ctx.fillText('-' + yieldMax.toFixed(0) + '%', width - padding.right + 10, padding.top + chartHeight + 4);
+  ctx.font = fontSize + ' IBM Plex Mono, monospace';
+  ctx.fillText('+' + yieldMax.toFixed(0) + '%', width - padding.right + 8, padding.top + 4);
+  ctx.fillText('0%', width - padding.right + 8, zeroY + 4);
+  ctx.fillText('-' + yieldMax.toFixed(0) + '%', width - padding.right + 8, padding.top + chartHeight + 4);
   
-  // Label eje Y derecho
-  ctx.save();
-  ctx.translate(width - 14, height / 2);
-  ctx.rotate(Math.PI / 2);
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#60a5fa';
-  ctx.font = '11px Inter, sans-serif';
-  ctx.fillText('Yield acumulado (%)', 0, 0);
-  ctx.restore();
+  // Label eje Y derecho (ocultar en móvil)
+  if (!isMobile) {
+    ctx.save();
+    ctx.translate(width - 14, height / 2);
+    ctx.rotate(Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#60a5fa';
+    ctx.font = labelFontSize + ' Inter, sans-serif';
+    ctx.fillText('Yield acumulado (%)', 0, 0);
+    ctx.restore();
+  }
   
   // ═══ EJE X (meses) ═══
   ctx.fillStyle = '#7a9280';
   ctx.textAlign = 'center';
-  ctx.font = '12px Inter, sans-serif';
+  ctx.font = (isMobile ? '10px' : '12px') + ' Inter, sans-serif';
   for (let i = 0; i < data.length; i++) {
-    ctx.fillText(data[i].mes, xScale(i), height - 15);
+    // En móvil, mostrar mes abreviado
+    const label = isMobile && data[i].mes.length > 5 ? data[i].mes.substring(0, 3) : data[i].mes;
+    ctx.fillText(label, xScale(i), height - (isMobile ? 10 : 15));
   }
 }
 
