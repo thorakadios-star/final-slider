@@ -773,31 +773,35 @@ nav.sc{border-color:#243028}
   .mpill-val{font-size:18px}
   .mpill-lbl{font-size:9px}
   
+  /* ══ LOGO TRUESTATS - IGUAL QUE HAMBURGUESA 40px ══ */
+  .ts-logo-img,img[alt="TrueStats AI"]{height:40px !important;width:40px !important;object-fit:contain}
+  
   /* Stats Banner */
   .stat-pill{flex:1 1 100%;justify-content:flex-start}
   .stat-pill-value{font-size:14px}
   .stat-pill-label{font-size:9px}
   
-  /* Tipster Cards - MÁS PEQUEÑAS Y CENTRADAS */
-  #pg-plat .tipsters-grid{gap:12px;max-width:240px;margin:0 auto}
-  #pg-plat .tipster-card{border-radius:10px;transform:scale(0.7);transform-origin:center top;margin-bottom:-80px}
-  #pg-plat .card-banner{height:40px}
-  #pg-plat .tipster-rank{font-size:7px;padding:2px 5px;top:5px;left:5px}
-  #pg-plat .verified-badge{font-size:6px;padding:2px 5px;top:5px;right:5px;left:auto}
-  #pg-plat .sport-badge{font-size:7px;padding:2px 5px}
-  #pg-plat .card-content{padding:8px}
-  #pg-plat .tipster-identity{gap:6px}
-  #pg-plat .tipster-avatar{width:32px;height:32px;margin-top:-16px}
-  #pg-plat .tipster-name{font-size:11px}
-  #pg-plat .tipster-rating .star{width:8px;height:8px}
-  #pg-plat .stats-grid{gap:4px;margin:8px 0}
-  #pg-plat .stat-item{padding:4px 3px}
-  #pg-plat .stat-value{font-size:10px}
+  /* ══ TIPSTER CARDS - 40% MÁS PEQUEÑAS Y CENTRADAS ══ */
+  #pg-plat .tipsters-grid{gap:20px;max-width:240px;margin:0 auto;padding:0 10px}
+  #pg-plat .tipster-card{border-radius:10px;transform:scale(0.6);transform-origin:center top;margin-bottom:-120px}
+  #pg-plat .card-banner{height:45px;position:relative}
+  /* Badges separados: Rank izquierda, Verificado derecha */
+  #pg-plat .tipster-rank{font-size:8px;padding:3px 6px;top:6px;left:6px;z-index:3}
+  #pg-plat .verified-badge{font-size:7px;padding:2px 5px;top:6px;left:auto !important;right:6px;z-index:3}
+  #pg-plat .sport-badge{font-size:8px;padding:3px 6px;bottom:6px;top:auto;right:6px}
+  #pg-plat .card-content{padding:10px}
+  #pg-plat .tipster-identity{gap:8px}
+  #pg-plat .tipster-avatar{width:40px;height:40px;margin-top:-22px}
+  #pg-plat .tipster-name{font-size:12px}
+  #pg-plat .tipster-rating .star{width:10px;height:10px}
+  #pg-plat .stats-grid{gap:6px;margin:10px 0}
+  #pg-plat .stat-item{padding:6px 4px}
+  #pg-plat .stat-value{font-size:11px}
   #pg-plat .stat-label{font-size:6px}
-  #pg-plat .performance-section{margin-bottom:8px}
-  #pg-plat .perf-dot{width:6px;height:6px}
+  #pg-plat .performance-section{margin-bottom:10px}
+  #pg-plat .perf-dot{width:12px;height:12px}
   #pg-plat .card-actions{gap:4px}
-  #pg-plat .btn-action{font-size:8px;padding:5px 6px;gap:3px}
+  #pg-plat .btn-action{font-size:9px;padding:6px 8px;gap:3px}
   #pg-plat .btn-action svg{width:10px;height:10px}
   
   /* Tipster Profile */
@@ -815,20 +819,26 @@ nav.sc{border-color:#243028}
   .tipster-tab{font-size:11px;padding:10px 12px}
   .tipster-tab svg{width:14px;height:14px}
   
-  /* Gráfico más compacto */
-  #pg-tipster .stats-chart-container{padding:8px 4px}
-  #pg-tipster #stats-chart{height:120px}
-  #pg-tipster .stats-chart-header h3{font-size:11px}
-  #pg-tipster .stats-chart-legend{font-size:8px;gap:8px}
+  /* ══ GRÁFICO ESTADÍSTICAS - SIN SCROLL, ESCALA NATURAL ══ */
+  #pg-tipster .stats-chart-container{overflow:hidden !important;padding:10px 6px}
+  #pg-tipster #stats-chart{width:100% !important;height:140px !important;min-width:0 !important}
+  #pg-tipster .stats-chart-header h3{font-size:12px}
+  #pg-tipster .stats-chart-legend{font-size:9px;gap:10px}
   
-  /* Picks - MÁS PEQUEÑOS Y CENTRADOS */
-  .pick-card{padding:8px;border-radius:8px;transform:scale(0.6);transform-origin:center top;margin-bottom:-100px}
+  /* ══ PICKS EN PERFIL - 40% MÁS PEQUEÑOS Y CENTRADOS ══ */
+  #pg-tipster .picks-grid{max-width:260px;margin:0 auto}
+  #pg-tipster .pick-card{transform:scale(0.6);transform-origin:center top;margin-bottom:-100px}
+  .pick-card{padding:10px;border-radius:10px}
   .pick-header{flex-direction:column;align-items:flex-start;gap:6px}
-  .pick-teams{font-size:11px}
+  .pick-teams{font-size:12px}
   .pick-status{font-size:9px;padding:3px 8px}
   .pick-details{gap:6px;flex-wrap:wrap}
-  .pick-detail{font-size:9px;padding:4px 8px}
+  .pick-detail{font-size:9px;padding:5px 8px}
   .pick-footer{flex-direction:column;gap:6px}
+  
+  /* ══ BOLETO/VISTA PREVIA - 40% MÁS PEQUEÑO Y CENTRADO ══ */
+  #pg-picks #vista-previa,
+  #pg-picks #contenedor-vista-previa>div{transform:scale(0.55);transform-origin:center top;margin:16px auto -45%;max-width:100%}
   
   /* Crear Pick */
   #pg-picks .main{padding:16px 12px}
