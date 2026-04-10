@@ -1196,28 +1196,29 @@ nav.sc{border-color:#243028}
   #pg-plat .filter-bar{flex-wrap:wrap;justify-content:center;gap:5px}
   #pg-plat .filter-btn{padding:5px 10px;font-size:9px}
   #pg-plat .sort-select{width:100%;padding:8px;font-size:11px}
-  /* Cards de tipsters 15% más pequeñas y centradas */
-  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:12px;max-width:320px;margin:0 auto}
-  #pg-plat .tipster-card{border-radius:10px;transform:scale(0.85);transform-origin:center top;margin-bottom:-20px}
-  #pg-plat .card-banner{height:50px}
-  #pg-plat .tipster-rank{font-size:8px;padding:2px 6px}
-  #pg-plat .verified-badge{font-size:7px;padding:2px 6px;left:55px}
-  #pg-plat .sport-badge{font-size:8px;padding:2px 6px}
+  /* Cards de tipsters - 40% más pequeñas y centradas */
+  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:16px;max-width:260px;margin:0 auto;padding:0 10px}
+  #pg-plat .tipster-card{border-radius:10px;transform:scale(0.75);transform-origin:center top;margin-bottom:-60px}
+  /* Banner reorganizado - elementos separados */
+  #pg-plat .card-banner{height:45px;position:relative}
+  #pg-plat .tipster-rank{font-size:7px;padding:2px 5px;top:6px;left:6px;z-index:3}
+  #pg-plat .verified-badge{font-size:6px;padding:2px 5px;top:6px;left:auto;right:6px;z-index:3}
+  #pg-plat .sport-badge{font-size:7px;padding:2px 5px;top:auto;bottom:6px;right:6px}
   #pg-plat .card-content{padding:10px}
-  #pg-plat .tipster-identity{gap:8px;margin-bottom:10px}
-  #pg-plat .tipster-avatar{width:42px;height:42px}
-  #pg-plat .tipster-name{font-size:13px}
-  #pg-plat .tipster-rating .star{width:10px;height:10px}
-  #pg-plat .stats-grid{grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
-  #pg-plat .stat-item{padding:6px 3px}
-  #pg-plat .stat-value{font-size:11px}
-  #pg-plat .stat-label{font-size:8px}
-  #pg-plat .performance-section{margin-bottom:12px}
-  #pg-plat .performance-label{font-size:9px}
-  #pg-plat .perf-dot{width:8px;height:8px}
-  #pg-plat .card-actions{gap:6px}
-  #pg-plat .btn-action{padding:8px 10px;font-size:10px}
-  #pg-plat .btn-action svg{width:12px;height:12px}
+  #pg-plat .tipster-identity{gap:8px;margin-bottom:8px}
+  #pg-plat .tipster-avatar{width:36px;height:36px;margin-top:-20px;border-width:2px}
+  #pg-plat .tipster-name{font-size:12px}
+  #pg-plat .tipster-rating .star{width:9px;height:9px}
+  #pg-plat .stats-grid{grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px}
+  #pg-plat .stat-item{padding:5px 2px}
+  #pg-plat .stat-value{font-size:10px}
+  #pg-plat .stat-label{font-size:7px}
+  #pg-plat .performance-section{margin-bottom:10px}
+  #pg-plat .performance-label{font-size:8px}
+  #pg-plat .perf-dot{width:7px;height:7px}
+  #pg-plat .card-actions{gap:4px}
+  #pg-plat .btn-action{padding:6px 8px;font-size:9px}
+  #pg-plat .btn-action svg{width:10px;height:10px}
 }
 
 @media(max-width:480px){
@@ -1260,18 +1261,19 @@ nav.sc{border-color:#243028}
   #pg-tipster .pick-card .pick-odds{font-size:14px}
   #pg-tipster .pick-card .pick-stake{font-size:10px}
   #pg-tipster .pick-card .pick-status{font-size:9px;padding:4px 8px}
-  /* Gráfico estadísticas - ajustado al ancho sin scroll */
-  #pg-tipster .stats-chart-container{overflow:hidden;padding:16px}
-  #pg-tipster #stats-chart{width:100%;height:200px;min-width:0}
+  /* Gráfico estadísticas - más compacto con escala mejor */
+  #pg-tipster .stats-chart-container{overflow:hidden;padding:12px 8px}
+  #pg-tipster #stats-chart{width:100%;height:160px;min-width:0}
   #pg-tipster #statsCanvas{width:100% !important;height:100% !important}
-  #pg-tipster .stats-chart-placeholder{height:160px;width:100%}
-  #pg-tipster .stats-chart-header{flex-direction:column;align-items:flex-start;gap:10px}
+  #pg-tipster .stats-chart-placeholder{height:130px;width:100%}
+  #pg-tipster .stats-chart-header{flex-direction:column;align-items:flex-start;gap:8px}
+  #pg-tipster .stats-chart-header h3{font-size:13px}
   #pg-tipster .stats-chart-filters{width:100%}
-  #pg-tipster .stats-chart-filters select{flex:1;font-size:11px}
-  #pg-tipster .stats-chart-legend{gap:12px;flex-wrap:wrap;font-size:10px}
-  /* Pick cards */
-  #pg-tipster .picks-grid{justify-content:center}
-  #pg-tipster .pick-card{width:100%;max-width:324px}
+  #pg-tipster .stats-chart-filters select{flex:1;font-size:10px;padding:6px}
+  #pg-tipster .stats-chart-legend{gap:10px;flex-wrap:wrap;font-size:9px}
+  /* Pick cards - 40% más pequeños y centrados */
+  #pg-tipster .picks-grid{justify-content:center;max-width:280px;margin:0 auto}
+  #pg-tipster .pick-card{width:100%;max-width:280px;transform:scale(0.65);transform-origin:center top;margin-bottom:-80px}
 }
 
 @media(max-width:480px){
@@ -1279,11 +1281,11 @@ nav.sc{border-color:#243028}
   #pg-tipster .tipster-hero-avatar{width:80px;height:80px}
   #pg-tipster .tipster-hero-avatar img{width:80px;height:80px}
   #pg-tipster .tipster-hero-info h1{font-size:20px}
-  /* Pick cards full width en móvil pequeño */
-  #pg-tipster .pick-card{max-width:100%}
+  /* Pick cards aún más pequeños */
+  #pg-tipster .pick-card{max-width:100%;transform:scale(0.6);margin-bottom:-100px}
   /* Gráfico más compacto */
-  #pg-tipster #stats-chart{height:180px}
-  #pg-tipster .stats-chart-placeholder{height:140px}
+  #pg-tipster #stats-chart{height:140px}
+  #pg-tipster .stats-chart-placeholder{height:110px}
 }
 
 /* ── PÁGINA CREAR PICK (#pg-picks) ──────────────────────────────────────────────── */
@@ -2600,15 +2602,15 @@ function drawStatsChart(statsData) {
   
   if (data.length < 2) return;
   
-  // Calcular rangos simétricos alrededor de 0
+  // Calcular rangos basados en los datos reales
   const allBeneficios = data.map(d => d.beneficio);
   const allYields = data.map(d => d.yield);
-  const maxAbsBeneficio = Math.max(Math.abs(Math.max(...allBeneficios)), Math.abs(Math.min(...allBeneficios)), 50);
-  const maxAbsYield = Math.max(Math.abs(Math.max(...allYields)), Math.abs(Math.min(...allYields)), 25);
+  const maxAbsBeneficio = Math.max(Math.abs(Math.max(...allBeneficios)), Math.abs(Math.min(...allBeneficios)), 5);
+  const maxAbsYield = Math.max(Math.abs(Math.max(...allYields)), Math.abs(Math.min(...allYields)), 10);
   
-  // Rangos simétricos (ej: -100 a +100)
-  const beneficioMax = Math.ceil(maxAbsBeneficio * 1.2 / 10) * 10;
-  const yieldMax = Math.ceil(maxAbsYield * 1.2 / 5) * 5;
+  // Rangos con margen del 30% para que las líneas no toquen los bordes
+  const beneficioMax = Math.ceil(maxAbsBeneficio * 1.3);
+  const yieldMax = Math.ceil(maxAbsYield * 1.3);
   
   // Funciones de conversión - 0 está en el centro
   const xScale = (i) => padding.left + (i / (data.length - 1)) * chartWidth;
@@ -3134,12 +3136,12 @@ function renderTipsterPicks() {
             </div>
             <div class="pick-h-match">
               <span class="icon">⚽</span>
-              <span class="teams">${p.partido || '—'}</span>
+              <span class="teams">${p.evento || p.partido || (p.equipo_local + ' vs ' + p.equipo_visitante) || '—'}</span>
             </div>
             <div class="pick-h-date">${p.fecha || '—'}</div>
             <div class="pick-h-sel">
               <span class="pick-h-sel-label">Selección:</span>
-              <span class="pick-h-sel-value">${p.mercado || '—'}</span>
+              <span class="pick-h-sel-value">${p.seleccion || p.mercado || '—'}</span>
             </div>
           </div>
           <div class="pick-h-right">
