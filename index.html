@@ -6180,6 +6180,7 @@ async function publishPick() {
   // 4. Preparar objeto para Supabase
   const firstPick = picksData[0];
   const currentTipster = getActiveTipster(); // Usar tipster activo
+  console.log('🎯 publishPick - activeTipsterId:', activeTipsterId, '| getActiveTipster():', currentTipster);
   const pickFinal = {
     tipster_id: currentTipster,
     deporte: firstPick.deporte,
