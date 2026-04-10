@@ -51,88 +51,148 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 /* ═══ TIPSTERS GRID - 3 POR FILA ════════════════════════════════════════════ */
 #pg-plat .tipsters-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 
-/* ═══ TIPSTER CARD COMPACTA ═════════════════════════════════════════════════ */
-#pg-plat .tipster-card{position:relative;background:#0a0e0c;border:1px solid #1a2620;border-radius:16px;overflow:hidden;opacity:0;animation:cardIn .5s ease forwards;transition:all .3s cubic-bezier(0.4,0,0.2,1);cursor:pointer}
-#pg-plat .tipster-card:nth-child(1){animation-delay:.05s}
-#pg-plat .tipster-card:nth-child(2){animation-delay:.1s}
-#pg-plat .tipster-card:nth-child(3){animation-delay:.15s}
-#pg-plat .tipster-card:nth-child(4){animation-delay:.2s}
-#pg-plat .tipster-card:nth-child(5){animation-delay:.25s}
-#pg-plat .tipster-card:nth-child(6){animation-delay:.3s}
-#pg-plat .tipster-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#2dd4bf,#fbbf24);opacity:0;transition:opacity .3s}
-#pg-plat .tipster-card:hover{transform:translateY(-4px);border-color:rgba(45,212,191,.3);box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 30px rgba(45,212,191,.08)}
-#pg-plat .tipster-card:hover::before{opacity:1}
+/* ═══ TRUESTATS AI: TIPSTER CARD (VISTA PRINCIPAL) ══════════════════════════ */
 
-/* Banner */
-#pg-plat .card-banner{position:relative;height:70px;background:linear-gradient(135deg,#0d1a14 0%,#081210 100%);overflow:hidden}
-#pg-plat .card-banner-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.35;filter:blur(1px);transition:all .4s}
-#pg-plat .tipster-card:hover .card-banner-bg{opacity:.5;transform:scale(1.05)}
-#pg-plat .card-banner-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,#0a0e0c 100%)}
-#pg-plat .tipster-rank{position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border-radius:100px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:#fbbf24;letter-spacing:.05em}
-#pg-plat .tipster-rank.top3{background:linear-gradient(135deg,rgba(251,191,36,.3),rgba(251,191,36,.1));border:1px solid rgba(251,191,36,.4)}
-#pg-plat .verified-badge{position:absolute;top:10px;left:80px;display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(96,165,250,.15);backdrop-filter:blur(10px);border-radius:100px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:#60a5fa;letter-spacing:.05em;border:1px solid rgba(96,165,250,.4);animation:glowBlue 2s ease-in-out infinite}
-@keyframes glowBlue{0%,100%{box-shadow:0 0 8px rgba(96,165,250,.3)}50%{box-shadow:0 0 16px rgba(96,165,250,.5)}}
-#pg-plat .sport-badge{position:absolute;top:10px;right:10px;padding:4px 10px;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border-radius:100px;font-size:11px;display:flex;align-items:center;gap:4px;color:#e8f5e4;font-weight:500}
-#pg-plat .sport-badge.futbol{background:rgba(139,92,246,.25);border:1px solid rgba(139,92,246,.4)}
-#pg-plat .sport-badge.tenis{background:rgba(45,212,191,.25);border:1px solid rgba(45,212,191,.4)}
-#pg-plat .sport-badge.basket{background:rgba(251,146,60,.25);border:1px solid rgba(251,146,60,.4)}
-#pg-plat .sport-badge.f1{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.4)}
-#pg-plat .sport-badge.squash{background:rgba(96,165,250,.25);border:1px solid rgba(96,165,250,.4)}
+#pg-plat .tipster-card {
+    position: relative;
+    background: #050708 !important; /* Negro sólido */
+    border: 1px solid #2dd4bf !important; /* Borde Turquesa */
+    border-radius: 12px !important;
+    padding: 16px !important;
+    overflow: hidden;
+    opacity: 0;
+    animation: cardIn .5s ease forwards;
+    transition: all 0.3s ease;
+    display: flex !important;
+    flex-direction: column !important;
+    cursor: pointer;
+}
 
-/* Card content */
-#pg-plat .card-content{padding:16px 18px 18px}
-#pg-plat .tipster-identity{display:flex;align-items:center;gap:12px;margin-top:-40px;margin-bottom:14px;position:relative;z-index:2}
-#pg-plat .tipster-identity .tipster-avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a2620,#0a0f0c);border:3px solid #0a0e0c;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#2dd4bf;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.4);flex-shrink:0}
-#pg-plat .tipster-identity .tipster-avatar img{width:100%;height:100%;object-fit:cover;border-radius:9px}
-#pg-plat .tipster-identity .tipster-avatar.verified{position:relative}
-#pg-plat .tipster-identity .tipster-avatar.verified::after{content:'✓';position:absolute;bottom:-3px;right:-3px;width:20px;height:20px;background:#2dd4bf;border-radius:50%;font-size:10px;color:#050708;display:flex;align-items:center;justify-content:center;border:2px solid #0a0e0c;font-weight:700}
-#pg-plat .tipster-identity .tipster-info{flex:1;min-width:0}
-#pg-plat .tipster-identity .tipster-name{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:#e8f5e4;margin-bottom:3px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#pg-plat .tipster-rating{display:flex;align-items:center;gap:2px}
-#pg-plat .star{width:12px;height:12px;fill:#fbbf24}
-#pg-plat .star.empty{fill:#1a2620}
+#pg-plat .tipster-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(45, 212, 191, 0.15);
+}
 
-/* Stats grid - CARDS */
-#pg-plat .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-#pg-plat .stat-item{text-align:center;padding:10px 4px;background:#111916;border-radius:10px;border:1px solid #1a2620;transition:all .2s}
-#pg-plat .stat-item:hover{border-color:rgba(45,212,191,.3);background:rgba(45,212,191,.03)}
-#pg-plat .stat-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:#e8f5e4;line-height:1.2}
-#pg-plat .stat-value.yield{color:#e8f5e4}
-#pg-plat .stat-value.profit{color:#e8f5e4}
-#pg-plat .stat-value.loss{color:#f87171}
-#pg-plat .stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#fb923c;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+/* Identidad: Avatar 75px y Nombre 22px */
+#pg-plat .tipster-identity {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    margin-bottom: 20px !important;
+    margin-top: 5px !important;
+}
 
-/* Performance dots */
-#pg-plat .performance-section{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid #1a2620;margin-bottom:14px}
-#pg-plat .performance-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#e8f5e4;text-transform:uppercase;letter-spacing:.06em}
-#pg-plat .performance-dots{display:flex;gap:4px}
-#pg-plat .perf-dot{width:8px;height:8px;border-radius:50%;transition:transform .2s;cursor:pointer}
-#pg-plat .perf-dot:hover{transform:scale(1.4)}
-#pg-plat .perf-dot.win{background:#2dd4bf;box-shadow:0 0 8px rgba(45,212,191,.5)}
-#pg-plat .perf-dot.loss{background:#f87171;box-shadow:0 0 8px rgba(248,113,113,.5)}
+#pg-plat .tipster-avatar {
+    width: 75px !important;
+    height: 75px !important;
+    border-radius: 10px !important;
+    object-fit: cover !important;
+    flex-shrink: 0 !important;
+}
 
-/* 3 botones */
-#pg-plat .card-actions{display:flex;gap:8px;justify-content:center}
-#pg-plat .btn-action{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:10px 8px;background:transparent;border:1px solid #1a2620;border-radius:8px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none}
-#pg-plat .btn-action:hover{border-color:rgba(45,212,191,.3);color:#2dd4bf;background:rgba(45,212,191,.12)}
-#pg-plat .btn-action.primary{background:linear-gradient(135deg,#2dd4bf,#14b8a6);border-color:#2dd4bf;color:#050708;font-weight:600}
-#pg-plat .btn-action.primary:hover{box-shadow:0 4px 16px rgba(45,212,191,.3);transform:translateY(-1px)}
-#pg-plat .btn-action svg{width:14px;height:14px;flex-shrink:0}
+#pg-plat .tipster-name {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    color: #fff !important;
+    margin: 0 !important;
+    line-height: 1.2;
+}
 
-/* Stats banner */
-.stats-banner{display:flex;justify-content:center;gap:24px;margin-bottom:32px;padding:20px 0;flex-wrap:wrap}
-.stat-pill{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#0a0e0c;border:1px solid #1a2620;border-radius:100px}
-.stat-pill-icon{font-size:16px}
-.stat-pill-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:#e8f5e4}
-.stat-pill-label{font-size:12px;color:#2dd4bf}
+/* Stats Grid: Valores Dorados #fbbf24 */
+#pg-plat .stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    padding: 12px 6px !important;
+    border-radius: 10px !important;
+    margin-bottom: 18px !important;
+    text-align: center !important;
+}
 
-/* Sort select */
-.sort-select{font-family:'Outfit',sans-serif;font-size:12px;padding:8px 32px 8px 14px;border-radius:100px;border:1px solid #1a2620;background:#0a0e0c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a5a52' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;color:#e8f5e4;cursor:pointer;appearance:none;outline:none;transition:all .2s}
-.sort-select:hover,.sort-select:focus{border-color:rgba(45,212,191,.3)}
+#pg-plat .stat-value {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #fbbf24 !important; /* Dorado */
+}
 
-/* Logo img */
-.ts-logo-img{height:64px;width:auto;object-fit:contain}
+#pg-plat .stat-label {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #7a9280 !important;
+    text-transform: uppercase !important;
+    margin-top: 4px !important;
+}
 
+/* Fila de Botones: Todos a 11px */
+#pg-plat .card-actions {
+    display: flex !important;
+    gap: 8px !important;
+    margin-bottom: 15px !important;
+}
+
+#pg-plat .btn-action {
+    height: 42px !important;
+    font-size: 11px !important; /* Forzado 11px */
+    font-weight: 800 !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important; /* Una sola línea */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 1 !important;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Botón Ver Picks (Primario) */
+#pg-plat .btn-action.primary {
+    background: #2dd4bf !important;
+    color: #050708 !important;
+    border: none !important;
+    flex: 1.1 !important;
+}
+
+/* Botón Estadísticas (Más ancho) */
+#pg-plat .btn-action[onclick*="'stats'"] {
+    flex: 1.6 !important;
+}
+
+/* Botón CREAR PICK: Pequeño y Centrado */
+#pg-plat .btn-crear-pick {
+    width: 165px !important;
+    height: 32px !important;
+    margin: 0 auto !important; /* Centrado automático */
+    background: #2dd4bf !important;
+    color: #050708 !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important; /* Una sola línea */
+    border: none !important;
+    cursor: pointer !important;
+}
+
+/* Limpieza: Ocultar elementos antiguos */
+#pg-plat .card-banner, 
+#pg-plat .tipster-rank, 
+#pg-plat .verified-badge, 
+#pg-plat .tipster-rating, 
+#pg-plat .performance-section {
+    display: none !important;
+}
+
+/* Logo de navegación (Mantenlo al final) */
+.ts-logo-img {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+}
 /* ═══ ESTILOS ANTIGUOS DESHABILITADOS ═══ */
 
 /* Responsive */
