@@ -15,179 +15,251 @@ body{font-family:'Inter',system-ui,sans-serif;background:#050708;color:#c8dcc4;o
 ::-webkit-scrollbar-thumb{background:#1a2620;border-radius:2px}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   SISTEMA FULL-RESPONSIVE GLOBAL
-   Reglas de máxima prioridad para garantizar flujo sin desbordamientos
+   🎯 SISTEMA DE DISEÑO FLUIDO Y ESCALADO PROPORCIONAL
+   ═══════════════════════════════════════════════════════════════════════════════
+   
+   PRINCIPIOS:
+   1. Ancho Relativo 92% - Siempre respira con 4% de margen a cada lado
+   2. Escalado sin Deformación - height:auto + object-fit para proporciones
+   3. Anti-Amontonamiento - flex-direction:column + gap para espaciado limpio
+   4. Flex-Wrap Inteligente - Los elementos bajan solos si no caben
+   5. Sin Hacks - Prohibido transform:scale(), márgenes negativos, position:absolute para flujo
+   
    ═══════════════════════════════════════════════════════════════════════════════ */
 
-/* ── 1. CONTENEDORES ELÁSTICOS (Fluid Layout) ────────────────────────────────── */
-/* Todos los contenedores principales: 100% del padre, máximo definido, centrados */
+/* ── 1. CONTENEDORES PRINCIPALES: ANCHO 92% + CENTRADO ────────────────────────── */
+.main-container,
 .tipsters-grid,
 .picks-grid,
 .stats-chart-container,
 #contenedor-vista-previa,
-#vista-previa,
-.tipster-card,
-.pick-card,
-.pronostico-card{
-  width:100% !important;
-  max-width:100% !important;
-  box-sizing:border-box !important;
+.page-header,
+.filter-bar,
+.stats-banner{
+  width:92%;
+  max-width:1200px;
+  margin-left:auto;
+  margin-right:auto;
 }
 
-/* ── 2. FLUJO VERTICAL GARANTIZADO (Flexbox Stack) ───────────────────────────── */
-/* Cards y contenedores de información: apilado vertical natural */
+/* ── 2. CARDS: FLUIDAS CON MAX-WIDTH ──────────────────────────────────────────── */
 .tipster-card,
 .pick-card,
+.pronostico-card,
+#vista-previa{
+  width:100%;
+  max-width:380px;
+  height:auto;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* ── 3. IMÁGENES Y LOGOS: ESCALADO PROPORCIONAL ───────────────────────────────── */
+img,
+.tipster-avatar img,
+.ts-logo-img,
+img[alt="TrueStats AI"]{
+  height:auto;
+  max-width:100%;
+  object-fit:contain;
+}
+
+/* ── 4. STACK VERTICAL LIMPIO: GAP 1.5REM ─────────────────────────────────────── */
+.tipsters-grid,
+.picks-grid,
 .card-content,
 .pick-h-layout,
 .pick-h-left,
 .tipster-identity,
-.pronostico-card{
-  display:flex !important;
-  flex-direction:column !important;
+.page-header{
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
 }
 
-/* ── 3. BOTONES CON FLEX-WRAP INTELIGENTE ────────────────────────────────────── */
-/* Filas de botones: si no caben, bajan automáticamente */
+/* ── 5. DISTRIBUCIÓN HORIZONTAL: FLEX-WRAP + SPACE-BETWEEN ────────────────────── */
 .card-actions,
+.stats-grid,
 .pick-h-stats,
-.tipster-badges,
 .pick-h-badges,
-.hero-cards,
-.filter-bar{
-  display:flex !important;
-  flex-wrap:wrap !important;
-  gap:8px !important;
+.tipster-badges,
+.filter-bar,
+.stats-banner,
+.performance-dots,
+.hero-cards{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:10px;
 }
 
-/* ── 4. PREVENCIÓN DE DESBORDAMIENTO HORIZONTAL ──────────────────────────────── */
-/* Textos largos: truncar con ellipsis */
+/* ── 6. TEXTOS: PREVENCIÓN DE DESBORDAMIENTO ──────────────────────────────────── */
 .tipster-name,
 .pick-h-match .teams,
-.pick-h-sel-value{
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  white-space:nowrap !important;
-  max-width:100% !important;
+.pick-h-sel-value,
+h1,h2,h3{
+  overflow-wrap:break-word;
+  word-wrap:break-word;
+  hyphens:auto;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   MOBILE RESPONSIVE GLOBAL (<768px)
+   📱 RESPONSIVE: MÓVIL FLUIDO
    ═══════════════════════════════════════════════════════════════════════════════ */
+
 @media(max-width:768px){
-  /* ── GRID TIPSTERS: 1 columna, centrado ── */
+  /* ── CONTENEDORES: 92% del viewport ── */
+  .main-container,
+  .tipsters-grid,
+  .picks-grid,
+  .page-header,
+  #pg-plat>div,
+  #pg-tipster>div,
+  #pg-picks .main{
+    width:92% !important;
+    max-width:100% !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+  
+  /* ── TIPSTER CARDS: Stack vertical con gap ── */
   #pg-plat .tipsters-grid{
     display:flex !important;
     flex-direction:column !important;
     align-items:center !important;
-    gap:16px !important;
-    padding:0 12px !important;
+    gap:1.5rem !important;
   }
   
-  /* ── TIPSTER CARD: Ancho fluido con máximo ── */
+  /* ── TIPSTER CARD: Fluida, sin hacks ── */
   #pg-plat .tipster-card{
     width:100% !important;
-    max-width:320px !important;
+    max-width:340px !important;
+    height:auto !important;
     margin:0 auto !important;
-    transform:none !important;
+    /* PROHIBIDO: transform, margin negativo */
   }
   
-  /* ── BANNER: Altura proporcional ── */
+  /* ── BANNER: Altura proporcional al contenido ── */
   #pg-plat .card-banner{
-    height:50px !important;
+    width:100% !important;
+    height:auto !important;
+    min-height:50px !important;
+    padding:10px !important;
+    display:flex !important;
+    flex-wrap:wrap !important;
+    justify-content:space-between !important;
+    align-items:flex-start !important;
+    gap:6px !important;
     position:relative !important;
   }
   
-  /* ── BADGES: Posicionamiento separado (Rank izq, Verificado der) ── */
-  #pg-plat .tipster-rank{
-    position:absolute !important;
-    top:8px !important;
-    left:8px !important;
-    right:auto !important;
-    font-size:9px !important;
-    padding:3px 8px !important;
-  }
-  #pg-plat .verified-badge{
-    position:absolute !important;
-    top:8px !important;
-    left:auto !important;
-    right:8px !important;
-    font-size:8px !important;
-    padding:2px 6px !important;
-  }
+  /* ── BADGES: Flujo natural en fila, wrap automático ── */
+  #pg-plat .tipster-rank,
+  #pg-plat .verified-badge,
   #pg-plat .sport-badge{
-    position:absolute !important;
-    top:auto !important;
-    bottom:6px !important;
-    right:8px !important;
-    font-size:9px !important;
-    padding:3px 8px !important;
-  }
-  
-  /* ── CARD CONTENT: Padding reducido ── */
-  #pg-plat .card-content{
-    padding:12px !important;
-  }
-  
-  /* ── AVATAR: Proporcional ── */
-  #pg-plat .tipster-identity{
-    flex-direction:row !important;
-    align-items:center !important;
-    gap:10px !important;
-    margin-top:-28px !important;
-  }
-  #pg-plat .tipster-avatar{
-    width:48px !important;
-    height:48px !important;
+    position:static !important;
     flex-shrink:0 !important;
   }
-  #pg-plat .tipster-name{
-    font-size:14px !important;
+  #pg-plat .tipster-rank{
+    order:1 !important;
   }
-  #pg-plat .tipster-rating .star{
-    width:10px !important;
-    height:10px !important;
+  #pg-plat .verified-badge{
+    order:2 !important;
+  }
+  #pg-plat .sport-badge{
+    order:3 !important;
+    margin-left:auto !important;
   }
   
-  /* ── STATS GRID: 2x2 en móvil ── */
+  /* ── CARD CONTENT: Stack vertical ── */
+  #pg-plat .card-content{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:1rem !important;
+    padding:14px !important;
+    height:auto !important;
+  }
+  
+  /* ── AVATAR + INFO: Fila horizontal ── */
+  #pg-plat .tipster-identity{
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    gap:12px !important;
+    margin:0 !important;
+    /* PROHIBIDO: margin-top negativo */
+  }
+  
+  #pg-plat .tipster-avatar{
+    width:52px !important;
+    height:52px !important;
+    flex-shrink:0 !important;
+  }
+  #pg-plat .tipster-avatar img{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+  }
+  
+  #pg-plat .tipster-info{
+    flex:1 !important;
+    min-width:0 !important;
+  }
+  #pg-plat .tipster-name{
+    font-size:15px !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  
+  /* ── STATS GRID: 2x2, gap uniforme ── */
   #pg-plat .stats-grid{
     display:grid !important;
     grid-template-columns:repeat(2,1fr) !important;
-    gap:6px !important;
-    margin:10px 0 !important;
+    gap:8px !important;
+    width:100% !important;
   }
   #pg-plat .stat-item{
-    padding:8px 4px !important;
+    padding:10px 6px !important;
+    text-align:center !important;
   }
   #pg-plat .stat-value{
-    font-size:12px !important;
+    font-size:13px !important;
   }
   #pg-plat .stat-label{
     font-size:8px !important;
   }
   
-  /* ── PERFORMANCE DOTS: Centrados ── */
+  /* ── PERFORMANCE: Fila con wrap ── */
   #pg-plat .performance-section{
+    display:flex !important;
     flex-wrap:wrap !important;
-    justify-content:center !important;
+    justify-content:space-between !important;
+    align-items:center !important;
     gap:8px !important;
-    margin-bottom:10px !important;
+    padding-top:10px !important;
+    border-top:1px solid #1a2620 !important;
   }
   #pg-plat .perf-dot{
-    width:10px !important;
-    height:10px !important;
+    width:12px !important;
+    height:12px !important;
   }
   
-  /* ── BOTONES: Flex-wrap automático ── */
+  /* ── BOTONES: Flex-wrap, space-between ── */
   #pg-plat .card-actions{
+    display:flex !important;
     flex-wrap:wrap !important;
-    gap:6px !important;
+    justify-content:space-between !important;
+    gap:8px !important;
   }
   #pg-plat .btn-action{
-    flex:1 1 auto !important;
+    flex:1 1 calc(33% - 6px) !important;
     min-width:80px !important;
+    padding:10px 8px !important;
     font-size:10px !important;
-    padding:8px 10px !important;
+    text-align:center !important;
   }
   #pg-plat .btn-action svg{
     width:12px !important;
@@ -196,22 +268,21 @@ body{font-family:'Inter',system-ui,sans-serif;background:#050708;color:#c8dcc4;o
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   MOBILE PEQUEÑO (<480px) - Tu pantalla de 444px
+   📱 RESPONSIVE: MÓVIL PEQUEÑO (<480px)
    ═══════════════════════════════════════════════════════════════════════════════ */
+
 @media(max-width:480px){
-  /* ── TIPSTER CARD: Más compacta ── */
+  /* ── TIPSTER CARD: Más compacta pero fluida ── */
   #pg-plat .tipster-card{
-    max-width:280px !important;
+    max-width:300px !important;
   }
   #pg-plat .card-banner{
-    height:42px !important;
+    min-height:44px !important;
+    padding:8px !important;
   }
   #pg-plat .tipster-avatar{
-    width:40px !important;
-    height:40px !important;
-  }
-  #pg-plat .tipster-identity{
-    margin-top:-22px !important;
+    width:44px !important;
+    height:44px !important;
   }
   #pg-plat .tipster-name{
     font-size:13px !important;
@@ -223,92 +294,137 @@ body{font-family:'Inter',system-ui,sans-serif;background:#050708;color:#c8dcc4;o
     font-size:7px !important;
   }
   #pg-plat .btn-action{
+    flex:1 1 calc(50% - 4px) !important;
+    min-width:70px !important;
     font-size:9px !important;
-    padding:7px 8px !important;
+    padding:8px 6px !important;
   }
   
-  /* ── PICK CARDS: Ancho fluido ── */
-  #pg-tipster .picks-grid,
-  .picks-grid{
+  /* ── PICK CARDS: Fluidas ── */
+  #pg-tipster .picks-grid{
     display:flex !important;
     flex-direction:column !important;
     align-items:center !important;
-    gap:12px !important;
+    gap:1rem !important;
+    width:92% !important;
+    margin:0 auto !important;
   }
   #pg-tipster .pick-card,
   .pick-card{
     width:100% !important;
-    max-width:300px !important;
+    max-width:320px !important;
+    height:auto !important;
     margin:0 auto !important;
-    transform:none !important;
   }
-  .pick-h-match .teams{
-    font-size:11px !important;
+  .pick-h-layout{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:0 !important;
   }
-  .pick-h-cuota{
-    font-size:16px !important;
+  .pick-h-left{
+    padding:12px !important;
   }
   .pick-h-right{
+    display:flex !important;
     flex-wrap:wrap !important;
-    gap:8px !important;
+    justify-content:space-between !important;
+    align-items:center !important;
+    gap:10px !important;
+    padding:10px 12px !important;
   }
   .pick-h-stats{
+    display:flex !important;
     flex-wrap:wrap !important;
-    justify-content:center !important;
+    gap:12px !important;
+  }
+  .pick-h-cuota{
+    font-size:18px !important;
   }
   
-  /* ── GRÁFICO: Sin scroll, altura fija ── */
+  /* ── GRÁFICO: Fluido sin scroll ── */
   #pg-tipster .stats-chart-container{
-    width:100% !important;
+    width:92% !important;
+    max-width:100% !important;
+    margin:0 auto !important;
     overflow:hidden !important;
-    padding:10px 8px !important;
+    padding:12px !important;
   }
   #pg-tipster #stats-chart{
     width:100% !important;
-    height:160px !important;
-    min-width:0 !important;
+    height:auto !important;
+    min-height:150px !important;
+    max-height:200px !important;
   }
   
-  /* ── BOLETO/VISTA PREVIA: Ancho fluido ── */
+  /* ── BOLETO/VISTA PREVIA: Fluido ── */
   #pg-picks #vista-previa,
   #pg-picks #contenedor-vista-previa>div,
   #pg-picks .pronostico-card{
-    width:100% !important;
-    max-width:320px !important;
-    margin:12px auto !important;
-    transform:none !important;
+    width:92% !important;
+    max-width:340px !important;
+    height:auto !important;
+    margin:1rem auto !important;
   }
   
-  /* ── LOGO: Mismo tamaño que hamburguesa ── */
+  /* ── LOGO: Proporcional ── */
   .ts-logo-img,
   img[alt="TrueStats AI"]{
     height:36px !important;
-    width:36px !important;
+    width:auto !important;
     object-fit:contain !important;
   }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   MÓVIL MUY PEQUEÑO (<380px) - Seguridad extra
+   📱 RESPONSIVE: MÓVIL MUY PEQUEÑO (<380px)
    ═══════════════════════════════════════════════════════════════════════════════ */
+
 @media(max-width:380px){
   #pg-plat .tipster-card{
-    max-width:260px !important;
-  }
-  #pg-plat .stats-grid{
-    grid-template-columns:repeat(2,1fr) !important;
+    max-width:280px !important;
   }
   #pg-plat .btn-action{
-    min-width:70px !important;
-    font-size:8px !important;
+    flex:1 1 100% !important;
+    min-width:100% !important;
   }
   .pick-card{
-    max-width:260px !important;
+    max-width:280px !important;
+  }
+  #pg-picks #vista-previa{
+    max-width:280px !important;
   }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
-   FIN SISTEMA FULL-RESPONSIVE
+   🚫 NEUTRALIZACIÓN DE HACKS HEREDADOS
+   Sobrescribe cualquier transform:scale, margin negativo o position:absolute
+   que venga de CSS antiguo más abajo en el archivo
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@media(max-width:768px){
+  /* Anular cualquier transform:scale heredado */
+  .tipster-card,
+  .pick-card,
+  #vista-previa,
+  .pronostico-card{
+    transform:none !important;
+    transform-origin:unset !important;
+  }
+  
+  /* Anular márgenes negativos heredados */
+  .tipster-identity,
+  .tipster-avatar,
+  .card-content{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+  }
+  
+  /* Resetear position:absolute en badges para flujo natural */
+  /* (Los badges ahora usan position:static dentro del banner flex) */
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   FIN SISTEMA DE DISEÑO FLUIDO
    ═══════════════════════════════════════════════════════════════════════════════ */
 
 /* Animations */
@@ -378,7 +494,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 
 /* Card content */
 #pg-plat .card-content{padding:16px 18px 18px}
-#pg-plat .tipster-identity{display:flex;align-items:center;gap:12px;margin-top:-40px;margin-bottom:14px;position:relative;z-index:2}
+#pg-plat .tipster-identity{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:relative;z-index:2}
 #pg-plat .tipster-identity .tipster-avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a2620,#0a0f0c);border:3px solid #0a0e0c;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#2dd4bf;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.4);flex-shrink:0}
 #pg-plat .tipster-identity .tipster-avatar img{width:100%;height:100%;object-fit:cover;border-radius:9px}
 #pg-plat .tipster-identity .tipster-avatar.verified{position:relative}
@@ -1493,17 +1609,17 @@ nav.sc{border-color:#243028}
   #pg-plat .filter-bar{flex-wrap:wrap;justify-content:center;gap:5px}
   #pg-plat .filter-btn{padding:5px 10px;font-size:9px}
   #pg-plat .sort-select{width:100%;padding:8px;font-size:11px}
-  /* Cards de tipsters - FLUIDO (sin scale) */
-  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:16px;max-width:320px;margin:0 auto;padding:0 10px}
+  /* Cards de tipsters - FLUIDO (sin hacks) */
+  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:16px;max-width:340px;margin:0 auto;padding:0}
   #pg-plat .tipster-card{border-radius:10px}
-  /* Banner reorganizado - elementos separados */
-  #pg-plat .card-banner{height:45px;position:relative}
-  #pg-plat .tipster-rank{font-size:7px;padding:2px 5px;top:6px;left:6px;z-index:3}
-  #pg-plat .verified-badge{font-size:6px;padding:2px 5px;top:6px;left:auto;right:6px;z-index:3}
-  #pg-plat .sport-badge{font-size:7px;padding:2px 5px;top:auto;bottom:6px;right:6px}
+  /* Banner reorganizado - flujo natural */
+  #pg-plat .card-banner{min-height:45px;position:relative}
+  #pg-plat .tipster-rank{font-size:7px;padding:2px 5px}
+  #pg-plat .verified-badge{font-size:6px;padding:2px 5px}
+  #pg-plat .sport-badge{font-size:7px;padding:2px 5px}
   #pg-plat .card-content{padding:10px}
   #pg-plat .tipster-identity{gap:8px;margin-bottom:8px}
-  #pg-plat .tipster-avatar{width:36px;height:36px;margin-top:-20px;border-width:2px}
+  #pg-plat .tipster-avatar{width:48px;height:48px;border-width:2px}
   #pg-plat .tipster-name{font-size:12px}
   #pg-plat .tipster-rating .star{width:9px;height:9px}
   #pg-plat .stats-grid{grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px}
@@ -1568,9 +1684,9 @@ nav.sc{border-color:#243028}
   #pg-tipster .stats-chart-filters{width:100%}
   #pg-tipster .stats-chart-filters select{flex:1;font-size:10px;padding:6px}
   #pg-tipster .stats-chart-legend{gap:10px;flex-wrap:wrap;font-size:9px}
-  /* Pick cards - FLUIDO (sin scale) */
-  #pg-tipster .picks-grid{justify-content:center;max-width:320px;margin:0 auto}
-  #pg-tipster .pick-card{width:100%;max-width:320px}
+  /* Pick cards - FLUIDO (sin hacks) */
+  #pg-tipster .picks-grid{justify-content:center;max-width:340px;margin:0 auto}
+  #pg-tipster .pick-card{width:100%;max-width:340px}
 }
 
 @media(max-width:480px){
@@ -1578,11 +1694,11 @@ nav.sc{border-color:#243028}
   #pg-tipster .tipster-hero-avatar{width:80px;height:80px}
   #pg-tipster .tipster-hero-avatar img{width:80px;height:80px}
   #pg-tipster .tipster-hero-info h1{font-size:20px}
-  /* Pick cards - FLUIDO (sin scale) */
-  #pg-tipster .pick-card{max-width:300px}
+  /* Pick cards - FLUIDO (sin hacks) */
+  #pg-tipster .pick-card{max-width:320px}
   /* Gráfico más compacto */
-  #pg-tipster #stats-chart{height:140px}
-  #pg-tipster .stats-chart-placeholder{height:110px}
+  #pg-tipster #stats-chart{height:160px}
+  #pg-tipster .stats-chart-placeholder{height:130px}
 }
 
 /* ── PÁGINA CREAR PICK (#pg-picks) ──────────────────────────────────────────────── */
@@ -1598,8 +1714,8 @@ nav.sc{border-color:#243028}
   #pg-picks .ph p{font-size:11px}
   #pg-picks .finp{font-size:14px;padding:12px}
   #pg-picks .flbl{font-size:11px}
-  /* Boleto - FLUIDO (sin scale) */
-  #pg-picks #vista-previa{max-width:100%;margin:16px auto}
+  /* Boleto - FLUIDO (sin hacks) */
+  #pg-picks #vista-previa{max-width:340px;margin:16px auto}
   #pg-picks #vista-previa>div{padding:14px}
   #pg-picks .pronostico-card{padding:14px;border-radius:12px}
 }
@@ -1607,7 +1723,7 @@ nav.sc{border-color:#243028}
 @media(max-width:480px){
   #pg-picks .main{padding:16px 12px}
   #pg-picks .ph h1{font-size:20px}
-  /* Boleto - FLUIDO (sin scale) */
+  /* Boleto - FLUIDO (sin hacks) */
   #pg-picks #vista-previa{max-width:320px}
 }
 
