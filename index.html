@@ -14,418 +14,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:#050708;color:#c8dcc4;o
 ::-webkit-scrollbar-track{background:#050708}
 ::-webkit-scrollbar-thumb{background:#1a2620;border-radius:2px}
 
-/* ═══════════════════════════════════════════════════════════════════════════════
-   🎯 SISTEMA DE DISEÑO FLUIDO Y ESCALADO PROPORCIONAL
-   ═══════════════════════════════════════════════════════════════════════════════
-   
-   PRINCIPIOS:
-   1. Ancho Relativo 92% - Siempre respira con 4% de margen a cada lado
-   2. Escalado sin Deformación - height:auto + object-fit para proporciones
-   3. Anti-Amontonamiento - flex-direction:column + gap para espaciado limpio
-   4. Flex-Wrap Inteligente - Los elementos bajan solos si no caben
-   5. Sin Hacks - Prohibido transform:scale(), márgenes negativos, position:absolute para flujo
-   
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-/* ── 1. CONTENEDORES PRINCIPALES: ANCHO 92% + CENTRADO ────────────────────────── */
-.main-container,
-.tipsters-grid,
-.picks-grid,
-.stats-chart-container,
-#contenedor-vista-previa,
-.page-header,
-.filter-bar,
-.stats-banner{
-  width:92%;
-  max-width:1200px;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-/* ── 2. CARDS: FLUIDAS CON MAX-WIDTH ──────────────────────────────────────────── */
-.tipster-card,
-.pick-card,
-.pronostico-card,
-#vista-previa{
-  width:100%;
-  max-width:380px;
-  height:auto;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-/* ── 3. IMÁGENES Y LOGOS: ESCALADO PROPORCIONAL ───────────────────────────────── */
-img,
-.tipster-avatar img,
-.ts-logo-img,
-img[alt="TrueStats AI"]{
-  height:auto;
-  max-width:100%;
-  object-fit:contain;
-}
-
-/* ── 4. STACK VERTICAL LIMPIO: GAP 1.5REM ─────────────────────────────────────── */
-.tipsters-grid,
-.picks-grid,
-.card-content,
-.pick-h-layout,
-.pick-h-left,
-.tipster-identity,
-.page-header{
-  display:flex;
-  flex-direction:column;
-  gap:1.5rem;
-}
-
-/* ── 5. DISTRIBUCIÓN HORIZONTAL: FLEX-WRAP + SPACE-BETWEEN ────────────────────── */
-.card-actions,
-.stats-grid,
-.pick-h-stats,
-.pick-h-badges,
-.tipster-badges,
-.filter-bar,
-.stats-banner,
-.performance-dots,
-.hero-cards{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:10px;
-}
-
-/* ── 6. TEXTOS: PREVENCIÓN DE DESBORDAMIENTO ──────────────────────────────────── */
-.tipster-name,
-.pick-h-match .teams,
-.pick-h-sel-value,
-h1,h2,h3{
-  overflow-wrap:break-word;
-  word-wrap:break-word;
-  hyphens:auto;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   📱 RESPONSIVE: MÓVIL FLUIDO
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-@media(max-width:768px){
-  /* ── CONTENEDORES: 92% del viewport ── */
-  .main-container,
-  .tipsters-grid,
-  .picks-grid,
-  .page-header,
-  #pg-plat>div,
-  #pg-tipster>div,
-  #pg-picks .main{
-    width:92% !important;
-    max-width:100% !important;
-    margin-left:auto !important;
-    margin-right:auto !important;
-    padding-left:0 !important;
-    padding-right:0 !important;
-  }
-  
-  /* ── TIPSTER CARDS: Stack vertical con gap ── */
-  #pg-plat .tipsters-grid{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    gap:1.5rem !important;
-  }
-  
-  /* ── TIPSTER CARD: Fluida, sin hacks ── */
-  #pg-plat .tipster-card{
-    width:100% !important;
-    max-width:340px !important;
-    height:auto !important;
-    margin:0 auto !important;
-    /* PROHIBIDO: transform, margin negativo */
-  }
-  
-  /* ── BANNER: Altura proporcional al contenido ── */
-  #pg-plat .card-banner{
-    width:100% !important;
-    height:auto !important;
-    min-height:50px !important;
-    padding:10px !important;
-    display:flex !important;
-    flex-wrap:wrap !important;
-    justify-content:space-between !important;
-    align-items:flex-start !important;
-    gap:6px !important;
-    position:relative !important;
-  }
-  
-  /* ── BADGES: Flujo natural en fila, wrap automático ── */
-  #pg-plat .tipster-rank,
-  #pg-plat .verified-badge,
-  #pg-plat .sport-badge{
-    position:static !important;
-    flex-shrink:0 !important;
-  }
-  #pg-plat .tipster-rank{
-    order:1 !important;
-  }
-  #pg-plat .verified-badge{
-    order:2 !important;
-  }
-  #pg-plat .sport-badge{
-    order:3 !important;
-    margin-left:auto !important;
-  }
-  
-  /* ── CARD CONTENT: Stack vertical ── */
-  #pg-plat .card-content{
-    display:flex !important;
-    flex-direction:column !important;
-    gap:1rem !important;
-    padding:14px !important;
-    height:auto !important;
-  }
-  
-  /* ── AVATAR + INFO: Fila horizontal ── */
-  #pg-plat .tipster-identity{
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:center !important;
-    gap:12px !important;
-    margin:0 !important;
-    /* PROHIBIDO: margin-top negativo */
-  }
-  
-  #pg-plat .tipster-avatar{
-    width:52px !important;
-    height:52px !important;
-    flex-shrink:0 !important;
-  }
-  #pg-plat .tipster-avatar img{
-    width:100% !important;
-    height:100% !important;
-    object-fit:cover !important;
-  }
-  
-  #pg-plat .tipster-info{
-    flex:1 !important;
-    min-width:0 !important;
-  }
-  #pg-plat .tipster-name{
-    font-size:15px !important;
-    white-space:nowrap !important;
-    overflow:hidden !important;
-    text-overflow:ellipsis !important;
-  }
-  
-  /* ── STATS GRID: 2x2, gap uniforme ── */
-  #pg-plat .stats-grid{
-    display:grid !important;
-    grid-template-columns:repeat(2,1fr) !important;
-    gap:8px !important;
-    width:100% !important;
-  }
-  #pg-plat .stat-item{
-    padding:10px 6px !important;
-    text-align:center !important;
-  }
-  #pg-plat .stat-value{
-    font-size:13px !important;
-  }
-  #pg-plat .stat-label{
-    font-size:8px !important;
-  }
-  
-  /* ── PERFORMANCE: Fila con wrap ── */
-  #pg-plat .performance-section{
-    display:flex !important;
-    flex-wrap:wrap !important;
-    justify-content:space-between !important;
-    align-items:center !important;
-    gap:8px !important;
-    padding-top:10px !important;
-    border-top:1px solid #1a2620 !important;
-  }
-  #pg-plat .perf-dot{
-    width:12px !important;
-    height:12px !important;
-  }
-  
-  /* ── BOTONES: Flex-wrap, space-between ── */
-  #pg-plat .card-actions{
-    display:flex !important;
-    flex-wrap:wrap !important;
-    justify-content:space-between !important;
-    gap:8px !important;
-  }
-  #pg-plat .btn-action{
-    flex:1 1 calc(33% - 6px) !important;
-    min-width:80px !important;
-    padding:10px 8px !important;
-    font-size:10px !important;
-    text-align:center !important;
-  }
-  #pg-plat .btn-action svg{
-    width:12px !important;
-    height:12px !important;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   📱 RESPONSIVE: MÓVIL PEQUEÑO (<480px)
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-@media(max-width:480px){
-  /* ── TIPSTER CARD: Más compacta pero fluida ── */
-  #pg-plat .tipster-card{
-    max-width:300px !important;
-  }
-  #pg-plat .card-banner{
-    min-height:44px !important;
-    padding:8px !important;
-  }
-  #pg-plat .tipster-avatar{
-    width:44px !important;
-    height:44px !important;
-  }
-  #pg-plat .tipster-name{
-    font-size:13px !important;
-  }
-  #pg-plat .stat-value{
-    font-size:11px !important;
-  }
-  #pg-plat .stat-label{
-    font-size:7px !important;
-  }
-  #pg-plat .btn-action{
-    flex:1 1 calc(50% - 4px) !important;
-    min-width:70px !important;
-    font-size:9px !important;
-    padding:8px 6px !important;
-  }
-  
-  /* ── PICK CARDS: Fluidas ── */
-  #pg-tipster .picks-grid{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    gap:1rem !important;
-    width:92% !important;
-    margin:0 auto !important;
-  }
-  #pg-tipster .pick-card,
-  .pick-card{
-    width:100% !important;
-    max-width:320px !important;
-    height:auto !important;
-    margin:0 auto !important;
-  }
-  .pick-h-layout{
-    display:flex !important;
-    flex-direction:column !important;
-    gap:0 !important;
-  }
-  .pick-h-left{
-    padding:12px !important;
-  }
-  .pick-h-right{
-    display:flex !important;
-    flex-wrap:wrap !important;
-    justify-content:space-between !important;
-    align-items:center !important;
-    gap:10px !important;
-    padding:10px 12px !important;
-  }
-  .pick-h-stats{
-    display:flex !important;
-    flex-wrap:wrap !important;
-    gap:12px !important;
-  }
-  .pick-h-cuota{
-    font-size:18px !important;
-  }
-  
-  /* ── GRÁFICO: Fluido sin scroll ── */
-  #pg-tipster .stats-chart-container{
-    width:92% !important;
-    max-width:100% !important;
-    margin:0 auto !important;
-    overflow:hidden !important;
-    padding:12px !important;
-  }
-  #pg-tipster #stats-chart{
-    width:100% !important;
-    height:auto !important;
-    min-height:150px !important;
-    max-height:200px !important;
-  }
-  
-  /* ── BOLETO/VISTA PREVIA: Fluido ── */
-  #pg-picks #vista-previa,
-  #pg-picks #contenedor-vista-previa>div,
-  #pg-picks .pronostico-card{
-    width:92% !important;
-    max-width:340px !important;
-    height:auto !important;
-    margin:1rem auto !important;
-  }
-  
-  /* ── LOGO: Proporcional ── */
-  .ts-logo-img,
-  img[alt="TrueStats AI"]{
-    height:36px !important;
-    width:auto !important;
-    object-fit:contain !important;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   📱 RESPONSIVE: MÓVIL MUY PEQUEÑO (<380px)
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-@media(max-width:380px){
-  #pg-plat .tipster-card{
-    max-width:280px !important;
-  }
-  #pg-plat .btn-action{
-    flex:1 1 100% !important;
-    min-width:100% !important;
-  }
-  .pick-card{
-    max-width:280px !important;
-  }
-  #pg-picks #vista-previa{
-    max-width:280px !important;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   🚫 NEUTRALIZACIÓN DE HACKS HEREDADOS
-   Sobrescribe cualquier transform:scale, margin negativo o position:absolute
-   que venga de CSS antiguo más abajo en el archivo
-   ═══════════════════════════════════════════════════════════════════════════════ */
-
-@media(max-width:768px){
-  /* Anular cualquier transform:scale heredado */
-  .tipster-card,
-  .pick-card,
-  #vista-previa,
-  .pronostico-card{
-    transform:none !important;
-    transform-origin:unset !important;
-  }
-  
-  /* Anular márgenes negativos heredados */
-  .tipster-identity,
-  .tipster-avatar,
-  .card-content{
-    margin-top:0 !important;
-    margin-bottom:0 !important;
-  }
-  
-  /* Resetear position:absolute en badges para flujo natural */
-  /* (Los badges ahora usan position:static dentro del banner flex) */
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════════
-   FIN SISTEMA DE DISEÑO FLUIDO
-   ═══════════════════════════════════════════════════════════════════════════════ */
+/* ══ SISTEMA DE MODOS: APOSTADOR vs ADMIN ══════════════════════════════════════ */
+/* Por defecto (Zona Apostadores): ocultar botones de crear pick */
+.admin-only{display:none !important}
+/* Cuando body tiene clase admin-mode (Zona Tipsters): mostrar botones */
+body.admin-mode .admin-only{display:flex !important}
 
 /* Animations */
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -494,7 +87,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 
 /* Card content */
 #pg-plat .card-content{padding:16px 18px 18px}
-#pg-plat .tipster-identity{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:relative;z-index:2}
+#pg-plat .tipster-identity{display:flex;align-items:center;gap:12px;margin-top:-40px;margin-bottom:14px;position:relative;z-index:2}
 #pg-plat .tipster-identity .tipster-avatar{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,#1a2620,#0a0f0c);border:3px solid #0a0e0c;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#2dd4bf;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.4);flex-shrink:0}
 #pg-plat .tipster-identity .tipster-avatar img{width:100%;height:100%;object-fit:cover;border-radius:9px}
 #pg-plat .tipster-identity .tipster-avatar.verified{position:relative}
@@ -544,7 +137,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
 .sort-select:hover,.sort-select:focus{border-color:rgba(45,212,191,.3)}
 
 /* Logo img */
-.ts-logo-img{height:64px;width:auto;object-fit:contain}
+.ts-logo-img{height:40px;width:auto;object-fit:contain}
 
 /* ═══ ESTILOS ANTIGUOS DESHABILITADOS ═══ */
 
@@ -1609,17 +1202,17 @@ nav.sc{border-color:#243028}
   #pg-plat .filter-bar{flex-wrap:wrap;justify-content:center;gap:5px}
   #pg-plat .filter-btn{padding:5px 10px;font-size:9px}
   #pg-plat .sort-select{width:100%;padding:8px;font-size:11px}
-  /* Cards de tipsters - FLUIDO (sin hacks) */
-  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:16px;max-width:340px;margin:0 auto;padding:0}
-  #pg-plat .tipster-card{border-radius:10px}
-  /* Banner reorganizado - flujo natural */
-  #pg-plat .card-banner{min-height:45px;position:relative}
-  #pg-plat .tipster-rank{font-size:7px;padding:2px 5px}
-  #pg-plat .verified-badge{font-size:6px;padding:2px 5px}
-  #pg-plat .sport-badge{font-size:7px;padding:2px 5px}
+  /* Cards de tipsters - 40% más pequeñas y centradas */
+  #pg-plat .tipsters-grid{grid-template-columns:1fr;gap:16px;max-width:260px;margin:0 auto;padding:0 10px}
+  #pg-plat .tipster-card{border-radius:10px;transform:scale(0.75);transform-origin:center top;margin-bottom:-60px}
+  /* Banner reorganizado - elementos separados */
+  #pg-plat .card-banner{height:45px;position:relative}
+  #pg-plat .tipster-rank{font-size:7px;padding:2px 5px;top:6px;left:6px;z-index:3}
+  #pg-plat .verified-badge{font-size:6px;padding:2px 5px;top:6px;left:auto;right:6px;z-index:3}
+  #pg-plat .sport-badge{font-size:7px;padding:2px 5px;top:auto;bottom:6px;right:6px}
   #pg-plat .card-content{padding:10px}
   #pg-plat .tipster-identity{gap:8px;margin-bottom:8px}
-  #pg-plat .tipster-avatar{width:48px;height:48px;border-width:2px}
+  #pg-plat .tipster-avatar{width:36px;height:36px;margin-top:-20px;border-width:2px}
   #pg-plat .tipster-name{font-size:12px}
   #pg-plat .tipster-rating .star{width:9px;height:9px}
   #pg-plat .stats-grid{grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:8px}
@@ -1684,9 +1277,9 @@ nav.sc{border-color:#243028}
   #pg-tipster .stats-chart-filters{width:100%}
   #pg-tipster .stats-chart-filters select{flex:1;font-size:10px;padding:6px}
   #pg-tipster .stats-chart-legend{gap:10px;flex-wrap:wrap;font-size:9px}
-  /* Pick cards - FLUIDO (sin hacks) */
-  #pg-tipster .picks-grid{justify-content:center;max-width:340px;margin:0 auto}
-  #pg-tipster .pick-card{width:100%;max-width:340px}
+  /* Pick cards - 40% más pequeños y centrados */
+  #pg-tipster .picks-grid{justify-content:center;max-width:280px;margin:0 auto}
+  #pg-tipster .pick-card{width:100%;max-width:280px;transform:scale(0.65);transform-origin:center top;margin-bottom:-80px}
 }
 
 @media(max-width:480px){
@@ -1694,11 +1287,11 @@ nav.sc{border-color:#243028}
   #pg-tipster .tipster-hero-avatar{width:80px;height:80px}
   #pg-tipster .tipster-hero-avatar img{width:80px;height:80px}
   #pg-tipster .tipster-hero-info h1{font-size:20px}
-  /* Pick cards - FLUIDO (sin hacks) */
-  #pg-tipster .pick-card{max-width:320px}
+  /* Pick cards aún más pequeños */
+  #pg-tipster .pick-card{max-width:100%;transform:scale(0.6);margin-bottom:-100px}
   /* Gráfico más compacto */
-  #pg-tipster #stats-chart{height:160px}
-  #pg-tipster .stats-chart-placeholder{height:130px}
+  #pg-tipster #stats-chart{height:140px}
+  #pg-tipster .stats-chart-placeholder{height:110px}
 }
 
 /* ── PÁGINA CREAR PICK (#pg-picks) ──────────────────────────────────────────────── */
@@ -1714,8 +1307,8 @@ nav.sc{border-color:#243028}
   #pg-picks .ph p{font-size:11px}
   #pg-picks .finp{font-size:14px;padding:12px}
   #pg-picks .flbl{font-size:11px}
-  /* Boleto - FLUIDO (sin hacks) */
-  #pg-picks #vista-previa{max-width:340px;margin:16px auto}
+  /* Boleto 40% más pequeño y centrado */
+  #pg-picks #vista-previa{transform:scale(0.6);transform-origin:center top;margin:16px auto -40%;max-width:100%}
   #pg-picks #vista-previa>div{padding:14px}
   #pg-picks .pronostico-card{padding:14px;border-radius:12px}
 }
@@ -1723,8 +1316,7 @@ nav.sc{border-color:#243028}
 @media(max-width:480px){
   #pg-picks .main{padding:16px 12px}
   #pg-picks .ph h1{font-size:20px}
-  /* Boleto - FLUIDO (sin hacks) */
-  #pg-picks #vista-previa{max-width:320px}
+  #pg-picks #vista-previa{transform:scale(0.55);margin-bottom:-45%}
 }
 
 /* ── PÁGINAS PRÓXIMAMENTE (#pg-academia, #pg-hall) ──────────────────────────────── */
@@ -1808,18 +1400,18 @@ if (typeof html2canvas === 'undefined') {
       
       <!-- Botones desktop (ocultos en móvil) -->
       <div id="nav-desktop-btns" style="display:none;gap:12px;flex-wrap:wrap">
-        <button onclick="go('plat')" style="padding:10px 18px;background:#0d1014;border:2px solid #c0c8d4;color:#e8ecf2;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(192,200,212,.2),0 0 40px rgba(192,200,212,.1),inset 0 0 20px rgba(192,200,212,.05);text-shadow:0 0 10px rgba(192,200,212,.5)">🎓 Academia</button>
-        <button onclick="go('plat')" style="padding:10px 18px;background:rgb(8,12,10);border:2px solid #2dd4bf;color:#2dd4bf;font-family:Inter,sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(45,212,191,.3),0 0 40px rgba(45,212,191,.15),inset 0 0 20px rgba(45,212,191,.05);text-shadow:0 0 10px rgba(45,212,191,.6)">📊 Zona Tipsters</button>
-        <button onclick="go('plat')" style="padding:10px 18px;background:#080c0a;border:2px solid #60a5fa;color:#60a5fa;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(96,165,250,.3),0 0 40px rgba(96,165,250,.15),inset 0 0 20px rgba(96,165,250,.05);text-shadow:0 0 10px rgba(96,165,250,.6)">🎯 Zona Apostadores</button>
-        <button onclick="go('plat')" style="padding:10px 18px;background:#080c0a;border:2px solid #fbbf24;color:#fbbf24;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(251,191,36,.3),0 0 40px rgba(251,191,36,.15),inset 0 0 20px rgba(251,191,36,.05);text-shadow:0 0 10px rgba(251,191,36,.6)">🏆 Hall of Fame</button>
+        <button onclick="go('academia')" style="padding:10px 18px;background:#0d1014;border:2px solid #c0c8d4;color:#e8ecf2;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(192,200,212,.2),0 0 40px rgba(192,200,212,.1),inset 0 0 20px rgba(192,200,212,.05);text-shadow:0 0 10px rgba(192,200,212,.5)">🎓 Academia</button>
+        <button onclick="goTipsters()" style="padding:10px 18px;background:rgb(8,12,10);border:2px solid #2dd4bf;color:#2dd4bf;font-family:Inter,sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(45,212,191,.3),0 0 40px rgba(45,212,191,.15),inset 0 0 20px rgba(45,212,191,.05);text-shadow:0 0 10px rgba(45,212,191,.6)">📊 Zona Tipsters</button>
+        <button onclick="goApostadores()" style="padding:10px 18px;background:#080c0a;border:2px solid #60a5fa;color:#60a5fa;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(96,165,250,.3),0 0 40px rgba(96,165,250,.15),inset 0 0 20px rgba(96,165,250,.05);text-shadow:0 0 10px rgba(96,165,250,.6)">🎯 Zona Apostadores</button>
+        <button onclick="go('hall')" style="padding:10px 18px;background:#080c0a;border:2px solid #fbbf24;color:#fbbf24;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px rgba(251,191,36,.3),0 0 40px rgba(251,191,36,.15),inset 0 0 20px rgba(251,191,36,.05);text-shadow:0 0 10px rgba(251,191,36,.6)">🏆 Hall of Fame</button>
       </div>
     </div>
     
     <!-- Menú móvil desplegable -->
     <div id="mobile-menu" style="display:none;position:absolute;top:100%;left:0;right:0;background:rgba(5,7,8,.98);border-bottom:1px solid rgba(45,212,191,.2);padding:16px;flex-direction:column;gap:10px">
       <button onclick="go('academia');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:#0d1014;border:2px solid #c0c8d4;color:#e8ecf2;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(192,200,212,.15)">🎓 Academia</button>
-      <button onclick="go('plat');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:rgb(8,12,10);border:2px solid #2dd4bf;color:#2dd4bf;font-family:Inter,sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(45,212,191,.2)">📊 Zona Tipsters</button>
-      <button onclick="go('plat');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:#080c0a;border:2px solid #60a5fa;color:#60a5fa;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(96,165,250,.2)">🎯 Zona Apostadores</button>
+      <button onclick="goTipsters();toggleMobileMenu()" style="width:100%;padding:14px 20px;background:rgb(8,12,10);border:2px solid #2dd4bf;color:#2dd4bf;font-family:Inter,sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(45,212,191,.2)">📊 Zona Tipsters</button>
+      <button onclick="goApostadores();toggleMobileMenu()" style="width:100%;padding:14px 20px;background:#080c0a;border:2px solid #60a5fa;color:#60a5fa;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(96,165,250,.2)">🎯 Zona Apostadores</button>
       <button onclick="go('hall');toggleMobileMenu()" style="width:100%;padding:14px 20px;background:#080c0a;border:2px solid #fbbf24;color:#fbbf24;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border-radius:10px;cursor:pointer;text-align:center;box-shadow:0 0 15px rgba(251,191,36,.2)">🏆 Hall of Fame</button>
     </div>
   </nav>
@@ -2317,7 +1909,7 @@ if (typeof html2canvas === 'undefined') {
               Seguir
             </button>
           </div>
-          <div style="display:flex;justify-content:center;margin-top:10px">
+          <div class="admin-only" style="justify-content:center;margin-top:10px">
             <button class="btn-action primary" onclick="setActiveTipster('ghp');go('picks')" style="width:100%;max-width:280px">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Crear Pick
@@ -2367,7 +1959,7 @@ if (typeof html2canvas === 'undefined') {
             <button class="btn-action" onclick="openTipsterProfile({id:'spider',name:'Spider Tips',subtitle:'BASKETBALL PROFESSIONAL TIPSTER',avatar:'spt.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'basket'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
             <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
           </div>
-          <div style="display:flex;justify-content:center;margin-top:10px">
+          <div class="admin-only" style="justify-content:center;margin-top:10px">
             <button class="btn-action primary" onclick="setActiveTipster('spider');go('picks')" style="width:100%;max-width:280px">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Crear Pick
@@ -2418,6 +2010,12 @@ if (typeof html2canvas === 'undefined') {
             <button class="btn-action primary" onclick="openTipsterProfile({id:'tipstop',name:'TipsTopPremium',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Ver Picks</button>
             <button class="btn-action" onclick="openTipsterProfile({id:'tipstop',name:'TipsTopPremium',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Estadísticas</button>
             <button class="btn-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Seguir</button>
+          </div>
+          <div class="admin-only" style="justify-content:center;margin-top:10px">
+            <button class="btn-action primary" onclick="setActiveTipster('tipstop');go('picks')" style="width:100%;max-width:280px">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Crear Pick
+            </button>
           </div>
         </div>
       </div>
@@ -2643,7 +2241,7 @@ if (typeof html2canvas === 'undefined') {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
           </button>
           <button class="btn-subscribe" id="tipster-subscribe" style="padding:10px 20px;background:linear-gradient(135deg,#14b8a6,#0f766e);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer">SUSCRÍBETE</button>
-          <button onclick="setActiveTipster(currentProfileTipsterId);go('picks')" style="padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+          <button class="admin-only" onclick="setActiveTipster(currentProfileTipsterId);go('picks')" style="padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;align-items:center;gap:6px">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             CREAR PICK
           </button>
@@ -3233,6 +2831,7 @@ function toggleMobileMenu() {
 
 // ── TIPSTER ACTIVO PARA CREAR PICKS ─────────────────────────────────────────────
 let activeTipsterId = 'ghp'; // Default: Green Hunter Pro
+let isAdminMode = false; // Modo: false = Apostador, true = Tipster/Admin
 
 const tipsterConfig = {
   'ghp': { name: 'Green Hunter Pro', avatar: 'hunter.JPG', initials: 'GH' },
@@ -3245,6 +2844,23 @@ const tipsterNames = {
   'spider': 'Spider Tips',
   'tipstop': 'TipsTopPremium'
 };
+
+// ── FUNCIONES DE MODO ───────────────────────────────────────────────────────────
+function setAdminMode(isAdmin) {
+  isAdminMode = isAdmin;
+  document.body.classList.toggle('admin-mode', isAdmin);
+  console.log('Modo:', isAdmin ? 'TIPSTER/ADMIN' : 'APOSTADOR');
+}
+
+function goApostadores() {
+  setAdminMode(false);
+  go('plat');
+}
+
+function goTipsters() {
+  setAdminMode(true);
+  go('plat');
+}
 
 function setActiveTipster(tipsterId) {
   activeTipsterId = tipsterId;
@@ -4763,11 +4379,11 @@ async function initPicks() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // PICKS STORE & PUBLISH
 // ═══════════════════════════════════════════════════════════════════════════════
-const picksStore = { ghp: [], tp: [] };
-let activeTipster = 'ghp';
+const picksStore = { ghp: [], spider: [], tipstop: [] };
+// Nota: activeTipsterId ya está definido arriba (línea ~2821)
 
 function openPicks(tipsterId) {
-  activeTipster = tipsterId;
+  setActiveTipster(tipsterId); // Usar la función correcta
   go('picks');
 }
     
