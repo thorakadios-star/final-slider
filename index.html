@@ -2944,8 +2944,8 @@ function showTipsterTab(tabName) {
       const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
       monthSelector.value = currentMonth;
     }
-    // Renderizar picks con el mes actual
-    setTimeout(() => renderPicksPanel('ghp'), 50);
+    // Renderizar picks con el tipster del perfil actual
+    setTimeout(() => renderPicksPanel(currentProfileTipsterId), 50);
     
   } else if (tabName === 'stats') {
     if (tabsPicks) tabsPicks.style.display = 'none';
@@ -4371,6 +4371,17 @@ function updatePreview() {
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════════
 async function initPicks() {
+  // Actualizar vista previa con el tipster activo
+  const config = tipsterConfig[activeTipsterId] || tipsterConfig['ghp'];
+  const prevAvatar = document.getElementById('prev-tipster-avatar');
+  const prevName = document.getElementById('prev-tipster-name');
+  if (prevAvatar) {
+    prevAvatar.innerHTML = `<img src="${config.avatar}" alt="${config.initials}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a3f1c,#0d1a0f);font-size:14px;font-weight:900;color:#2dd4bf\\'>${config.initials}</div>'">`;
+  }
+  if (prevName) {
+    prevName.textContent = config.name;
+  }
+  
   renderPronosticos();
   const prevContainer = document.getElementById('contenedor-vista-previa');
   if (prevContainer) prevContainer.innerHTML = buildVistaPrevia();
@@ -6097,11 +6108,10 @@ function loadPicksFromStorage() {
     if (saved) {
       const data = JSON.parse(saved);
       picksStore.ghp = data.ghp || [];
-      picksStore.tp = data.tp || [];
+      picksStore.spider = data.spider || [];
+      picksStore.tipstop = data.tipstop || [];
       
-      // Solo renderizar si los elementos existen
-      if (document.getElementById('picks-ghp')) renderPicksPanel('ghp');
-      if (document.getElementById('picks-tp')) renderPicksPanel('tp');
+      console.log('📦 Picks cargados desde localStorage - GHP:', picksStore.ghp.length, '| Spider:', picksStore.spider.length, '| TipsTop:', picksStore.tipstop.length);
     }
   } catch (e) {
     console.warn('localStorage no disponible:', e);
