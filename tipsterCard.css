@@ -1,0 +1,171 @@
+.tipster-card {
+  width: 420px;
+  padding: 22px;
+  border-radius: 20px;
+  position: relative;
+  background: linear-gradient(145deg, #0a0f0c, #0c1410);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  box-shadow:
+    0 0 20px rgba(74,222,128,0.15),
+    inset 0 0 25px rgba(74,222,128,0.05);
+  color: #d1fae5;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+.card-glow {
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at 80% 0%, rgba(74,222,128,0.15), transparent 60%);
+}
+
+.header {
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.logo {
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background: linear-gradient(135deg,#4ade80,#22c55e);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  color:#052e16;
+}
+
+.platform { font-weight:600; }
+.subtitle { font-size:12px; opacity:.6; }
+
+.title {
+  text-align:center;
+  margin:18px 0;
+  letter-spacing:2px;
+  color:#4ade80;
+}
+
+.match-box {
+  background: rgba(255,255,255,0.03);
+  border:1px solid rgba(74,222,128,0.15);
+  padding:14px;
+  border-radius:14px;
+}
+
+.sport {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+.teams {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.team {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.team img {
+  width:22px;
+  height:22px;
+  object-fit:contain;
+}
+
+.vs {
+  color:#4ade80;
+  font-weight:600;
+}
+
+.meta {
+  margin-top:8px;
+  font-size:12px;
+  opacity:.7;
+}
+
+.pick-box {
+  margin-top:15px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #4ade80;
+  display:flex;
+  justify-content:space-between;
+}
+
+.label {
+  font-size: 10px;
+  opacity: 0.6;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.pick-type {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.pick {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.odds {
+  font-size:32px;
+  font-weight:bold;
+  color:#4ade80;
+}
+
+.stake-box {
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  padding:12px;
+  border-top:1px solid rgba(74,222,128,0.2);
+}
+
+.value {
+  font-weight:600;
+}
+
+.analysis {
+  margin-top:15px;
+}
+
+.section-title {
+  color:#4ade80;
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+.analysis p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.badges {
+  margin-top:12px;
+  font-size:12px;
+  display:grid;
+  gap:4px;
+  opacity:.8;
+}
+
+.badges span {
+  display: block;
+}
+
+.id {
+  text-align:center;
+  margin-top:10px;
+  font-size:11px;
+  opacity:.5;
+}
