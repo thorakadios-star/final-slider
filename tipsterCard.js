@@ -1,20 +1,14 @@
 /**
- * TipsterCard.js
- * Renderiza una Tipster Card dinámica y genera imagen para Telegram
- * 
- * Funciones:
- * - renderTipsterCard(data, containerId) - Renderiza la card en un contenedor
- * - generateImage(cardId) - Genera imagen base64 de la card usando html2canvas
+ * TipsterCard.js - MODIFICADO CON FONTAWESOME Y AUTO-FALLBACK
  */
 
-// Template HTML de la Tipster Card
+// Template HTML de la Tipster Card con FontAwesome 6
 const TIPSTER_CARD_TEMPLATE = `
 <div class="tipster-card" id="{card_id}">
-
   <div class="card-glow"></div>
 
   <div class="header">
-    <div class="logo">TS</div>
+    <div class="logo">{logo_text}</div>
     <div>
       <div class="platform">{platform_name}</div>
       <div class="subtitle">{platform_subtitle}</div>
@@ -24,19 +18,19 @@ const TIPSTER_CARD_TEMPLATE = `
   <div class="title">{titulo}</div>
 
   <div class="match-box">
-    <div class="sport">⚽ {deporte}</div>
+    <div class="sport"><i class="{sport_icon}"></i> {deporte}</div>
 
     <div class="teams">
       <div class="team">
-        <img src="{flag_local}" crossorigin="anonymous">
+        <img src="{flag_local}" onerror="this.src='img/default-team.png'" crossorigin="anonymous">
         <span>{equipo_local}</span>
       </div>
 
       <div class="vs">vs</div>
 
       <div class="team">
-        <img src="{flag_visitante}" crossorigin="anonymous">
         <span>{equipo_visitante}</span>
+        <img src="{flag_visitante}" onerror="this.src='img/default-team.png'" crossorigin="anonymous">
       </div>
     </div>
 
@@ -74,48 +68,44 @@ const TIPSTER_CARD_TEMPLATE = `
   </div>
 
   <div class="badges">
-    <span>✔ {tag_1}</span>
-    <span>🕒 {tag_2}</span>
-    <span>🔒 {tag_3}</span>
-    <span>📊 {tag_4}</span>
+    <span><i class="fa-solid fa-circle-check"></i> {tag_1}</span>
+    <span><i class="fa-solid fa-clock"></i> {tag_2}</span>
+    <span><i class="fa-solid fa-lock"></i> {tag_3}</span>
+    <span><i class="fa-solid fa-chart-line"></i> {tag_4}</span>
   </div>
 
   <div class="id">ID: {pick_id}</div>
-
 </div>
 `;
 
-// Contador para IDs únicos de cards
 let tipsterCardCounter = 0;
 
 /**
- * Renderiza una Tipster Card en el contenedor especificado
- * @param {Object} data - Datos del pick
- * @param {string} containerId - ID del contenedor donde insertar la card
- * @returns {string} - ID de la card generada
+ * Renderiza una Tipster Card
  */
 function renderTipsterCard(data, containerId = 'app') {
-  // Generar ID único para esta card
   tipsterCardCounter++;
   const cardId = `tipster-card-${tipsterCardCounter}`;
   
-  // Valores por defecto
+  // Valores por defecto mejorados
   const defaults = {
+    logo_text: 'TS',
     platform_name: 'TrueStats',
     platform_subtitle: 'Picks Auditados',
     titulo: 'ANÁLISIS',
     deporte: 'FÚTBOL',
+    sport_icon: 'fa-solid fa-futbol', // Icono por defecto
     equipo_local: 'Equipo Local',
     equipo_visitante: 'Equipo Visitante',
-    flag_local: '',
-    flag_visitante: '',
+    flag_local: 'img/default-team.png',
+    flag_visitante: 'img/default-team.png',
     competicion: 'Competición',
     fecha: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }),
     tipo_pick: 'Tipo de apuesta',
     pick: 'Selección',
     cuota: '1.00',
-    stake: '1',
-    comentario: 'Sin comentario',
+    stake: '1/10',
+    comentario: 'Sin comentario adicional',
     tag_1: 'Tipster verificado',
     tag_2: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
     tag_3: 'Inmutable',
@@ -123,81 +113,42 @@ function renderTipsterCard(data, containerId = 'app') {
     pick_id: `TS-${Date.now()}`
   };
   
-  // Combinar datos con defaults
   const cardData = { ...defaults, ...data, card_id: cardId };
   
-  // Reemplazar todas las variables en el template
   let html = TIPSTER_CARD_TEMPLATE;
-  
   for (const [key, value] of Object.entries(cardData)) {
     const regex = new RegExp(`\\{${key}\\}`, 'g');
     html = html.replace(regex, value || '');
   }
   
-  // Obtener el contenedor
   const container = document.getElementById(containerId);
-  
   if (!container) {
     console.error(`Container #${containerId} not found`);
     return null;
   }
   
-  // Insertar la card (sin romper el contenido existente)
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html.trim();
   const cardElement = wrapper.firstChild;
   container.appendChild(cardElement);
   
-  console.log(`✅ Tipster Card rendered: #${cardId}`);
-  
   return cardId;
 }
 
 /**
- * Genera una imagen base64 de la Tipster Card usando html2canvas
- * @param {string} cardId - ID de la card a convertir en imagen
- * @returns {Promise<string>} - Imagen en formato base64
+ * Genera imagen base64 (html2canvas)
  */
-async function generateImage(cardId = 'tipster-card-1') {
+async function generateImage(cardId) {
   const cardElement = document.getElementById(cardId);
-  
-  if (!cardElement) {
-    console.error(`Card #${cardId} not found`);
-    return null;
-  }
-  
-  // Verificar que html2canvas está disponible
-  if (typeof html2canvas === 'undefined') {
-    console.error('html2canvas library not loaded. Add: <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>');
-    return null;
-  }
+  if (!cardElement || typeof html2canvas === 'undefined') return null;
   
   try {
-    console.log(`📸 Generating image for #${cardId}...`);
-    
     const canvas = await html2canvas(cardElement, {
       useCORS: true,
-      allowTaint: false,
       backgroundColor: '#0a0f0c',
-      scale: 2, // Alta resolución
-      logging: false,
-      onclone: (clonedDoc) => {
-        // Asegurar que los estilos se aplican correctamente en el clon
-        const clonedCard = clonedDoc.getElementById(cardId);
-        if (clonedCard) {
-          clonedCard.style.position = 'relative';
-          clonedCard.style.transform = 'none';
-        }
-      }
+      scale: 2
     });
-    
-    // Convertir a base64
-    const base64 = canvas.toDataURL('image/png');
-    
-    console.log(`✅ Image generated: ${Math.round(base64.length / 1024)}KB`);
-    
-    return base64;
-    
+    return canvas.toDataURL('image/png');
   } catch (error) {
     console.error('Error generating image:', error);
     return null;
@@ -205,75 +156,58 @@ async function generateImage(cardId = 'tipster-card-1') {
 }
 
 /**
- * Genera imagen y la envía a Telegram
- * @param {string} cardId - ID de la card
- * @param {string} proxyUrl - URL del proxy (Railway)
- * @returns {Promise<boolean>} - true si se envió correctamente
+ * Envío a Telegram vía Proxy Railway
  */
 async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy-production.up.railway.app') {
   const base64 = await generateImage(cardId);
-  
-  if (!base64) {
-    console.error('Failed to generate image');
-    return false;
-  }
+  if (!base64) return false;
   
   try {
-    console.log('📤 Sending to Telegram...');
-    
     const response = await fetch(`${proxyUrl}/telegram-photo`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: base64 })
     });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    const result = await response.json();
-    console.log('✅ Sent to Telegram:', result);
-    
-    return true;
-    
+    return response.ok;
   } catch (error) {
-    console.error('Error sending to Telegram:', error);
     return false;
   }
 }
 
-/**
- * Elimina una Tipster Card del DOM
- * @param {string} cardId - ID de la card a eliminar
- */
 function removeTipsterCard(cardId) {
   const card = document.getElementById(cardId);
-  if (card) {
-    card.remove();
-    console.log(`🗑️ Card removed: #${cardId}`);
-  }
+  if (card) card.remove();
 }
 
-/**
- * Limpia todas las Tipster Cards de un contenedor
- * @param {string} containerId - ID del contenedor
- */
 function clearTipsterCards(containerId = 'app') {
   const container = document.getElementById(containerId);
   if (container) {
-    const cards = container.querySelectorAll('.tipster-card');
-    cards.forEach(card => card.remove());
-    console.log(`🧹 Cleared ${cards.length} cards from #${containerId}`);
+    container.querySelectorAll('.tipster-card').forEach(card => card.remove());
   }
 }
 
-// Exportar funciones (compatible con módulos y script tradicional)
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    renderTipsterCard,
-    generateImage,
-    generateAndSendToTelegram,
-    removeTipsterCard,
-    clearTipsterCards
-  };
+  module.exports = { renderTipsterCard, generateImage, generateAndSendToTelegram, removeTipsterCard, clearTipsterCards };
 }
+// Al final de TipsterCard.js
+document.addEventListener('DOMContentLoaded', () => {
+    renderTipsterCard({
+        logo_text: 'ST',
+        platform_name: 'SpiderTips',
+        flag_local: 'spidertips.JPG',
+        deporte: 'FÚTBOL',
+        sport_icon: 'fa-solid fa-futbol',
+        pick: 'Más de 8.5 Córners',
+        cuota: '1.83'
+    }, 'app');
+
+    renderTipsterCard({
+        logo_text: 'TA',
+        platform_name: 'TipsAcademy',
+        flag_local: 'tipsacedemy.JPG',
+        deporte: 'BALONCESTO',
+        sport_icon: 'fa-solid fa-basketball',
+        pick: 'Lakers -5',
+        cuota: '1.90'
+    }, 'app');
+});
