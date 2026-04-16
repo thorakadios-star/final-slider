@@ -1,0 +1,199 @@
+/* ESTRUCTURA GLOBAL */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:#06080a;color:#b8bfc9;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:#06080a}
+::-webkit-scrollbar-thumb{background:#1a1f1e;border-radius:2px}
+
+/* ANIMACIONES */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shimmer{0%{background-position:-300% center}100%{background-position:300% center}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* NAV */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(132, 134, 133, 0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #6b6d6c;
+    transition: border-color .3s;
+}
+
+.nav-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 28px;
+    height: 72px; 
+    display: flex;
+    align-items: center;
+}
+
+.ts-logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 52px; 
+}
+
+.ts-logo img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    background-color: #848685 !important; 
+    image-rendering: -webkit-optimize-contrast;
+    transition: opacity .2s;
+}
+
+/* PLATFORM SHELL */
+.shell{display:flex;min-height:calc(100vh - 62px)}
+.sb{width:206px;flex-shrink:0;background:#080c0a;border-right:1px solid #111710;display:flex;flex-direction:column;padding:18px 0;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto}
+.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#10b981;letter-spacing:.13em;text-transform:uppercase;padding:0 14px;margin:14px 0 5px;display:block}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:1px 8px;border-radius:3px;cursor:pointer;color:#c8d4cc;font-size:13px;border:1px solid transparent;transition:all .15s}
+.sb-item i{flex-shrink:0;opacity:.6}
+.sb-item:hover{background:#0e1410;color:#e2ebe5;border-color:#1a2219}
+.sb-item.act{background:rgba(16,185,129,.07);color:#6ee9b0;border-color:rgba(16,185,129,.2)}
+.main{flex:1;min-width:0;padding:30px 34px;overflow-y:auto}
+
+/* PAGE HEADER */
+.ph{margin-bottom:26px;animation:fadeUp .5s ease forwards}
+.ph h1{font-weight:700;font-size:24px;color:#dde6e0;margin-bottom:4px}
+.ph h1 .b{color:#10b981}
+
+/* PRONÓSTICOS PANEL - CORREGIDO */
+.prono-panel {
+    flex: 0 1 800px;      /* BLOQUEO: No crece más de 800px, pero puede encogerse */
+    width: 100%;
+    max-width: 800px; 
+    background: #0a0e0b;
+    border: 1px solid #162018;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.prono-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid #111a13;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.prono-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: #10b981;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+.pick-row {
+    padding: 13px 18px;
+    border-bottom: 1px solid #0f160f;
+    display: grid;
+    grid-template-columns: 1fr minmax(120px, auto) 60px 90px;
+    gap: 10px 24px;
+    align-items: center;
+    transition: background .15s;
+}
+
+.pick-row:hover { background: #0e1410; }
+
+.pick-match { font-size: 13px; font-weight: 500; color: #c8d4cc; }
+.pick-odd, .pick-stake, .pick-estado { text-align: right; justify-self: end; }
+
+.pick-mercado {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: #4a6055;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pick-odd { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #dde6e0; }
+.pick-estado {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+}
+
+.est-pend { background: rgba(245,158,11,.07); color: #f59e0b; border: 1px solid rgba(245,158,11,.2); }
+.est-win { background: rgba(16,185,129,.07); color: #34d399; border: 1px solid rgba(16,185,129,.2); }
+.est-loss { background: rgba(239,68,68,.07); color: #ef4444; border: 1px solid rgba(239,68,68,.2); }
+
+/* TIPSTER CARD & GRID - CORREGIDO */
+.tgrid { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 30px; 
+    width: 100%;
+}
+
+.trow { 
+    display: flex; 
+    flex-direction: row;      /* Tarjeta al lado del panel */
+    gap: 24px; 
+    align-items: flex-start;  
+    justify-content: center;  /* Centra el bloque entero en la pantalla */
+    width: 100%;
+}
+
+.tc {
+    width: 240px;
+    flex-shrink: 0;           /* Evita que la tarjeta se encoja */
+    background: #0a0e0b;
+    border: 1px solid #162018;
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0;
+    animation: cardIn .4s ease forwards;
+}
+
+/* LANDING & HERO */
+.hero {
+    min-height: 93vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+}
+
+.htitle {
+    font-weight: 800;
+    font-size: clamp(42px, 8vw, 90px);
+    line-height: 1.04;
+    margin-bottom: 26px;
+}
+
+.hblue {
+    background: linear-gradient(100deg,#6ee9b0,#10b981 40%,#065f46 70%,#10b981);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 5s linear infinite;
+}
+
+/* RESPONSIVE - CORREGIDO */
+@media(max-width:1100px){ 
+    .trow { 
+        flex-direction: column; 
+        align-items: center; 
+    } 
+    .prono-panel { 
+        max-width: 100%; 
+        flex: 1 1 auto;
+    } 
+}
+@media(max-width:900px){ .sb{display:none} .main{padding:20px 16px} }
