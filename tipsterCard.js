@@ -1,11 +1,10 @@
 /**
- * TipsterCard.js - MODIFICADO CON SOPORTE PARA ELEMENTOS DIRECTOS Y FALLBACK
+ * TipsterCard.js - VERSIÓN CORREGIDA Y BLINDADA
  */
 
 const TIPSTER_CARD_TEMPLATE = `
 <div class="tipster-card" id="{card_id}">
   <div class="card-glow"></div>
-
   <div class="header">
     <div class="logo">{logo_text}</div>
     <div>
@@ -13,66 +12,53 @@ const TIPSTER_CARD_TEMPLATE = `
       <div class="subtitle">{platform_subtitle}</div>
     </div>
   </div>
-
   <div class="title">{titulo}</div>
-
   <div class="match-box">
     <div class="sport"><i class="{sport_icon}"></i> {deporte}</div>
-
     <div class="teams">
       <div class="team">
         <img src="{flag_local}" onerror="this.src='img/default-team.png'" crossorigin="anonymous">
         <span>{equipo_local}</span>
       </div>
-
       <div class="vs">vs</div>
-
       <div class="team">
         <span>{equipo_visitante}</span>
         <img src="{flag_visitante}" onerror="this.src='img/default-team.png'" crossorigin="anonymous">
       </div>
     </div>
-
     <div class="meta">
       <div>{competicion}</div>
       <div>{fecha}</div>
     </div>
   </div>
-
   <div class="pick-box">
     <div>
       <div class="label">PRONÓSTICO</div>
       <div class="pick-type">{tipo_pick}</div>
       <div class="pick">{pick}</div>
     </div>
-
     <div class="odds">{cuota}</div>
   </div>
-
   <div class="stake-box">
     <div>
       <div class="label">STAKE</div>
       <div class="value">{stake}</div>
     </div>
-
     <div>
       <div class="label">CUOTA</div>
       <div class="value">{cuota}</div>
     </div>
   </div>
-
   <div class="analysis">
     <div class="section-title">COMENTARIO TÉCNICO</div>
     <p>{comentario}</p>
   </div>
-
   <div class="badges">
     <span><i class="fa-solid fa-circle-check"></i> {tag_1}</span>
     <span><i class="fa-solid fa-clock"></i> {tag_2}</span>
     <span><i class="fa-solid fa-lock"></i> {tag_3}</span>
     <span><i class="fa-solid fa-chart-line"></i> {tag_4}</span>
   </div>
-
   <div class="id">ID: {pick_id}</div>
 </div>
 `;
@@ -81,21 +67,21 @@ let tipsterCardCounter = 0;
 
 /**
  * Renderiza una Tipster Card
-function renderTipsterCard(data, containerId = 'app') {
+ */
+function renderTipsterCard(data, containerInput = 'app') {
   tipsterCardCounter++;
   const cardId = `tipster-card-${tipsterCardCounter}`;
   
-  // ESTA ES LA CORRECCIÓN CLAVE:
+  // DETECCIÓN BLINDADA: Acepta ID (string) o Elemento DOM directo
   let container;
-  if (typeof containerId === 'string') {
-    container = document.getElementById(containerId);
-  } else {
-    container = containerId; // Si ya es un elemento HTML, lo usamos directamente
+  if (containerInput instanceof HTMLElement) {
+    container = containerInput;
+  } else if (typeof containerInput === 'string') {
+    container = document.getElementById(containerInput);
   }
   
   if (!container) {
-    // Si llegamos aquí y no hay contenedor, mostramos error limpio
-    console.error(`Error: El contenedor especificado no existe en el DOM.`);
+    console.error(`❌ Error: El contenedor "${containerInput}" no existe.`);
     return null;
   }
   
@@ -136,9 +122,9 @@ function renderTipsterCard(data, containerId = 'app') {
   wrapper.innerHTML = html.trim();
   const cardElement = wrapper.firstChild;
   
-  // Inyectamos la carta en el contenedor (ya sea el track del slider o un div normal)
   container.appendChild(cardElement);
   
+  console.log(`✅ Card renderizada: ${cardId}`);
   return cardId;
 }
 
@@ -181,16 +167,14 @@ async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-p
   }
 }
 
-// LÓGICA DE INYECCIÓN AUTOMÁTICA EN EL SLIDER
+// LÓGICA DE INYECCIÓN AUTOMÁTICA
 document.addEventListener('DOMContentLoaded', () => {
-    // Apuntamos al ID real que vimos en tu consola
     const sliderTrack = document.getElementById('track-1');
 
     if (sliderTrack) {
-        // Función interna para crear la estructura de slide necesaria
         const addToSlider = (datos) => {
             const slideWrap = document.createElement('div');
-            slideWrap.className = 'slide'; // Clase necesaria para tu CSS de carrusel
+            slideWrap.className = 'slide'; 
             sliderTrack.appendChild(slideWrap);
             renderTipsterCard(datos, slideWrap);
         };
@@ -219,11 +203,11 @@ document.addEventListener('DOMContentLoaded', () => {
             cuota: '1.90'
         });
 
-        console.log("✅ Tipsters inyectados en #track-1");
+        console.log("🚀 Slider #track-1 actualizado con nuevos tipsters");
     }
 });
 
-// Exportar funciones
+// Exportar funciones si se usa en Node, si no, quedan globales
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { renderTipsterCard, generateImage, generateAndSendToTelegram };
 }
