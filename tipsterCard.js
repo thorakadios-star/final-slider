@@ -81,16 +81,21 @@ let tipsterCardCounter = 0;
 
 /**
  * Renderiza una Tipster Card
- */
 function renderTipsterCard(data, containerId = 'app') {
   tipsterCardCounter++;
   const cardId = `tipster-card-${tipsterCardCounter}`;
   
-  // LOGICA FLEXIBLE: Acepta ID (string) o Elemento directo
-  const container = (typeof containerId === 'string') ? document.getElementById(containerId) : containerId;
+  // ESTA ES LA CORRECCIÓN CLAVE:
+  let container;
+  if (typeof containerId === 'string') {
+    container = document.getElementById(containerId);
+  } else {
+    container = containerId; // Si ya es un elemento HTML, lo usamos directamente
+  }
   
   if (!container) {
-    console.error(`Contenedor no encontrado`);
+    // Si llegamos aquí y no hay contenedor, mostramos error limpio
+    console.error(`Error: El contenedor especificado no existe en el DOM.`);
     return null;
   }
   
@@ -131,6 +136,7 @@ function renderTipsterCard(data, containerId = 'app') {
   wrapper.innerHTML = html.trim();
   const cardElement = wrapper.firstChild;
   
+  // Inyectamos la carta en el contenedor (ya sea el track del slider o un div normal)
   container.appendChild(cardElement);
   
   return cardId;
