@@ -6826,5 +6826,44 @@ function clearTipsterCards(containerId = 'app') {
   }
 }
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Buscamos el contenedor donde viven los tipsters en tu web
+    // Prueba con 'tipster-grid' o 'app'. Si no sabes cuál es, mira tu HTML principal
+    const grid = document.getElementById('tipster-grid') || document.getElementById('app');
+
+    if (grid) {
+        // Renderizamos a SpiderTips
+        renderTipsterCard({
+            logo_text: 'ST',
+            platform_name: 'SpiderTips',
+            flag_local: 'spidertips.JPG', // Archivo en la raíz
+            deporte: 'FÚTBOL',
+            sport_icon: 'fa-solid fa-futbol',
+            pick: 'Más de 8.5 Córners',
+            cuota: '1.83',
+            equipo_local: 'SpiderTips',
+            equipo_visitante: 'Análisis'
+        }, grid.id);
+
+        // Renderizamos a TipsAcademy
+        renderTipsterCard({
+            logo_text: 'TA',
+            platform_name: 'TipsAcademy',
+            flag_local: 'tipsacedemy.JPG', // Archivo en la raíz
+            deporte: 'BALONCESTO',
+            sport_icon: 'fa-solid fa-basketball',
+            pick: 'Lakers -5',
+            cuota: '1.90',
+            equipo_local: 'TipsAcademy',
+            equipo_visitante: 'NBA'
+        }, grid.id);
+        
+        console.log("✅ Cartas inyectadas en #" + grid.id);
+    } else {
+        console.error("❌ No encontré el contenedor 'tipster-grid' o 'app'. Revisa el ID en tu HTML.");
+    }
+});
+</script>
 </body>
 </html>
