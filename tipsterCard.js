@@ -1,8 +1,7 @@
 /**
- * TipsterCard.js - MODIFICADO CON FONTAWESOME Y AUTO-FALLBACK
+ * TipsterCard.js - MODIFICADO CON SOPORTE PARA ELEMENTOS DIRECTOS Y FALLBACK
  */
 
-// Template HTML de la Tipster Card con FontAwesome 6
 const TIPSTER_CARD_TEMPLATE = `
 <div class="tipster-card" id="{card_id}">
   <div class="card-glow"></div>
@@ -87,14 +86,21 @@ function renderTipsterCard(data, containerId = 'app') {
   tipsterCardCounter++;
   const cardId = `tipster-card-${tipsterCardCounter}`;
   
-  // Valores por defecto mejorados
+  // LOGICA FLEXIBLE: Acepta ID (string) o Elemento directo
+  const container = (typeof containerId === 'string') ? document.getElementById(containerId) : containerId;
+  
+  if (!container) {
+    console.error(`Contenedor no encontrado`);
+    return null;
+  }
+  
   const defaults = {
     logo_text: 'TS',
     platform_name: 'TrueStats',
     platform_subtitle: 'Picks Auditados',
     titulo: 'ANÁLISIS',
     deporte: 'FÚTBOL',
-    sport_icon: 'fa-solid fa-futbol', // Icono por defecto
+    sport_icon: 'fa-solid fa-futbol',
     equipo_local: 'Equipo Local',
     equipo_visitante: 'Equipo Visitante',
     flag_local: 'img/default-team.png',
@@ -121,22 +127,17 @@ function renderTipsterCard(data, containerId = 'app') {
     html = html.replace(regex, value || '');
   }
   
-  const container = document.getElementById(containerId);
-  if (!container) {
-    console.error(`Container #${containerId} not found`);
-    return null;
-  }
-  
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html.trim();
   const cardElement = wrapper.firstChild;
+  
   container.appendChild(cardElement);
   
   return cardId;
 }
 
 /**
- * Genera imagen base64 (html2canvas)
+ * Genera imagen base64
  */
 async function generateImage(cardId) {
   const cardElement = document.getElementById(cardId);
@@ -150,13 +151,13 @@ async function generateImage(cardId) {
     });
     return canvas.toDataURL('image/png');
   } catch (error) {
-    console.error('Error generating image:', error);
+    console.error('Error:', error);
     return null;
   }
 }
 
 /**
- * Envío a Telegram vía Proxy Railway
+ * Envío a Telegram
  */
 async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy-production.up.railway.app') {
   const base64 = await generateImage(cardId);
@@ -174,40 +175,49 @@ async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-p
   }
 }
 
-function removeTipsterCard(cardId) {
-  const card = document.getElementById(cardId);
-  if (card) card.remove();
-}
-
-function clearTipsterCards(containerId = 'app') {
-  const container = document.getElementById(containerId);
-  if (container) {
-    container.querySelectorAll('.tipster-card').forEach(card => card.remove());
-  }
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { renderTipsterCard, generateImage, generateAndSendToTelegram, removeTipsterCard, clearTipsterCards };
-}
-// Al final de TipsterCard.js
+// LÓGICA DE INYECCIÓN AUTOMÁTICA EN EL SLIDER
 document.addEventListener('DOMContentLoaded', () => {
-    renderTipsterCard({
-        logo_text: 'ST',
-        platform_name: 'SpiderTips',
-        flag_local: 'spidertips.JPG',
-        deporte: 'FÚTBOL',
-        sport_icon: 'fa-solid fa-futbol',
-        pick: 'Más de 8.5 Córners',
-        cuota: '1.83'
-    }, 'app');
+    // Apuntamos al ID real que vimos en tu consola
+    const sliderTrack = document.getElementById('track-1');
 
-    renderTipsterCard({
-        logo_text: 'TA',
-        platform_name: 'TipsAcademy',
-        flag_local: 'tipsacedemy.JPG',
-        deporte: 'BALONCESTO',
-        sport_icon: 'fa-solid fa-basketball',
-        pick: 'Lakers -5',
-        cuota: '1.90'
-    }, 'app');
+    if (sliderTrack) {
+        // Función interna para crear la estructura de slide necesaria
+        const addToSlider = (datos) => {
+            const slideWrap = document.createElement('div');
+            slideWrap.className = 'slide'; // Clase necesaria para tu CSS de carrusel
+            sliderTrack.appendChild(slideWrap);
+            renderTipsterCard(datos, slideWrap);
+        };
+
+        // SpiderTips
+        addToSlider({
+            logo_text: 'ST',
+            platform_name: 'SpiderTips',
+            platform_subtitle: 'Córners Expert',
+            flag_local: 'spidertips.JPG',
+            deporte: 'FÚTBOL',
+            sport_icon: 'fa-solid fa-futbol',
+            pick: 'Más de 8.5 Córners',
+            cuota: '1.83'
+        });
+
+        // TipsAcademy
+        addToSlider({
+            logo_text: 'TA',
+            platform_name: 'TipsAcademy',
+            platform_subtitle: 'Especialista Basket',
+            flag_local: 'tipsacedemy.JPG',
+            deporte: 'BALONCESTO',
+            sport_icon: 'fa-solid fa-basketball',
+            pick: 'Lakers -5',
+            cuota: '1.90'
+        });
+
+        console.log("✅ Tipsters inyectados en #track-1");
+    }
 });
+
+// Exportar funciones
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { renderTipsterCard, generateImage, generateAndSendToTelegram };
+}
