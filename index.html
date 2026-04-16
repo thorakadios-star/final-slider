@@ -6826,42 +6826,53 @@ function clearTipsterCards(containerId = 'app') {
   }
 }
 </script>
-<script>
+    <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Buscamos el contenedor donde viven los tipsters en tu web
-    // Prueba con 'tipster-grid' o 'app'. Si no sabes cuál es, mira tu HTML principal
-    const grid = document.getElementById('tipster-grid') || document.getElementById('app');
+    // Apuntamos al ID real de tu slider
+    const sliderTrack = document.getElementById('track-1');
 
-    if (grid) {
-        // Renderizamos a SpiderTips
-        renderTipsterCard({
+    if (sliderTrack) {
+        // Función auxiliar para crear la estructura de tu slider (.slide)
+        const inyectarAlSlider = (datos) => {
+            const slideWrap = document.createElement('div');
+            slideWrap.className = 'slide'; // Mismo nombre que tus otras cartas
+            sliderTrack.appendChild(slideWrap);
+            
+            // Renderizamos dentro del nuevo div creado
+            renderTipsterCard(datos, slideWrap);
+        };
+
+        // Inyectamos SpiderTips
+        inyectarAlSlider({
             logo_text: 'ST',
             platform_name: 'SpiderTips',
-            flag_local: 'spidertips.JPG', // Archivo en la raíz
+            platform_subtitle: 'Especialista Fútbol',
             deporte: 'FÚTBOL',
             sport_icon: 'fa-solid fa-futbol',
-            pick: 'Más de 8.5 Córners',
-            cuota: '1.83',
+            flag_local: 'spidertips.JPG',
             equipo_local: 'SpiderTips',
-            equipo_visitante: 'Análisis'
-        }, grid.id);
+            equipo_visitante: 'Análisis',
+            pick: 'Más de 8.5 Córners',
+            cuota: '1.83'
+        });
 
-        // Renderizamos a TipsAcademy
-        renderTipsterCard({
+        // Inyectamos TipsAcademy
+        inyectarAlSlider({
             logo_text: 'TA',
             platform_name: 'TipsAcademy',
-            flag_local: 'tipsacedemy.JPG', // Archivo en la raíz
+            platform_subtitle: 'Especialista NBA',
             deporte: 'BALONCESTO',
             sport_icon: 'fa-solid fa-basketball',
-            pick: 'Lakers -5',
-            cuota: '1.90',
+            flag_local: 'tipsacedemy.JPG',
             equipo_local: 'TipsAcademy',
-            equipo_visitante: 'NBA'
-        }, grid.id);
-        
-        console.log("✅ Cartas inyectadas en #" + grid.id);
+            equipo_visitante: 'NBA',
+            pick: 'Lakers -5',
+            cuota: '1.90'
+        });
+
+        console.log("✅ Cartas inyectadas con éxito en el slider #track-1");
     } else {
-        console.error("❌ No encontré el contenedor 'tipster-grid' o 'app'. Revisa el ID en tu HTML.");
+        console.error("❌ No se encontró #track-1. Verifica si el ID es correcto.");
     }
 });
 </script>
