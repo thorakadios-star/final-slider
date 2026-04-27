@@ -3245,6 +3245,146 @@ function selModo(modo, btn) {
 }
 
 // Manual: cuando cambia local o visitante
+// ── DATOS MANUAL (listas a rellenar) ──────────────────────────────────────────
+const MANUAL_DATA = {
+  paises: [
+    'España', 'Inglaterra', 'Alemania', 'Francia', 'Italia', 'Portugal',
+    'Países Bajos', 'Bélgica', 'Turquía', 'Rusia', 'Brasil', 'Argentina',
+    'México', 'Estados Unidos', 'Japón', 'Corea del Sur', 'Champions League',
+    'Europa League', 'Conference League', 'Mundial', 'Eurocopa'
+  ],
+  ligas: {
+    'España':              ['La Liga', 'Segunda División', 'Copa del Rey'],
+    'Inglaterra':          ['Premier League', 'Championship', 'FA Cup', 'EFL Cup'],
+    'Alemania':            ['Bundesliga', '2. Bundesliga', 'DFB Pokal'],
+    'Francia':             ['Ligue 1', 'Ligue 2', 'Coupe de France'],
+    'Italia':              ['Serie A', 'Serie B', 'Coppa Italia'],
+    'Portugal':            ['Primeira Liga', 'Liga Portugal 2', 'Taça de Portugal'],
+    'Países Bajos':        ['Eredivisie', 'Eerste Divisie'],
+    'Bélgica':             ['Pro League'],
+    'Turquía':             ['Süper Lig', '1. Lig'],
+    'Rusia':               ['Premier Liga'],
+    'Brasil':              ['Série A', 'Série B', 'Copa do Brasil'],
+    'Argentina':           ['Primera División', 'Primera Nacional'],
+    'México':              ['Liga MX', 'Ascenso MX'],
+    'Estados Unidos':      ['MLS', 'USL Championship'],
+    'Japón':               ['J1 League', 'J2 League'],
+    'Corea del Sur':       ['K League 1', 'K League 2'],
+    'Champions League':    ['UEFA Champions League'],
+    'Europa League':       ['UEFA Europa League'],
+    'Conference League':   ['UEFA Conference League'],
+    'Mundial':             ['FIFA World Cup'],
+    'Eurocopa':            ['UEFA Euro']
+  },
+  equipos: {
+    'La Liga':             ['Real Madrid','Barcelona','Atlético de Madrid','Sevilla','Real Betis','Valencia','Athletic Club','Real Sociedad','Villarreal','Osasuna','Celta Vigo','Getafe','Rayo Vallecano','Girona','Las Palmas','Mallorca','Alavés','Leganés','Espanyol','Valladolid'],
+    'Segunda División':    ['Deportivo','Racing Santander','Elche','Almería','Zaragoza','Sporting Gijón','Oviedo','Mirandés','Burgos','Huesca'],
+    'Premier League':      ['Manchester City','Arsenal','Liverpool','Chelsea','Manchester United','Tottenham','Newcastle','Aston Villa','Brighton','West Ham','Brentford','Crystal Palace','Fulham','Wolves','Everton','Bournemouth','Nottingham Forest','Leicester','Southampton','Ipswich'],
+    'Bundesliga':          ['Bayern München','Borussia Dortmund','Bayer Leverkusen','RB Leipzig','Eintracht Frankfurt','Wolfsburg','Mönchengladbach','Union Berlin','Freiburg','Stuttgart','Hoffenheim','Mainz','Augsburg','Werder Bremen','Heidenheim','Bochum','Kiel','St. Pauli'],
+    'Ligue 1':             ['Paris Saint-Germain','Marseille','Monaco','Lyon','Lille','Lens','Nice','Rennes','Strasbourg','Montpellier','Brest','Nantes','Reims','Toulouse','Lorient','Metz','Clermont','Le Havre'],
+    'Serie A':             ['Inter','Juventus','AC Milan','Napoli','Roma','Lazio','Fiorentina','Atalanta','Torino','Bologna','Udinese','Sassuolo','Empoli','Genoa','Cagliari','Lecce','Hellas Verona','Monza','Frosinone','Salernitana'],
+    'Primeira Liga':       ['Benfica','Porto','Sporting CP','Braga','Vitória SC','Famalicão','Moreirense','Gil Vicente','Boavista','Arouca'],
+    'Eredivisie':          ['Ajax','PSV','Feyenoord','AZ Alkmaar','FC Utrecht','FC Twente','Vitesse','Heerenveen'],
+    'UEFA Champions League':['Real Madrid','Manchester City','Bayern München','Barcelona','PSG','Liverpool','Chelsea','Inter','Juventus','Atlético de Madrid','Borussia Dortmund','Napoli','Porto','Benfica','Ajax','Celtic'],
+    'UEFA Europa League':  ['Sevilla','Roma','Feyenoord','Bayer Leverkusen','Atalanta','Villarreal','Manchester United','Arsenal'],
+    'UEFA Conference League':['West Ham','Fiorentina','Olympiacos','Chelsea','Real Betis'],
+    'MLS':                 ['Inter Miami','LA Galaxy','LAFC','Seattle Sounders','New York City FC','Atlanta United','Portland Timbers','Philadelphia Union'],
+    'Série A':             ['Flamengo','Palmeiras','Corinthians','São Paulo','Atletico Mineiro','Fluminense','Santos','Internacional','Grêmio','Vasco'],
+    'Primera División':    ['River Plate','Boca Juniors','Racing Club','Independiente','San Lorenzo','Estudiantes','Huracán','Vélez Sársfield'],
+    'Liga MX':             ['Club América','Chivas','Cruz Azul','Pumas','Tigres UANL','Monterrey','Toluca','León','Santos Laguna'],
+  }
+};
+
+// Cascada: al cambiar País → poblar Liga
+function onManualPaisChange(pid) {
+  const pais = document.getElementById(`${pid}-pais`)?.value;
+  const ligaStep = document.getElementById(`${pid}-step-liga`);
+  const ligaSel  = document.getElementById(`${pid}-liga`);
+
+  // Ocultar pasos siguientes y resetearlos
+  [`${pid}-step-equipos`,`${pid}-step-fechahora`,`${pid}-step-seleccion-manual`,`${pid}-step-cuotastake`]
+    .forEach(s => { const el = document.getElementById(s); if(el) el.style.display='none'; });
+  document.getElementById(`${pid}-home`  ) && (document.getElementById(`${pid}-home`  ).value = '');
+  document.getElementById(`${pid}-away`  ) && (document.getElementById(`${pid}-away`  ).value = '');
+  document.getElementById(`${pid}-manual-liga`) && (document.getElementById(`${pid}-manual-liga`).value = '');
+
+  if (!pais) { if(ligaStep) ligaStep.style.display='none'; return; }
+
+  // Poblar ligas
+  const ligas = MANUAL_DATA.ligas[pais] || [];
+  if (ligaSel) {
+    ligaSel.innerHTML = '<option value="">— Selecciona liga —</option>' +
+      ligas.map(l => `<option value="${l}">${l}</option>`).join('');
+  }
+  if (ligaStep) { ligaStep.style.display='block'; ligaStep.style.animation='fadeUp .25s ease forwards'; }
+  updatePreview();
+}
+
+// Cascada: al cambiar Liga → poblar Equipos
+function onManualLigaChange(pid) {
+  const liga = document.getElementById(`${pid}-liga`)?.value;
+  const equiposStep = document.getElementById(`${pid}-step-equipos`);
+  const homeSel = document.getElementById(`${pid}-home-sel`);
+  const awaySel = document.getElementById(`${pid}-away-sel`);
+  const ligaHidden = document.getElementById(`${pid}-manual-liga`);
+
+  // Ocultar pasos siguientes
+  [`${pid}-step-fechahora`,`${pid}-step-seleccion-manual`,`${pid}-step-cuotastake`]
+    .forEach(s => { const el = document.getElementById(s); if(el) el.style.display='none'; });
+  document.getElementById(`${pid}-home`) && (document.getElementById(`${pid}-home`).value = '');
+  document.getElementById(`${pid}-away`) && (document.getElementById(`${pid}-away`).value = '');
+
+  if (!liga) { if(equiposStep) equiposStep.style.display='none'; return; }
+
+  if (ligaHidden) ligaHidden.value = liga;
+
+  const equipos = MANUAL_DATA.equipos[liga] || [];
+  const opts = '<option value="">— Selecciona —</option>' + equipos.map(e => `<option value="${e}">${e}</option>`).join('');
+  if (homeSel) homeSel.innerHTML = opts;
+  if (awaySel) awaySel.innerHTML = opts;
+  if (equiposStep) { equiposStep.style.display='block'; equiposStep.style.animation='fadeUp .25s ease forwards'; }
+  updatePreview();
+}
+
+// Cascada: al cambiar Local → guardar en hidden y mostrar fecha si hay visitante también
+function onManualLocalChange(pid) {
+  const val = document.getElementById(`${pid}-home-sel`)?.value || '';
+  const homeHidden = document.getElementById(`${pid}-home`);
+  if (homeHidden) homeHidden.value = val;
+  checkMostrarFecha(pid);
+  updatePreview();
+}
+
+// Cascada: al cambiar Visitante → guardar en hidden y mostrar fecha si hay local también
+function onManualVisitanteChange(pid) {
+  const val = document.getElementById(`${pid}-away-sel`)?.value || '';
+  const awayHidden = document.getElementById(`${pid}-away`);
+  if (awayHidden) awayHidden.value = val;
+  checkMostrarFecha(pid);
+  updatePreview();
+}
+
+function checkMostrarFecha(pid) {
+  const home = document.getElementById(`${pid}-home`)?.value;
+  const away = document.getElementById(`${pid}-away`)?.value;
+  const fechaStep = document.getElementById(`${pid}-step-fechahora`);
+  if (home && away && fechaStep) {
+    fechaStep.style.display = 'block';
+    fechaStep.style.animation = 'fadeUp .25s ease forwards';
+  }
+}
+
+// Cascada: al cambiar fecha → mostrar selección
+function onManualFechaChange(pid) {
+  const fecha = document.getElementById(`${pid}-date-manual`)?.value;
+  const selStep = document.getElementById(`${pid}-step-seleccion-manual`);
+  if (fecha && selStep) {
+    selStep.style.display = 'block';
+    selStep.style.animation = 'fadeUp .25s ease forwards';
+  }
+  updatePreview();
+}
+
 function onManualPartidoChange(pid) {
   const home = document.getElementById(`${pid}-home`)?.value?.trim();
   const away = document.getElementById(`${pid}-away`)?.value?.trim();
@@ -3259,6 +3399,12 @@ function onManualSelChange(pid) {
   const val = document.getElementById(`${pid}-sel-manual`)?.value?.trim() || '';
   const hiddenSel = document.getElementById(`${pid}-sel`);
   if (hiddenSel) hiddenSel.value = val;
+  // Mostrar cuota/stake si hay texto
+  const cuotaStep = document.getElementById(`${pid}-step-cuotastake`);
+  if (val && cuotaStep) {
+    cuotaStep.style.display = 'block';
+    cuotaStep.style.animation = 'fadeUp .25s ease forwards';
+  }
   updatePreview();
 }
 
@@ -3602,57 +3748,78 @@ function buildBoxPick(num) {
       ${stakeField}
     </div>`;
 
-  // ── CAMPOS MANUALES ───────────────────────────────────────────────────────
+  // ── CAMPOS MANUALES (cascada) ─────────────────────────────────────────────
   const camposManual = `
     ${deportePickField}
-    <!-- Liga manual -->
-    <div>
-      <label class="flbl">Liga</label>
-      <input id="${id}-manual-liga" type="text" class="finp" placeholder="ej. La Liga, Champions League..." oninput="updatePreview()"/>
+
+    <!-- PASO 1: País -->
+    <div id="${id}-step-pais">
+      <label class="flbl">🌍 País</label>
+      <select id="${id}-pais" class="fsel" onchange="onManualPaisChange('${id}')">
+        <option value="">— Selecciona país —</option>
+      </select>
     </div>
 
-    <!-- Partido manual -->
-    <div>
-      <label class="flbl">Partido</label>
-      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center">
-        <input id="${id}-home" type="text" class="finp" placeholder="Local" oninput="onManualPartidoChange('${id}')"/>
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a7d52;text-align:center">vs</span>
-        <input id="${id}-away" type="text" class="finp" placeholder="Visitante" oninput="onManualPartidoChange('${id}')"/>
+    <!-- PASO 2: Liga (oculto hasta elegir país) -->
+    <div id="${id}-step-liga" style="display:none;animation:fadeUp .25s ease forwards">
+      <label class="flbl">🏆 Liga</label>
+      <select id="${id}-liga" class="fsel" onchange="onManualLigaChange('${id}')">
+        <option value="">— Selecciona liga —</option>
+      </select>
+    </div>
+
+    <!-- PASO 3+4: Local y Visitante (oculto hasta elegir liga) -->
+    <div id="${id}-step-equipos" style="display:none;animation:fadeUp .25s ease forwards">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label class="flbl">🏠 Local</label>
+          <select id="${id}-home-sel" class="fsel" onchange="onManualLocalChange('${id}')">
+            <option value="">— Local —</option>
+          </select>
+        </div>
+        <div>
+          <label class="flbl">✈️ Visitante</label>
+          <select id="${id}-away-sel" class="fsel" onchange="onManualVisitanteChange('${id}')">
+            <option value="">— Visitante —</option>
+          </select>
+        </div>
+      </div>
+      <!-- inputs hidden para compatibilidad con publishPick y updatePreview -->
+      <input type="hidden" id="${id}-home" value=""/>
+      <input type="hidden" id="${id}-away" value=""/>
+      <input type="hidden" id="${id}-manual-liga" value=""/>
+    </div>
+
+    <!-- PASO 5+6: Fecha y Hora (oculto hasta elegir equipos) -->
+    <div id="${id}-step-fechahora" style="display:none;animation:fadeUp .25s ease forwards">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label class="flbl">📅 Fecha</label>
+          <input id="${id}-date-manual" type="date" class="finp" style="border-color:rgba(16,185,129,.4);color:#e2e8f0;background:#0a1612" oninput="onManualFechaChange('${id}')"/>
+        </div>
+        <div>
+          <label class="flbl">🕐 Hora</label>
+          <input id="${id}-time-manual" type="time" class="finp" style="border-color:rgba(16,185,129,.4);color:#e2e8f0;background:#0a1612" oninput="updatePreview()"/>
+        </div>
       </div>
     </div>
 
-    <!-- Fecha + Hora manual -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div>
-        <label class="flbl" style="color:#e2e8f0">📅 Fecha</label>
-        <input id="${id}-date-manual" type="date" class="finp" style="border-color:rgba(16,185,129,.4);color:#e2e8f0;background:#0a1612" oninput="updatePreview()"/>
-      </div>
-      <div>
-        <label class="flbl" style="color:#e2e8f0">🕐 Hora</label>
-        <input id="${id}-time-manual" type="time" class="finp" style="border-color:rgba(16,185,129,.4);color:#e2e8f0;background:#0a1612" oninput="updatePreview()"/>
-      </div>
+    <!-- PASO 7: Selección (oculto hasta elegir fecha) -->
+    <div id="${id}-step-seleccion-manual" style="display:none;animation:fadeUp .25s ease forwards">
+      <label class="flbl">🎯 Selección</label>
+      <input id="${id}-sel-manual" type="text" class="finp" placeholder="ej. Real Madrid gana, Ambos marcan, Over 2.5..." oninput="onManualSelChange('${id}')"/>
+      <input id="${id}-sel" type="hidden" value=""/>
     </div>
 
-    <!-- Mercado manual -->
-    <div>
-      <label class="flbl">Mercado</label>
-      <input id="${id}-mercado-manual" type="text" class="finp" placeholder="ej. 1X2 Resultado Final, Ambos Marcan..." oninput="updatePreview()"/>
-    </div>
-
-    <!-- Selección manual -->
-    <div>
-      <label class="flbl">Selección</label>
-      <input id="${id}-sel-manual" type="text" class="finp" placeholder="ej. Real Madrid gana, Sí, Over 2.5..." oninput="onManualSelChange('${id}')"/>
-    </div>
-
-    <!-- Cuota + Stake (manual) -->
-    <div style="display:grid;grid-template-columns:${isSimple ? '1fr 1fr' : '1fr'};gap:12px">
-      <div>
-        <label class="flbl">Cuota</label>
-        <input id="${id}-cuota" type="number" class="finp" placeholder="ej. 1.85" step="0.01" min="1" style="font-size:16px;font-weight:600" oninput="updateCuotaTotal();updatePreview()"/>
-        <input id="${id}-sel" type="hidden" value=""/>
+    <!-- PASO 8+9: Cuota y Stake (oculto hasta escribir selección) -->
+    <div id="${id}-step-cuotastake" style="display:none;animation:fadeUp .25s ease forwards">
+      <div style="display:grid;grid-template-columns:${isSimple ? '1fr 1fr' : '1fr'};gap:12px">
+        <div>
+          <label class="flbl">📊 Cuota</label>
+          <input id="${id}-cuota" type="number" class="finp" placeholder="ej. 1.85" step="0.01" min="1" style="font-size:16px;font-weight:600" oninput="updateCuotaTotal();updatePreview()"/>
+        </div>
+        ${stakeField}
       </div>
-      ${stakeField}
     </div>`;
 
   return `
@@ -3970,8 +4137,20 @@ function removePick(pid) {
 
 // Inicializar: cargar países directamente
 async function fillSports(pid) {
-  setBadge(`${pid}-status`, '⟳ Conectando…');
+  const isManual = toggleState.modo === 'manual';
+
+  // Si es modo manual, poblar el desplegable de países de la lista local
+  if (isManual) {
+    const paisSel = document.getElementById(`${pid}-pais`);
+    if (paisSel) {
+      paisSel.innerHTML = '<option value="">— Selecciona país —</option>' +
+        MANUAL_DATA.paises.map(p => `<option value="${p}">${p}</option>`).join('');
+    }
+    setBadge(`${pid}-status`, '');
+    return;
+  }
   // Ocultar deporte (no necesario), mostrar directamente el selector de país
+  setBadge(`${pid}-status`, '⟳ Conectando…');
   const sportEl = document.getElementById(`${pid}-sport`);
   if (sportEl) {
     sportEl.parentElement.style.display = 'none'; // ocultar selector deporte
