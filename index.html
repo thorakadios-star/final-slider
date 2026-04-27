@@ -3334,9 +3334,11 @@ async function onManualPaisChange(pid) {
 
   try {
     const sb = getSbClient();
+    const deporte = toggleState.deporte || 'futbol';
     const { data, error } = await sb.from('ligas')
       .select('id, nombre')
       .eq('pais_id', paisId)
+      .eq('deporte', deporte)
       .order('nombre');
     if (error) throw error;
     const ligaSel = document.getElementById(`${pid}-liga`);
@@ -4158,8 +4160,23 @@ function selDeporte(btn, sport) {
   });
   btn.classList.add('act-sport');
   toggleState.deporte = sport;
-  
-  // Ya no necesitamos recargar porque los deportes vienen de la API
+
+  // Resetear todos los pasos de picks al cambiar deporte
+  for (let i = 1; i <= pronosticoCount; i++) {
+    const pid = `p${i}`;
+    ['step-liga','step-equipos','step-fechahora','step-seleccion-manual','step-cuotastake'].forEach(s => {
+      const el = document.getElementById(`${pid}-${s}`);
+      if (el) el.style.display = 'none';
+    });
+    ['home','away','manual-liga'].forEach(f => {
+      const el = document.getElementById(`${pid}-${f}`);
+      if (el) el.value = '';
+    });
+    // Resetear select de país para forzar nueva carga de ligas al elegirlo
+    const paisSel = document.getElementById(`${pid}-pais`);
+    if (paisSel) paisSel.value = '';
+  }
+
   updatePreview();
 }
 
