@@ -3274,6 +3274,9 @@ function selectError(selId, msg) {
   if (sel) sel.innerHTML = `<option>⚠ ${msg}</option>`;
 }
 
+// Países prioritarios que aparecen primero
+const PAISES_TOP = ['España','Inglaterra','Alemania','Francia','Italia'];
+
 // PASO 1 → cargar países desde Supabase al inicializar el pick
 async function cargarPaises(pid) {
   const sel = document.getElementById(`${pid}-pais`);
@@ -3283,8 +3286,13 @@ async function cargarPaises(pid) {
     const sb = getSbClient();
     const { data, error } = await sb.from('paises').select('id, nombre').order('nombre');
     if (error) throw error;
-    sel.innerHTML = '<option value="">— Selecciona país —</option>' +
-      data.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
+    const top   = data.filter(p => PAISES_TOP.includes(p.nombre));
+    const resto = data.filter(p => !PAISES_TOP.includes(p.nombre));
+    top.sort((a,b) => PAISES_TOP.indexOf(a.nombre) - PAISES_TOP.indexOf(b.nombre));
+    let html = '<option value="">— Selecciona país —</option>';
+    if (top.length) html += '<optgroup label="── Principales ──">' + top.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('') + '</optgroup>';
+    if (resto.length) html += '<optgroup label="── Todos ──">' + resto.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('') + '</optgroup>';
+    sel.innerHTML = html;
   } catch(e) {
     selectError(`${pid}-pais`, 'Error al cargar países');
     console.error('cargarPaises:', e);
@@ -3394,43 +3402,66 @@ function onManualVisitanteChange(pid) {
   updatePreview();
 }
 
-// Mostrar fecha/hora cuando local Y visitante estén elegidos
-function checkMostrarFecha(pid) {
+// Al elegir local Y visitante: poner fecha/hora automática y mostrar ambos pasos + selección
+async function checkMostrarFecha(pid) {
   const home = document.getElementById(`${pid}-home`)?.value;
   const away = document.getElementById(`${pid}-away`)?.value;
-  if (home && away) mostrarPaso(`${pid}-step-fechahora`);
-}
+  if (!home || !away) return;
 
-// PASO 5 → Fecha elegida → mostrar selección y cargarla desde Supabase
-async function onManualFechaChange(pid) {
-  const fecha = document.getElementById(`${pid}-date-manual`)?.value;
-  if (!fecha) { updatePreview(); return; }
+  // Fecha y hora actuales automáticas
+  const now = new Date();
+  const dateInput = document.getElementById(`${pid}-date-manual`);
+  const timeInput = document.getElementById(`${pid}-time-manual`);
+  if (dateInput && !dateInput.value) dateInput.value = now.toISOString().slice(0,10);
+  if (timeInput && !timeInput.value) timeInput.value = now.toTimeString().slice(0,5);
 
+  // Mostrar fecha/hora
+  mostrarPaso(`${pid}-step-fechahora`);
+
+  // Mostrar selección y cargarla desde Supabase
   mostrarPaso(`${pid}-step-seleccion-manual`);
-  selectLoading(`${pid}-sel-manual`);
-
-  try {
-    const sb = getSbClient();
-    const { data, error } = await sb.from('selecciones').select('id, nombre').order('nombre');
-    if (error) throw error;
-    const selSel = document.getElementById(`${pid}-sel-manual`);
-    if (selSel) {
+  const selSel = document.getElementById(`${pid}-sel-manual`);
+  if (selSel && selSel.options.length <= 1) {
+    selectLoading(`${pid}-sel-manual`);
+    try {
+      const sb = getSbClient();
+      const { data, error } = await sb.from('selecciones').select('id, nombre').order('nombre');
+      if (error) throw error;
       selSel.innerHTML = '<option value="">— Selecciona selección —</option>' +
         data.map(s => `<option value="${s.nombre}">${s.nombre}</option>`).join('');
+    } catch(e) {
+      selectError(`${pid}-sel-manual`, 'Error al cargar selecciones');
+      console.error('checkMostrarFecha selecciones:', e);
     }
-  } catch(e) {
-    selectError(`${pid}-sel-manual`, 'Error al cargar selecciones');
-    console.error('onManualFechaChange:', e);
   }
   updatePreview();
 }
 
-// PASO 7 → Selección elegida → mostrar cuota/stake
+// PASO 5 → si el usuario cambia manualmente la fecha (ya no es el disparador principal)
+function onManualFechaChange(pid) {
+  updatePreview();
+}
+
+// PASO 7 → Selección del desplegable
 async function onManualSelChange(pid) {
-  const val = document.getElementById(`${pid}-sel-manual`)?.value || '';
+  const selVal  = document.getElementById(`${pid}-sel-manual`)?.value || '';
+  const textVal = document.getElementById(`${pid}-sel-manual-text`)?.value?.trim() || '';
+  // El texto manual tiene prioridad si está relleno
+  const final = textVal || selVal;
   const hiddenSel = document.getElementById(`${pid}-sel`);
-  if (hiddenSel) hiddenSel.value = val;
-  if (val) mostrarPaso(`${pid}-step-cuotastake`);
+  if (hiddenSel) hiddenSel.value = final;
+  if (final) mostrarPaso(`${pid}-step-cuotastake`);
+  updatePreview();
+}
+
+// PASO 7b → Selección manual (texto libre) — tiene prioridad sobre el desplegable
+function onManualSelTextChange(pid) {
+  const textVal = document.getElementById(`${pid}-sel-manual-text`)?.value?.trim() || '';
+  const selVal  = document.getElementById(`${pid}-sel-manual`)?.value || '';
+  const final = textVal || selVal;
+  const hiddenSel = document.getElementById(`${pid}-sel`);
+  if (hiddenSel) hiddenSel.value = final;
+  if (final) mostrarPaso(`${pid}-step-cuotastake`);
   updatePreview();
 }
 
@@ -3839,12 +3870,17 @@ function buildBoxPick(num) {
       </div>
     </div>
 
-    <!-- PASO 7: Selección (oculto hasta elegir fecha) -->
+    <!-- PASO 7: Selección (se abre al elegir equipos) -->
     <div id="${id}-step-seleccion-manual" style="display:none;animation:fadeUp .25s ease forwards">
       <label class="flbl">🎯 Selección</label>
       <select id="${id}-sel-manual" class="fsel" onchange="onManualSelChange('${id}')">
         <option value="">— Selecciona selección —</option>
       </select>
+      <!-- Selección manual opcional -->
+      <div style="margin-top:8px">
+        <label class="flbl" style="color:#52525b;font-size:10px">✏️ Selección manual <span style="color:#3a3a44">(opcional)</span></label>
+        <input id="${id}-sel-manual-text" type="text" class="finp" placeholder="Escribe una selección personalizada..." style="font-size:12px;background:#080c0a;border-color:#1a2020" oninput="onManualSelTextChange('${id}')"/>
+      </div>
       <input id="${id}-sel" type="hidden" value=""/>
     </div>
 
@@ -4536,7 +4572,7 @@ function updatePreview() {
       // Obtener selección
       let seleccion = '';
       if (isManual) {
-        seleccion = document.getElementById(`${pid}-sel-manual`)?.value?.trim() || '';
+        seleccion = document.getElementById(`${pid}-sel-manual-text`)?.value?.trim() || document.getElementById(`${pid}-sel-manual`)?.value?.trim() || '';
       } else {
         const seleccionManual = document.getElementById(`${pid}-seleccion-manual`)?.value?.trim() || '';
         const selInput = document.getElementById(`${pid}-sel`)?.value?.trim() || '';
@@ -6389,7 +6425,7 @@ async function publishPick() {
       date = dateVal || new Date().toISOString().slice(0, 10);
       hora = timeVal || '';
       mercado = document.getElementById(`${pid}-mercado-manual`)?.value?.trim() || '';
-      seleccion = document.getElementById(`${pid}-sel-manual`)?.value?.trim() || '';
+      seleccion = document.getElementById(`${pid}-sel-manual-text`)?.value?.trim() || document.getElementById(`${pid}-sel-manual`)?.value?.trim() || '';
       liga = document.getElementById(`${pid}-manual-liga`)?.value?.trim() || '';
       pais = '';
       deporte = deportePick || 'futbol';
