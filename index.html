@@ -3246,107 +3246,137 @@ function selModo(modo, btn) {
 
 // Manual: cuando cambia local o visitante
 // ── DATOS MANUAL (listas a rellenar) ──────────────────────────────────────────
-const MANUAL_DATA = {
-  paises: [
-    'España', 'Inglaterra', 'Alemania', 'Francia', 'Italia', 'Portugal',
-    'Países Bajos', 'Bélgica', 'Turquía', 'Rusia', 'Brasil', 'Argentina',
-    'México', 'Estados Unidos', 'Japón', 'Corea del Sur', 'Champions League',
-    'Europa League', 'Conference League', 'Mundial', 'Eurocopa'
-  ],
-  ligas: {
-    'España':              ['La Liga', 'Segunda División', 'Copa del Rey'],
-    'Inglaterra':          ['Premier League', 'Championship', 'FA Cup', 'EFL Cup'],
-    'Alemania':            ['Bundesliga', '2. Bundesliga', 'DFB Pokal'],
-    'Francia':             ['Ligue 1', 'Ligue 2', 'Coupe de France'],
-    'Italia':              ['Serie A', 'Serie B', 'Coppa Italia'],
-    'Portugal':            ['Primeira Liga', 'Liga Portugal 2', 'Taça de Portugal'],
-    'Países Bajos':        ['Eredivisie', 'Eerste Divisie'],
-    'Bélgica':             ['Pro League'],
-    'Turquía':             ['Süper Lig', '1. Lig'],
-    'Rusia':               ['Premier Liga'],
-    'Brasil':              ['Série A', 'Série B', 'Copa do Brasil'],
-    'Argentina':           ['Primera División', 'Primera Nacional'],
-    'México':              ['Liga MX', 'Ascenso MX'],
-    'Estados Unidos':      ['MLS', 'USL Championship'],
-    'Japón':               ['J1 League', 'J2 League'],
-    'Corea del Sur':       ['K League 1', 'K League 2'],
-    'Champions League':    ['UEFA Champions League'],
-    'Europa League':       ['UEFA Europa League'],
-    'Conference League':   ['UEFA Conference League'],
-    'Mundial':             ['FIFA World Cup'],
-    'Eurocopa':            ['UEFA Euro']
-  },
-  equipos: {
-    'La Liga':             ['Real Madrid','Barcelona','Atlético de Madrid','Sevilla','Real Betis','Valencia','Athletic Club','Real Sociedad','Villarreal','Osasuna','Celta Vigo','Getafe','Rayo Vallecano','Girona','Las Palmas','Mallorca','Alavés','Leganés','Espanyol','Valladolid'],
-    'Segunda División':    ['Deportivo','Racing Santander','Elche','Almería','Zaragoza','Sporting Gijón','Oviedo','Mirandés','Burgos','Huesca'],
-    'Premier League':      ['Manchester City','Arsenal','Liverpool','Chelsea','Manchester United','Tottenham','Newcastle','Aston Villa','Brighton','West Ham','Brentford','Crystal Palace','Fulham','Wolves','Everton','Bournemouth','Nottingham Forest','Leicester','Southampton','Ipswich'],
-    'Bundesliga':          ['Bayern München','Borussia Dortmund','Bayer Leverkusen','RB Leipzig','Eintracht Frankfurt','Wolfsburg','Mönchengladbach','Union Berlin','Freiburg','Stuttgart','Hoffenheim','Mainz','Augsburg','Werder Bremen','Heidenheim','Bochum','Kiel','St. Pauli'],
-    'Ligue 1':             ['Paris Saint-Germain','Marseille','Monaco','Lyon','Lille','Lens','Nice','Rennes','Strasbourg','Montpellier','Brest','Nantes','Reims','Toulouse','Lorient','Metz','Clermont','Le Havre'],
-    'Serie A':             ['Inter','Juventus','AC Milan','Napoli','Roma','Lazio','Fiorentina','Atalanta','Torino','Bologna','Udinese','Sassuolo','Empoli','Genoa','Cagliari','Lecce','Hellas Verona','Monza','Frosinone','Salernitana'],
-    'Primeira Liga':       ['Benfica','Porto','Sporting CP','Braga','Vitória SC','Famalicão','Moreirense','Gil Vicente','Boavista','Arouca'],
-    'Eredivisie':          ['Ajax','PSV','Feyenoord','AZ Alkmaar','FC Utrecht','FC Twente','Vitesse','Heerenveen'],
-    'UEFA Champions League':['Real Madrid','Manchester City','Bayern München','Barcelona','PSG','Liverpool','Chelsea','Inter','Juventus','Atlético de Madrid','Borussia Dortmund','Napoli','Porto','Benfica','Ajax','Celtic'],
-    'UEFA Europa League':  ['Sevilla','Roma','Feyenoord','Bayer Leverkusen','Atalanta','Villarreal','Manchester United','Arsenal'],
-    'UEFA Conference League':['West Ham','Fiorentina','Olympiacos','Chelsea','Real Betis'],
-    'MLS':                 ['Inter Miami','LA Galaxy','LAFC','Seattle Sounders','New York City FC','Atlanta United','Portland Timbers','Philadelphia Union'],
-    'Série A':             ['Flamengo','Palmeiras','Corinthians','São Paulo','Atletico Mineiro','Fluminense','Santos','Internacional','Grêmio','Vasco'],
-    'Primera División':    ['River Plate','Boca Juniors','Racing Club','Independiente','San Lorenzo','Estudiantes','Huracán','Vélez Sársfield'],
-    'Liga MX':             ['Club América','Chivas','Cruz Azul','Pumas','Tigres UANL','Monterrey','Toluca','León','Santos Laguna'],
+// ── CASCADA MANUAL DESDE SUPABASE ────────────────────────────────────────────
+
+// Muestra un paso con animación
+function mostrarPaso(stepId) {
+  const el = document.getElementById(stepId);
+  if (el) { el.style.display = 'block'; el.style.animation = 'fadeUp .25s ease forwards'; }
+}
+
+// Oculta una lista de pasos y limpia sus valores
+function ocultarPasos(pids, stepIds) {
+  stepIds.forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.style.display = 'none';
+  });
+}
+
+// Helper: poner loading en un select
+function selectLoading(selId) {
+  const sel = document.getElementById(selId);
+  if (sel) sel.innerHTML = '<option>⟳ Cargando...</option>';
+}
+
+// Helper: poner error en un select
+function selectError(selId, msg) {
+  const sel = document.getElementById(selId);
+  if (sel) sel.innerHTML = `<option>⚠ ${msg}</option>`;
+}
+
+// PASO 1 → cargar países desde Supabase al inicializar el pick
+async function cargarPaises(pid) {
+  const sel = document.getElementById(`${pid}-pais`);
+  if (!sel) return;
+  selectLoading(`${pid}-pais`);
+  try {
+    const sb = getSbClient();
+    const { data, error } = await sb.from('paises').select('id, nombre').order('nombre');
+    if (error) throw error;
+    sel.innerHTML = '<option value="">— Selecciona país —</option>' +
+      data.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('');
+  } catch(e) {
+    selectError(`${pid}-pais`, 'Error al cargar países');
+    console.error('cargarPaises:', e);
   }
-};
+}
 
-// Cascada: al cambiar País → poblar Liga
-function onManualPaisChange(pid) {
-  const pais = document.getElementById(`${pid}-pais`)?.value;
-  const ligaStep = document.getElementById(`${pid}-step-liga`);
-  const ligaSel  = document.getElementById(`${pid}-liga`);
+// PASO 1 → al elegir país → cargar ligas
+async function onManualPaisChange(pid) {
+  const paisId = document.getElementById(`${pid}-pais`)?.value;
 
-  // Ocultar pasos siguientes y resetearlos
-  [`${pid}-step-equipos`,`${pid}-step-fechahora`,`${pid}-step-seleccion-manual`,`${pid}-step-cuotastake`]
-    .forEach(s => { const el = document.getElementById(s); if(el) el.style.display='none'; });
-  document.getElementById(`${pid}-home`  ) && (document.getElementById(`${pid}-home`  ).value = '');
-  document.getElementById(`${pid}-away`  ) && (document.getElementById(`${pid}-away`  ).value = '');
-  document.getElementById(`${pid}-manual-liga`) && (document.getElementById(`${pid}-manual-liga`).value = '');
+  // Resetear y ocultar pasos siguientes
+  ocultarPasos(pid, [
+    `${pid}-step-liga`, `${pid}-step-equipos`,
+    `${pid}-step-fechahora`, `${pid}-step-seleccion-manual`, `${pid}-step-cuotastake`
+  ]);
+  ['home','away','manual-liga'].forEach(f => {
+    const el = document.getElementById(`${pid}-${f}`);
+    if (el) el.value = '';
+  });
 
-  if (!pais) { if(ligaStep) ligaStep.style.display='none'; return; }
+  if (!paisId) return;
 
-  // Poblar ligas
-  const ligas = MANUAL_DATA.ligas[pais] || [];
-  if (ligaSel) {
-    ligaSel.innerHTML = '<option value="">— Selecciona liga —</option>' +
-      ligas.map(l => `<option value="${l}">${l}</option>`).join('');
+  mostrarPaso(`${pid}-step-liga`);
+  selectLoading(`${pid}-liga`);
+
+  try {
+    const sb = getSbClient();
+    const { data, error } = await sb.from('ligas')
+      .select('id, nombre')
+      .eq('pais_id', paisId)
+      .order('nombre');
+    if (error) throw error;
+    const ligaSel = document.getElementById(`${pid}-liga`);
+    if (ligaSel) {
+      ligaSel.innerHTML = '<option value="">— Selecciona liga —</option>' +
+        data.map(l => `<option value="${l.id}" data-nombre="${l.nombre}">${l.nombre}</option>`).join('');
+    }
+  } catch(e) {
+    selectError(`${pid}-liga`, 'Error al cargar ligas');
+    console.error('onManualPaisChange:', e);
   }
-  if (ligaStep) { ligaStep.style.display='block'; ligaStep.style.animation='fadeUp .25s ease forwards'; }
   updatePreview();
 }
 
-// Cascada: al cambiar Liga → poblar Equipos
-function onManualLigaChange(pid) {
-  const liga = document.getElementById(`${pid}-liga`)?.value;
-  const equiposStep = document.getElementById(`${pid}-step-equipos`);
-  const homeSel = document.getElementById(`${pid}-home-sel`);
-  const awaySel = document.getElementById(`${pid}-away-sel`);
+// PASO 2 → al elegir liga → cargar equipos
+async function onManualLigaChange(pid) {
+  const ligaSel = document.getElementById(`${pid}-liga`);
+  const ligaId  = ligaSel?.value;
+  const ligaNombre = ligaSel?.options[ligaSel.selectedIndex]?.dataset?.nombre || '';
+
+  // Resetear y ocultar pasos siguientes
+  ocultarPasos(pid, [
+    `${pid}-step-equipos`, `${pid}-step-fechahora`,
+    `${pid}-step-seleccion-manual`, `${pid}-step-cuotastake`
+  ]);
+  ['home','away'].forEach(f => {
+    const el = document.getElementById(`${pid}-${f}`);
+    if (el) el.value = '';
+  });
+
+  if (!ligaId) return;
+
+  // Guardar nombre de liga en hidden
   const ligaHidden = document.getElementById(`${pid}-manual-liga`);
+  if (ligaHidden) ligaHidden.value = ligaNombre;
 
-  // Ocultar pasos siguientes
-  [`${pid}-step-fechahora`,`${pid}-step-seleccion-manual`,`${pid}-step-cuotastake`]
-    .forEach(s => { const el = document.getElementById(s); if(el) el.style.display='none'; });
-  document.getElementById(`${pid}-home`) && (document.getElementById(`${pid}-home`).value = '');
-  document.getElementById(`${pid}-away`) && (document.getElementById(`${pid}-away`).value = '');
+  mostrarPaso(`${pid}-step-equipos`);
+  selectLoading(`${pid}-home-sel`);
+  selectLoading(`${pid}-away-sel`);
 
-  if (!liga) { if(equiposStep) equiposStep.style.display='none'; return; }
-
-  if (ligaHidden) ligaHidden.value = liga;
-
-  const equipos = MANUAL_DATA.equipos[liga] || [];
-  const opts = '<option value="">— Selecciona —</option>' + equipos.map(e => `<option value="${e}">${e}</option>`).join('');
-  if (homeSel) homeSel.innerHTML = opts;
-  if (awaySel) awaySel.innerHTML = opts;
-  if (equiposStep) { equiposStep.style.display='block'; equiposStep.style.animation='fadeUp .25s ease forwards'; }
+  try {
+    const sb = getSbClient();
+    const { data, error } = await sb.from('equipos')
+      .select('id, nombre')
+      .eq('liga_id', ligaId)
+      .order('nombre');
+    if (error) throw error;
+    const opts = '<option value="">— Selecciona —</option>' +
+      data.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join('');
+    const homeSel = document.getElementById(`${pid}-home-sel`);
+    const awaySel = document.getElementById(`${pid}-away-sel`);
+    if (homeSel) homeSel.innerHTML = opts;
+    if (awaySel) awaySel.innerHTML = opts;
+  } catch(e) {
+    selectError(`${pid}-home-sel`, 'Error');
+    selectError(`${pid}-away-sel`, 'Error');
+    console.error('onManualLigaChange:', e);
+  }
   updatePreview();
 }
 
-// Cascada: al cambiar Local → guardar en hidden y mostrar fecha si hay visitante también
+// PASO 3 → Local seleccionado
 function onManualLocalChange(pid) {
   const val = document.getElementById(`${pid}-home-sel`)?.value || '';
   const homeHidden = document.getElementById(`${pid}-home`);
@@ -3355,7 +3385,7 @@ function onManualLocalChange(pid) {
   updatePreview();
 }
 
-// Cascada: al cambiar Visitante → guardar en hidden y mostrar fecha si hay local también
+// PASO 4 → Visitante seleccionado
 function onManualVisitanteChange(pid) {
   const val = document.getElementById(`${pid}-away-sel`)?.value || '';
   const awayHidden = document.getElementById(`${pid}-away`);
@@ -3364,24 +3394,43 @@ function onManualVisitanteChange(pid) {
   updatePreview();
 }
 
+// Mostrar fecha/hora cuando local Y visitante estén elegidos
 function checkMostrarFecha(pid) {
   const home = document.getElementById(`${pid}-home`)?.value;
   const away = document.getElementById(`${pid}-away`)?.value;
-  const fechaStep = document.getElementById(`${pid}-step-fechahora`);
-  if (home && away && fechaStep) {
-    fechaStep.style.display = 'block';
-    fechaStep.style.animation = 'fadeUp .25s ease forwards';
-  }
+  if (home && away) mostrarPaso(`${pid}-step-fechahora`);
 }
 
-// Cascada: al cambiar fecha → mostrar selección
-function onManualFechaChange(pid) {
+// PASO 5 → Fecha elegida → mostrar selección y cargarla desde Supabase
+async function onManualFechaChange(pid) {
   const fecha = document.getElementById(`${pid}-date-manual`)?.value;
-  const selStep = document.getElementById(`${pid}-step-seleccion-manual`);
-  if (fecha && selStep) {
-    selStep.style.display = 'block';
-    selStep.style.animation = 'fadeUp .25s ease forwards';
+  if (!fecha) { updatePreview(); return; }
+
+  mostrarPaso(`${pid}-step-seleccion-manual`);
+  selectLoading(`${pid}-sel-manual`);
+
+  try {
+    const sb = getSbClient();
+    const { data, error } = await sb.from('selecciones').select('id, nombre').order('nombre');
+    if (error) throw error;
+    const selSel = document.getElementById(`${pid}-sel-manual`);
+    if (selSel) {
+      selSel.innerHTML = '<option value="">— Selecciona selección —</option>' +
+        data.map(s => `<option value="${s.nombre}">${s.nombre}</option>`).join('');
+    }
+  } catch(e) {
+    selectError(`${pid}-sel-manual`, 'Error al cargar selecciones');
+    console.error('onManualFechaChange:', e);
   }
+  updatePreview();
+}
+
+// PASO 7 → Selección elegida → mostrar cuota/stake
+async function onManualSelChange(pid) {
+  const val = document.getElementById(`${pid}-sel-manual`)?.value || '';
+  const hiddenSel = document.getElementById(`${pid}-sel`);
+  if (hiddenSel) hiddenSel.value = val;
+  if (val) mostrarPaso(`${pid}-step-cuotastake`);
   updatePreview();
 }
 
@@ -3391,20 +3440,6 @@ function onManualPartidoChange(pid) {
   if (!pronosticoData[pid]) pronosticoData[pid] = {};
   pronosticoData[pid].manualHome = home || '';
   pronosticoData[pid].manualAway = away || '';
-  updatePreview();
-}
-
-// Manual: cuando cambia la selección manual
-function onManualSelChange(pid) {
-  const val = document.getElementById(`${pid}-sel-manual`)?.value?.trim() || '';
-  const hiddenSel = document.getElementById(`${pid}-sel`);
-  if (hiddenSel) hiddenSel.value = val;
-  // Mostrar cuota/stake si hay texto
-  const cuotaStep = document.getElementById(`${pid}-step-cuotastake`);
-  if (val && cuotaStep) {
-    cuotaStep.style.display = 'block';
-    cuotaStep.style.animation = 'fadeUp .25s ease forwards';
-  }
   updatePreview();
 }
 
@@ -3807,7 +3842,9 @@ function buildBoxPick(num) {
     <!-- PASO 7: Selección (oculto hasta elegir fecha) -->
     <div id="${id}-step-seleccion-manual" style="display:none;animation:fadeUp .25s ease forwards">
       <label class="flbl">🎯 Selección</label>
-      <input id="${id}-sel-manual" type="text" class="finp" placeholder="ej. Real Madrid gana, Ambos marcan, Over 2.5..." oninput="onManualSelChange('${id}')"/>
+      <select id="${id}-sel-manual" class="fsel" onchange="onManualSelChange('${id}')">
+        <option value="">— Selecciona selección —</option>
+      </select>
       <input id="${id}-sel" type="hidden" value=""/>
     </div>
 
@@ -4139,14 +4176,10 @@ function removePick(pid) {
 async function fillSports(pid) {
   const isManual = toggleState.modo === 'manual';
 
-  // Si es modo manual, poblar el desplegable de países de la lista local
+  // Si es modo manual, poblar el desplegable de países desde Supabase
   if (isManual) {
-    const paisSel = document.getElementById(`${pid}-pais`);
-    if (paisSel) {
-      paisSel.innerHTML = '<option value="">— Selecciona país —</option>' +
-        MANUAL_DATA.paises.map(p => `<option value="${p}">${p}</option>`).join('');
-    }
     setBadge(`${pid}-status`, '');
+    await cargarPaises(pid);
     return;
   }
   // Ocultar deporte (no necesario), mostrar directamente el selector de país
