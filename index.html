@@ -3334,11 +3334,9 @@ async function onManualPaisChange(pid) {
 
   try {
     const sb = getSbClient();
-    const deporte = toggleState.deporte || 'futbol';
     const { data, error } = await sb.from('ligas')
       .select('id, nombre')
       .eq('pais_id', paisId)
-      .eq('deporte', deporte)
       .order('nombre');
     if (error) throw error;
     const ligaSel = document.getElementById(`${pid}-liga`);
