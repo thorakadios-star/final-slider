@@ -2439,7 +2439,7 @@ if (typeof html2canvas === 'undefined') {
 
       <div style="max-width:640px">
         <div id="contenedor-pronosticos"></div>
-        <div id="contenedor-vista-previa"></div>
+        <div id="contenedor-vista-previa" style="transform:scale(0.6);transform-origin:top center;margin-bottom:-42%"></div>
         
         <!-- Botón Volver (abajo) -->
         <div style="display:flex;justify-content:center;margin-top:24px;padding-top:20px;border-top:1px solid #162018">
@@ -3379,8 +3379,8 @@ let toggleState = {
   momento: 'pre',
   tipo: 'simple',
   acceso: 'free',
-  modo: 'auto',       // 'auto' = API | 'manual' = texto libre
-  deporte: 140        // Default: La Liga
+  modo: 'manual',     // 'auto' = API | 'manual' = texto libre
+  deporte: 'futbol'   // Default: Fútbol
 };
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
@@ -3415,21 +3415,34 @@ function setBadge(id, msg, color = '#10b981') {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// TOGGLE COLLAPSE BOXES
+// ═══════════════════════════════════════════════════════════════════════════════
+function toggleBox(boxId) {
+  const content = document.getElementById(boxId + '-content');
+  const arrow = document.getElementById(boxId + '-arrow');
+  if (!content) return;
+  const isOpen = content.style.display !== 'none';
+  content.style.display = isOpen ? 'none' : 'flex';
+  if (arrow) arrow.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // BOX 01 — PRONÓSTICO (Configuración general)
 // ═══════════════════════════════════════════════════════════════════════════════
 function buildBox01() {
   return `
 <div id="box-01" style="background:#0a0e0b;border:1px solid #162018;border-radius:8px;padding:0;margin-bottom:18px;animation:fadeUp .3s ease forwards">
   
-  <!-- Header -->
-  <div style="padding:14px 18px;border-bottom:1px solid #111a13;display:flex;align-items:center;gap:10px">
+  <!-- Header clicable -->
+  <div onclick="toggleBox('box-01')" style="padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s" onmouseenter="this.style.background='rgba(16,185,129,.03)'" onmouseleave="this.style.background='transparent'">
     <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:4px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#10b981">01</span>
     <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#10b981;text-transform:uppercase;letter-spacing:.12em">Pronóstico</span>
-    <span id="api-status" style="margin-left:auto;font-size:9px;color:#3a3a44;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em"></span>
+    <span id="api-status" style="font-size:9px;color:#3a3a44;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em"></span>
+    <svg id="box-01-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="margin-left:auto;transition:transform .25s;transform:rotate(-90deg)"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
 
-  <!-- Content -->
-  <div style="padding:18px;display:flex;flex-direction:column;gap:18px">
+  <!-- Content (colapsado por defecto) -->
+  <div id="box-01-content" style="display:none;padding:18px;border-top:1px solid #111a13;flex-direction:column;gap:18px">
 
     <!-- Momento: Pre-partido / En vivo -->
     <div>
@@ -3476,17 +3489,17 @@ function buildBox01() {
     <div>
       <label class="flbl">Modo de entrada</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button type="button" id="tog-manual" class="sport-btn" onclick="selModo('manual',this)" style="display:inline-flex;align-items:center;gap:6px">
+        <button type="button" id="tog-manual" class="sport-btn act-sport" onclick="selModo('manual',this)" style="display:inline-flex;align-items:center;gap:6px">
           <i class="fa-solid fa-pen-to-square"></i>
           Pick manual
         </button>
-        <button type="button" id="tog-auto" class="sport-btn act-sport" onclick="selModo('auto',this)" style="display:inline-flex;align-items:center;gap:6px">
+        <button type="button" id="tog-auto" class="sport-btn" onclick="selModo('auto',this)" style="display:inline-flex;align-items:center;gap:6px">
           <i class="fa-solid fa-wave-square"></i>
           Pick automático
         </button>
       </div>
-      <div id="modo-hint" style="margin-top:8px;padding:8px 12px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.04em;transition:all .2s;background:rgba(59,130,246,.08);color:#60a5fa;border:1px solid rgba(59,130,246,.2)">
-        🤖 Automático: desplegables con datos de la API
+      <div id="modo-hint" style="margin-top:8px;padding:8px 12px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.04em;transition:all .2s;background:rgba(251,191,36,.08);color:#fbbf24;border:1px solid rgba(251,191,36,.2)">
+        ✏️ Manual: introduce los datos del pick a mano
       </div>
     </div>
 
@@ -3645,16 +3658,17 @@ function buildBoxPick(num) {
   return `
 <div id="box-${id}" style="background:#0a0e0b;border:1px solid rgba(16,185,129,.18);border-radius:8px;padding:0;margin-bottom:18px;animation:fadeUp .3s ease forwards">
   
-  <!-- Header -->
-  <div style="padding:14px 18px;border-bottom:1px solid #111a13;display:flex;align-items:center;gap:10px">
+  <!-- Header clicable -->
+  <div onclick="toggleBox('box-${id}')" style="padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s" onmouseenter="this.style.background='rgba(16,185,129,.03)'" onmouseleave="this.style.background='transparent'">
     <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:4px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#10b981">02</span>
     <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#10b981;text-transform:uppercase;letter-spacing:.12em">Pick ${num}</span>
-    <span id="${id}-status" style="margin-left:auto;font-size:9px;color:#3a3a44;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em"></span>
-    ${canRemove ? `<button onclick="removePick('${id}')" style="font-size:11px;color:#52525b;background:transparent;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:color .15s;padding:4px 8px" onmouseenter="this.style.color='#ef4444'" onmouseleave="this.style.color='#52525b'">✕ Eliminar</button>` : ''}
+    <span id="${id}-status" style="font-size:9px;color:#3a3a44;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em"></span>
+    ${canRemove ? `<button onclick="event.stopPropagation();removePick('${id}')" style="font-size:11px;color:#52525b;background:transparent;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:color .15s;padding:4px 8px" onmouseenter="this.style.color='#ef4444'" onmouseleave="this.style.color='#52525b'">✕ Eliminar</button>` : ''}
+    <svg id="box-${id}-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="margin-left:${canRemove ? '4px' : 'auto'};transition:transform .25s;transform:rotate(-90deg)"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
 
-  <!-- Content -->
-  <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+  <!-- Content (colapsado por defecto) -->
+  <div id="box-${id}-content" style="display:none;padding:18px;border-top:1px solid #111a13;flex-direction:column;gap:14px">
     ${isManual ? camposManual : camposAuto}
   </div>
 </div>`;
@@ -3667,14 +3681,15 @@ function buildBox03() {
   return `
 <div id="box-03" style="background:#0a0e0b;border:1px solid #162018;border-radius:8px;padding:0;margin-bottom:18px;animation:fadeUp .3s ease forwards">
   
-  <!-- Header -->
-  <div style="padding:14px 18px;border-bottom:1px solid #111a13;display:flex;align-items:center;gap:10px">
+  <!-- Header clicable -->
+  <div onclick="toggleBox('box-03')" style="padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s" onmouseenter="this.style.background='rgba(16,185,129,.03)'" onmouseleave="this.style.background='transparent'">
     <span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:4px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:#10b981">03</span>
     <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#10b981;text-transform:uppercase;letter-spacing:.12em">Análisis</span>
+    <svg id="box-03-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="margin-left:auto;transition:transform .25s;transform:rotate(-90deg)"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
 
-  <!-- Content -->
-  <div style="padding:18px;display:flex;flex-direction:column;gap:16px">
+  <!-- Content (colapsado por defecto) -->
+  <div id="box-03-content" style="display:none;padding:18px;border-top:1px solid #111a13;flex-direction:column;gap:16px">
     <div>
       <label class="flbl">Tu análisis del pronóstico</label>
       <textarea id="analisis-texto" class="finp" placeholder="Escribe tu análisis, razonamiento y justificación del pick..." style="min-height:120px;resize:vertical;line-height:1.5" oninput="updatePreview()"></textarea>
