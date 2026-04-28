@@ -1,6 +1,6 @@
 // TrueStats - Proxy para SportAPI (RapidAPI) + Telegram con IMÁGENES
-// Local:   node index.js  →  http://localhost:3000
-// Railway: deploy automático con PORT de entorno
+// Local:   node server.js  →  http://localhost:3000
+// Render: deploy automático con PORT de entorno
 
 const http  = require('http');
 const https = require('https');
