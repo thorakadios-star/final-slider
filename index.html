@@ -3494,9 +3494,8 @@ const SA_KEY  = '3b7d1aeeaamshce1e406a028e4adp1f3231jsn1132706d9b0b';
 const SA_HOST = 'sportapi7.p.rapidapi.com';
 const SA_BASE = 'https://sportapi7.p.rapidapi.com/api/v1';
 
-// URL del proxy Railway — actualiza esto tras el deploy
-// Ejemplo: 'https://truestats-proxy.up.railway.app'
-const SA_PROXY = 'https://truestats-proxy-production.up.railway.app';
+// URL del proxy Render
+const SA_PROXY = 'https://truestats-proxy.onrender.com';
 
 let categoriesCache = null;   // lista de países/categorías
 let eventsCache     = {};     // por fecha
@@ -7134,7 +7133,7 @@ async function generateImage(cardId = 'tipster-card-1') {
  * @param {string} proxyUrl - URL del proxy (Railway)
  * @returns {Promise<boolean>} - true si se envió correctamente
  */
-async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy-production.up.railway.app') {
+async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy.onrender.com') {
   const base64 = await generateImage(cardId);
   
   if (!base64) {
