@@ -3428,8 +3428,18 @@ async function onManualLigaChange(pid) {
   if (ligaHidden) ligaHidden.value = ligaNombre;
 
   mostrarPaso(`${pid}-step-equipos`);
-  selectLoading(`${pid}-home-sel`);
-  selectLoading(`${pid}-away-sel`);
+
+  // Loading en los dropdowns custom
+  [`${pid}-home-sel`, `${pid}-away-sel`].forEach(id => {
+    const dd = document.getElementById(id);
+    if (!dd) return;
+    const label = dd.querySelector('.eq-label');
+    const icon  = dd.querySelector('.eq-icon');
+    if (label) { label.textContent = '⟳ Cargando...'; label.style.color = '#52525b'; }
+    if (icon)  icon.innerHTML = '';
+    const menu = dd.querySelector('.eq-menu');
+    if (menu)  { menu.innerHTML = ''; menu.style.display = 'none'; }
+  });
 
   try {
     const sb = getSbClient();
@@ -3440,9 +3450,20 @@ async function onManualLigaChange(pid) {
     if (error) throw error;
     buildEquipoDropdown(`${pid}-home-sel`, data, pid, 'home');
     buildEquipoDropdown(`${pid}-away-sel`, data, pid, 'away');
+    // Restaurar placeholder
+    [`${pid}-home-sel`, `${pid}-away-sel`].forEach((id, i) => {
+      const dd = document.getElementById(id);
+      if (!dd) return;
+      const label = dd.querySelector('.eq-label');
+      if (label) { label.textContent = i === 0 ? '— Local —' : '— Visitante —'; label.style.color = '#52525b'; }
+    });
   } catch(e) {
-    selectError(`${pid}-home-sel`, 'Error');
-    selectError(`${pid}-away-sel`, 'Error');
+    [`${pid}-home-sel`, `${pid}-away-sel`].forEach(id => {
+      const dd = document.getElementById(id);
+      if (!dd) return;
+      const label = dd.querySelector('.eq-label');
+      if (label) { label.textContent = '⚠ Error al cargar'; label.style.color = '#ef4444'; }
+    });
     console.error('onManualLigaChange:', e);
   }
   updatePreview();
