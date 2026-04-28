@@ -3227,8 +3227,8 @@ function renderTipsterPicks() {
             <div class="pick-h-match">
               <span class="icon">⚽</span>
               ${(() => {
-                const escLocal  = document.getElementById(`${pid}-home-sel`)?.querySelector('.eq-icon img')?.src || '';
-                const escVisit  = document.getElementById(`${pid}-away-sel`)?.querySelector('.eq-icon img')?.src || '';
+                const escLocal  = p.escudo_local  || '';
+                const escVisit  = p.escudo_visitante || '';
                 const local = p.equipo_local || '';
                 const visit = p.equipo_visitante || '';
                 const txt = p.evento || p.partido || (local && visit ? `${local} vs ${visit}` : '—');
@@ -6793,11 +6793,17 @@ async function publishPick() {
     if (home === '—' || home === 'Local') home = '';
     if (away === '—' || away === 'Visitante') away = '';
 
+    // Capturar escudos del dropdown custom
+    const escLocal  = document.getElementById(`${pid}-home-sel`)?.querySelector('.eq-icon img')?.src || '';
+    const escVisit  = document.getElementById(`${pid}-away-sel`)?.querySelector('.eq-icon img')?.src || '';
+
     if (home && away) {
       picksData.push({
         deporte,
         equipo_local: home,
         equipo_visitante: away,
+        escudo_local: escLocal,
+        escudo_visitante: escVisit,
         liga,
         pais,
         fecha: date,
@@ -6861,6 +6867,8 @@ async function publishPick() {
       liga: pickFinal.liga,
       equipo_local: pickFinal.equipo_local,
       equipo_visitante: pickFinal.equipo_visitante,
+      escudo_local: firstPick.escudo_local || '',
+      escudo_visitante: firstPick.escudo_visitante || '',
       fecha: pickFinal.fecha,
       hora: pickFinal.hora,
       seleccion: pickFinal.seleccion,
