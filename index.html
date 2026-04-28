@@ -3495,34 +3495,11 @@ function toggleEquipoDD(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
   const menu = container.querySelector('.eq-menu');
-  const trigger = container.querySelector('.eq-trigger');
   if (!menu) return;
   const isOpen = menu.style.display !== 'none';
-  // Cerrar todos los demás abiertos
   document.querySelectorAll('.eq-menu').forEach(m => m.style.display = 'none');
-  if (!isOpen) {
-    // Calcular posición con position:fixed
-    const rect = trigger ? trigger.getBoundingClientRect() : container.getBoundingClientRect();
-    menu.style.top    = (rect.bottom + 4) + 'px';
-    menu.style.left   = rect.left + 'px';
-    menu.style.width  = rect.width + 'px';
-    menu.style.display = 'block';
-  }
+  if (!isOpen) menu.style.display = 'block';
 }
-
-// Recalcular posición al hacer scroll
-window.addEventListener('scroll', () => {
-  document.querySelectorAll('.eq-menu').forEach(menu => {
-    if (menu.style.display === 'none') return;
-    const container = menu.closest('.equipo-dropdown');
-    const trigger = container?.querySelector('.eq-trigger');
-    if (!trigger) return;
-    const rect = trigger.getBoundingClientRect();
-    menu.style.top  = (rect.bottom + 4) + 'px';
-    menu.style.left = rect.left + 'px';
-    menu.style.width = rect.width + 'px';
-  });
-}, true);
 
 // Cierra dropdowns al hacer clic fuera
 document.addEventListener('click', e => {
@@ -4112,9 +4089,9 @@ function buildBoxPick(num) {
     </div>
 
     <!-- PASO 3+4: Local y Visitante (oculto hasta elegir liga) -->
-    <div id="${id}-step-equipos" style="display:none;animation:fadeUp .25s ease forwards">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div>
+    <div id="${id}-step-equipos" style="display:none;animation:fadeUp .25s ease forwards;overflow:visible">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;overflow:visible">
+        <div style="overflow:visible">
           <label class="flbl">🏠 Local</label>
           <div id="${id}-home-sel" class="equipo-dropdown" data-pid="${id}" data-rol="home" style="position:relative">
             <div class="eq-trigger fsel" onclick="toggleEquipoDD('${id}-home-sel')" style="display:flex;align-items:center;gap:8px;cursor:pointer">
@@ -4122,7 +4099,7 @@ function buildBoxPick(num) {
               <span class="eq-label" style="flex:1;color:#52525b">— Local —</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="eq-menu" style="display:none;position:fixed;width:inherit;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6)"></div>
+            <div class="eq-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6)"></div>
           </div>
         </div>
         <div>
@@ -4133,7 +4110,7 @@ function buildBoxPick(num) {
               <span class="eq-label" style="flex:1;color:#52525b">— Visitante —</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="eq-menu" style="display:none;position:fixed;width:inherit;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6)"></div>
+            <div class="eq-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6)"></div>
           </div>
         </div>
       </div>
@@ -4197,7 +4174,7 @@ function buildBoxPick(num) {
   </div>
 
   <!-- Content (colapsado por defecto) -->
-  <div id="box-${id}-content" style="display:none;padding:18px;border-top:1px solid #111a13;flex-direction:column;gap:14px">
+  <div id="box-${id}-content" style="display:none;padding:18px;border-top:1px solid #111a13;flex-direction:column;gap:14px;overflow:visible">
     ${isManual ? camposManual : camposAuto}
   </div>
 </div>`;
