@@ -1319,9 +1319,9 @@ nav.sc{border-color:#243028}
   #pg-tipster .stats-chart-filters{width:100%}
   #pg-tipster .stats-chart-filters select{flex:1;font-size:10px;padding:6px}
   #pg-tipster .stats-chart-legend{gap:10px;flex-wrap:wrap;font-size:9px}
-  /* Pick cards - 40% más pequeños y centrados */
-  #pg-tipster .picks-grid{justify-content:center;max-width:280px;margin:0 auto}
-  #pg-tipster .pick-card{width:100%;max-width:280px;transform:scale(0.65);transform-origin:center top;margin-bottom:-80px}
+  /* Pick cards - 80% ancho, proporcional */
+  #pg-tipster .picks-grid{justify-content:center;width:100%;margin:0 auto;padding:0 10%}
+  #pg-tipster .pick-card{width:100%;max-width:100%;transform:none;margin-bottom:16px}
 }
 
 @media(max-width:480px){
@@ -1329,8 +1329,9 @@ nav.sc{border-color:#243028}
   #pg-tipster .tipster-hero-avatar{width:80px;height:80px}
   #pg-tipster .tipster-hero-avatar img{width:80px;height:80px}
   #pg-tipster .tipster-hero-info h1{font-size:20px}
-  /* Pick cards aún más pequeños */
-  #pg-tipster .pick-card{max-width:100%;transform:scale(0.6);margin-bottom:-100px}
+  /* Pick cards 80% ancho */
+  #pg-tipster .picks-grid{padding:0 10%}
+  #pg-tipster .pick-card{width:100%;max-width:100%;transform:none;margin-bottom:14px}
   /* Gráfico más compacto */
   #pg-tipster #stats-chart{height:140px}
   #pg-tipster .stats-chart-placeholder{height:110px}
@@ -1349,8 +1350,8 @@ nav.sc{border-color:#243028}
   #pg-picks .ph p{font-size:11px}
   #pg-picks .finp{font-size:14px;padding:12px}
   #pg-picks .flbl{font-size:11px}
-  /* Boleto 40% más pequeño y centrado */
-  #pg-picks #vista-previa{transform:scale(0.6);transform-origin:center top;margin:16px auto -40%;max-width:100%}
+  /* Boleto 80% ancho, proporcional */
+  #pg-picks #vista-previa{transform:none;margin:16px auto;width:80%;max-width:80%}
   #pg-picks #vista-previa>div{padding:14px}
   #pg-picks .pronostico-card{padding:14px;border-radius:12px}
 }
@@ -1358,7 +1359,7 @@ nav.sc{border-color:#243028}
 @media(max-width:480px){
   #pg-picks .main{padding:16px 12px}
   #pg-picks .ph h1{font-size:20px}
-  #pg-picks #vista-previa{transform:scale(0.55);margin-bottom:-45%}
+  #pg-picks #vista-previa{width:80%;max-width:80%;margin:12px auto}
 }
 
 /* ── PÁGINAS PRÓXIMAMENTE (#pg-academia, #pg-hall) ──────────────────────────────── */
@@ -6063,6 +6064,37 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+// Construye mensaje de texto para fallback o envío directo
+function buildTelegramText(pick) {
+  const isCombo = pick.tipo === 'COMBINADA';
+  const stake = parseInt(pick.stake) || 1;
+  const cuota = parseFloat(pick.cuota) || 1;
+  const estado = (pick.estado || 'pendiente').toUpperCase();
+  const pickId = pick.id ? `TRUEPICK-${pick.id.toString().slice(-6).toUpperCase()}` : `TS-${Date.now().toString(36).toUpperCase()}`;
+
+  let partidos = [];
+  if (isCombo && pick.partidos) {
+    try { partidos = JSON.parse(pick.partidos); } catch(e) {}
+  }
+  if (!partidos.length) {
+    partidos = [{ equipo_local: pick.equipo_local || '', equipo_visitante: pick.equipo_visitante || '', liga: pick.liga || '', seleccion: pick.seleccion || '', cuota: pick.cuota || '' }];
+  }
+
+  const lineasPartidos = partidos.map(p =>
+    `⚽ <b>${p.equipo_local} vs ${p.equipo_visitante}</b>
+📋 ${p.liga || ''} · 🎯 ${p.seleccion || ''} · 📊 @${p.cuota}`
+  ).join('
+
+');
+
+  return `🎯 <b>${isCombo ? 'COMBINADA' : 'PICK SIMPLE'}</b> · ${estado}
+
+${lineasPartidos}
+
+📊 Cuota total: <b>${cuota}</b> · Stake: <b>${stake}u</b>
+🆔 ${pickId}`;
+}
+
 async function sendToTelegram(pick) {
   try {
     console.log('📸 Generando imagen del pick...');
@@ -6286,7 +6318,7 @@ async function sendToTelegram(pick) {
     
     console.log('📤 Enviando imagen a Telegram...');
     
-    const PROXY_URL = 'https://truestats-proxy-production.up.railway.app';
+    const PROXY_URL = 'https://truestats-proxy.onrender.com';
     const response = await fetch(`${PROXY_URL}/telegram-photo`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -6305,13 +6337,54 @@ async function sendToTelegram(pick) {
       showToast('✅ Enviado a Telegram', 'success');
       return true;
     } else {
-      console.error('Error Telegram:', result);
-      showToast('⚠️ Error: ' + (result.description || 'Fallo en Telegram'), 'warning');
+      console.error('Error Telegram imagen:', result);
+      // Fallback: enviar como texto plano directo a la API de Telegram
+      console.log('⚠️ Fallo imagen, intentando envío de texto...');
+      try {
+        const fallbackUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        const fb = await fetch(fallbackUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            parse_mode: 'HTML',
+            text: buildTelegramText(pick)
+          })
+        });
+        const fbResult = await fb.json();
+        if (fbResult.ok) {
+          showToast('✅ Enviado a Telegram (texto)', 'success');
+          return true;
+        } else {
+          console.error('Error fallback Telegram:', fbResult);
+          showToast('⚠️ Error Telegram: ' + (fbResult.description || result.description || 'Fallo'), 'warning');
+        }
+      } catch(fbErr) {
+        console.error('Error fallback fetch:', fbErr);
+        showToast('⚠️ Error: ' + (result.description || 'Fallo en Telegram'), 'warning');
+      }
       return false;
     }
   } catch (e) {
-    console.error('Error enviando a Telegram:', e);
-    showToast('❌ Error de conexión', 'error');
+    console.error('Error enviando a Telegram (proxy caído?):', e);
+    // Intentar envío de texto directo si el proxy no responde
+    try {
+      console.log('⚠️ Proxy fallo, intentando envío directo de texto...');
+      const fallbackUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      const fb = await fetch(fallbackUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, parse_mode: 'HTML', text: buildTelegramText(pick) })
+      });
+      const fbResult = await fb.json();
+      if (fbResult.ok) {
+        showToast('✅ Enviado a Telegram (texto)', 'success');
+        return true;
+      }
+    } catch(fbErr) {
+      console.error('Error fallback texto:', fbErr);
+    }
+    showToast('❌ Error de conexión con Telegram', 'error');
     return false;
   }
 }
