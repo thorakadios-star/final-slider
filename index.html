@@ -1759,10 +1759,10 @@ if (typeof html2canvas === 'undefined') {
           </div>
           <div>
             <h2 style="font-size:18px;color:#e8f0ea;margin-bottom:6px">Transparencia <span style="color:#60a5fa">Total</span></h2>
-            <p style="font-size:12px;color:#5a7265;line-height:1.7">Rankings verificados por TrueStats AI. Compara tipsters con datos reales.</p>
           </div>
-          <div style="padding:8px 16px;background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);border-radius:6px">
+          <div style="padding:8px 16px;background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);border-radius:6px;display:flex;flex-direction:column;gap:6px">
             <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#60a5fa">✓ Ranking 100% objetivo y auditable</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#93c5fd;border-top:1px solid rgba(96,165,250,.15);padding-top:6px">Rankings verificados por TrueStats AI · Compara tipsters con datos reales</span>
           </div>
         </div>
 
@@ -1825,32 +1825,21 @@ if (typeof html2canvas === 'undefined') {
 
     <!-- Page Header -->
     <div class="page-header">
-      <h1>Tipsters <span>Verificados</span></h1>
-      <p>Estadísticas auditadas en tiempo real. Resultados inalterables y transparencia total.</p>
+      <h1 style="font-size:clamp(28px,5vw,42px);font-weight:900;letter-spacing:-0.03em;color:#ffffff;text-transform:uppercase;font-family:'Inter',system-ui;text-shadow:0 0 30px rgba(45,212,191,.3);margin-bottom:8px">
+        Tipsters <span style="color:#2dd4bf;text-shadow:0 0 20px rgba(45,212,191,.6)">Verificados</span>
+      </h1>
+      <p style="font-size:13px;font-weight:500;color:#94a3b8;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em">
+        <strong style="color:#e2e8f0">Estadísticas auditadas en tiempo real.</strong>
+        <span style="color:#2dd4bf;font-weight:700"> Resultados inalterables</span> y transparencia total.
+      </p>
     </div>
 
     <!-- Stats Banner -->
-    <div class="stats-banner" style="animation:fadeUp .7s .1s ease forwards;opacity:0">
-      <div class="stat-pill">
-        <span class="stat-pill-icon">🛡️</span>
-        <span class="stat-pill-value" id="global-picks">0</span>
-        <span class="stat-pill-label">picks auditados</span>
-      </div>
-      <div class="stat-pill">
-        <span class="stat-pill-icon">🎯</span>
-        <span class="stat-pill-value" id="global-winrate">0%</span>
-        <span class="stat-pill-label">precisión media</span>
-      </div>
-      <div class="stat-pill">
-        <span class="stat-pill-icon">💰</span>
-        <span class="stat-pill-value" id="global-profit">0€</span>
-        <span class="stat-pill-label">verificados</span>
-      </div>
-      <div class="stat-pill">
-        <span class="stat-pill-icon">📊</span>
-        <span class="stat-pill-value">6</span>
-        <span class="stat-pill-label">tipsters activos</span>
-      </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;animation:fadeUp .7s .1s ease forwards;opacity:0">
+      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🛡️</span> <span id="global-picks">0</span> picks auditados</span>
+      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🎯</span> <span id="global-winrate">0%</span> precisión media</span>
+      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">💰</span> +<span id="global-profit">0</span>u verificados</span>
+      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">📊</span> 6 tipsters activos</span>
     </div>
 
     <!-- Filter Section -->
@@ -2443,8 +2432,12 @@ if (typeof html2canvas === 'undefined') {
     <main class="main">
       <div class="ph" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px">
         <div>
-          <h1>Crear <span class="b">Pick</span></h1>
-          <p id="picks-header-subtitle">Green Hunter Pro · Publicación auditada por TrueStats AI</p>
+          <h1 style="font-size:clamp(22px,4vw,32px);font-weight:900;letter-spacing:-0.03em;color:#ffffff;text-transform:uppercase;font-family:'Inter',system-ui;text-shadow:0 0 20px rgba(45,212,191,.3);margin-bottom:6px">
+            Crear <span style="color:#2dd4bf;text-shadow:0 0 15px rgba(45,212,191,.6)">Pick</span>
+          </h1>
+          <p id="picks-header-subtitle" style="font-size:11px;font-weight:500;color:#94a3b8;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em">
+            <strong style="color:#e2e8f0">Green Hunter Pro</strong> · <span style="color:#2dd4bf">Publicación auditada</span> por TrueStats AI
+          </p>
         </div>
         <button onclick="go('plat')" style="display:flex;align-items:center;gap:7px;background:transparent;border:1px solid #162018;color:#a1a1aa;font-family:'Inter',sans-serif;font-size:13px;padding:8px 16px;border-radius:4px;cursor:pointer;transition:all .15s" onmouseenter="this.style.borderColor='#2a3830';this.style.color='#d6e3d2'" onmouseleave="this.style.borderColor='#162018';this.style.color='#a1a1aa'">
           <i class="fa-solid fa-arrow-left"></i>
@@ -3474,9 +3467,17 @@ async function addSeleccion(pid, isFirst = false) {
       <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#10b981;letter-spacing:.08em">SEL ${idx}</span>
       ${idx > 1 ? `<button type="button" onclick="removeSeleccion('${pid}','${rowId}')" style="background:transparent;border:none;color:#52525b;cursor:pointer;font-size:12px;padding:2px 6px" onmouseenter="this.style.color='#ef4444'" onmouseleave="this.style.color='#52525b'">✕</button>` : ''}
     </div>
-    <select class="sel-dropdown fsel" onchange="onSelRowChange('${pid}','${rowId}')">
-      <option value="">— Selecciona selección —</option>
-    </select>
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="flex:1">
+        <select class="sel-dropdown fsel" onchange="onSelRowChange('${pid}','${rowId}')">
+          <option value="">— Selecciona selección —</option>
+        </select>
+      </div>
+      <div style="width:75px;flex-shrink:0">
+        <label style="font-size:9px;color:#3a5a3a;font-family:'IBM Plex Mono',monospace;display:block;margin-bottom:4px">CUOTA</label>
+        <input type="number" class="sel-cuota finp" placeholder="1.85" step="0.01" min="1" style="font-size:13px;font-weight:700;background:#080c0a;border-color:rgba(16,185,129,.3);text-align:center;padding:8px 6px" oninput="recalcCuotaTotal('${pid}')"/>
+      </div>
+    </div>
     <div>
       <label style="font-size:10px;color:#52525b;font-family:'IBM Plex Mono',monospace">✏️ Manual <span style="color:#3a3a44">(opcional)</span></label>
       <input type="text" class="sel-text finp" placeholder="Selección personalizada..." style="font-size:12px;background:#080c0a;border-color:#1a2020;margin-top:4px" oninput="onSelTextChange('${pid}')"/>
@@ -3530,6 +3531,26 @@ function syncSeleccionesHidden(pid) {
   const hidden = document.getElementById(`${pid}-sel`);
   if (hidden) hidden.value = text;
   if (text) mostrarPaso(`${pid}-step-cuotastake`);
+  recalcCuotaTotal(pid);
+}
+
+// Recalcular cuota total multiplicando todas las cuotas de las filas
+function recalcCuotaTotal(pid) {
+  const container = document.getElementById(`${pid}-sels-container`);
+  if (!container) return;
+  let total = 1;
+  let count = 0;
+  container.querySelectorAll('.sel-cuota').forEach(inp => {
+    const v = parseFloat(inp.value);
+    if (v && v > 1) { total *= v; count++; }
+  });
+  const display = document.getElementById(`${pid}-cuota-display`);
+  if (display) display.textContent = count > 0 ? total.toFixed(2) : '—';
+  // Guardar en hidden para publishPick
+  const hiddenCuota = document.getElementById(`${pid}-cuota`);
+  if (hiddenCuota) hiddenCuota.value = count > 0 ? total.toFixed(2) : '';
+  updateCuotaTotal();
+  updatePreview();
 }
 
 // Mostrar botón "+ Añadir otra selección" si hay al menos una selección elegida
@@ -3963,19 +3984,23 @@ function buildBoxPick(num) {
       <label class="flbl">🎯 Selecciones</label>
       <!-- Contenedor de filas de selección -->
       <div id="${id}-sels-container" style="display:flex;flex-direction:column;gap:8px"></div>
-      <!-- Botón añadir selección (aparece tras elegir la primera) -->
+      <!-- Botón añadir selección -->
       <button type="button" id="${id}-btn-add-sel" onclick="addSeleccion('${id}')" style="display:none;margin-top:8px;width:100%;padding:8px;background:transparent;border:1px dashed rgba(16,185,129,.3);border-radius:6px;color:#10b981;font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(16,185,129,.6)';this.style.background='rgba(16,185,129,.05)'" onmouseleave="this.style.borderColor='rgba(16,185,129,.3)';this.style.background='transparent'">
         + Añadir otra selección
       </button>
       <input id="${id}-sel" type="hidden" value=""/>
+      <input id="${id}-cuota" type="hidden" value=""/>
     </div>
 
-    <!-- PASO 8+9: Cuota y Stake (oculto hasta escribir selección) -->
+    <!-- PASO 8+9: Cuota resultante (readonly) y Stake -->
     <div id="${id}-step-cuotastake" style="display:none;animation:fadeUp .25s ease forwards">
       <div style="display:grid;grid-template-columns:${isSimple ? '1fr 1fr' : '1fr'};gap:12px">
         <div>
-          <label class="flbl">📊 Cuota</label>
-          <input id="${id}-cuota" type="number" class="finp" placeholder="ej. 1.85" step="0.01" min="1" style="font-size:16px;font-weight:600" oninput="updateCuotaTotal();updatePreview()"/>
+          <label class="flbl">📊 Cuota resultante</label>
+          <div style="display:flex;align-items:center;gap:8px;background:#080c0a;border:1px solid rgba(16,185,129,.4);border-radius:6px;padding:10px 14px">
+            <span id="${id}-cuota-display" style="font-size:18px;font-weight:700;color:#10b981;font-family:'IBM Plex Mono',monospace">—</span>
+            <span style="font-size:10px;color:#3a5a3a;font-family:'IBM Plex Mono',monospace">multiplicación de selecciones</span>
+          </div>
         </div>
         ${stakeField}
       </div>
