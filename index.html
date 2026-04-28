@@ -3226,7 +3226,23 @@ function renderTipsterPicks() {
             </div>
             <div class="pick-h-match">
               <span class="icon">⚽</span>
-              <span class="teams">${p.evento || p.partido || (p.equipo_local + ' vs ' + p.equipo_visitante) || '—'}</span>
+              ${(() => {
+                const escLocal  = document.getElementById(`${pid}-home-sel`)?.querySelector('.eq-icon img')?.src || '';
+                const escVisit  = document.getElementById(`${pid}-away-sel`)?.querySelector('.eq-icon img')?.src || '';
+                const local = p.equipo_local || '';
+                const visit = p.equipo_visitante || '';
+                const txt = p.evento || p.partido || (local && visit ? `${local} vs ${visit}` : '—');
+                if (escLocal || escVisit) {
+                  return `<span class="teams" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center">
+                    ${escLocal ? `<img src="${escLocal}" style="width:16px;height:16px;object-fit:contain" onerror="this.remove()">` : ''}
+                    <span>${local}</span>
+                    <span style="opacity:.5">vs</span>
+                    <span>${visit}</span>
+                    ${escVisit ? `<img src="${escVisit}" style="width:16px;height:16px;object-fit:contain" onerror="this.remove()">` : ''}
+                  </span>`;
+                }
+                return `<span class="teams">${txt}</span>`;
+              })()}
             </div>
             <div class="pick-h-date">${p.fecha || '—'}</div>
             <div class="pick-h-sel">
@@ -3418,20 +3434,85 @@ async function onManualLigaChange(pid) {
   try {
     const sb = getSbClient();
     const { data, error } = await sb.from('equipos')
-      .select('id, nombre')
+      .select('id, nombre, escudo_url')
       .eq('liga_id', ligaId)
       .order('nombre');
     if (error) throw error;
-    const opts = '<option value="">— Selecciona —</option>' +
-      data.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join('');
-    const homeSel = document.getElementById(`${pid}-home-sel`);
-    const awaySel = document.getElementById(`${pid}-away-sel`);
-    if (homeSel) homeSel.innerHTML = opts;
-    if (awaySel) awaySel.innerHTML = opts;
+    buildEquipoDropdown(`${pid}-home-sel`, data, pid, 'home');
+    buildEquipoDropdown(`${pid}-away-sel`, data, pid, 'away');
   } catch(e) {
     selectError(`${pid}-home-sel`, 'Error');
     selectError(`${pid}-away-sel`, 'Error');
     console.error('onManualLigaChange:', e);
+  }
+  updatePreview();
+}
+
+// ── DROPDOWN CUSTOM DE EQUIPOS CON ESCUDO ────────────────────────────────────
+
+// Construye el dropdown custom con escudos
+function buildEquipoDropdown(containerId, equipos, pid, rol) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const menu = container.querySelector('.eq-menu');
+  if (!menu) return;
+  menu.innerHTML = equipos.map(e => `
+    <div class="eq-item" data-nombre="${e.nombre}" data-escudo="${e.escudo_url || ''}"
+         onclick="selectEquipo('${containerId}','${e.nombre}','${e.escudo_url || ''}','${pid}','${rol}')"
+         style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;transition:background .15s"
+         onmouseenter="this.style.background='rgba(16,185,129,.08)'"
+         onmouseleave="this.style.background='transparent'">
+      ${e.escudo_url
+        ? `<img src="${e.escudo_url}" style="width:20px;height:20px;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'">`
+        : `<span style="width:20px;height:20px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:14px">⚽</span>`}
+      <span style="font-size:13px;color:#e2e8f0">${e.nombre}</span>
+    </div>`).join('');
+}
+
+// Abre/cierra el menú
+function toggleEquipoDD(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const menu = container.querySelector('.eq-menu');
+  if (!menu) return;
+  const isOpen = menu.style.display !== 'none';
+  // Cerrar todos los demás abiertos
+  document.querySelectorAll('.eq-menu').forEach(m => m.style.display = 'none');
+  if (!isOpen) menu.style.display = 'block';
+}
+
+// Cierra dropdowns al hacer clic fuera
+document.addEventListener('click', e => {
+  if (!e.target.closest('.equipo-dropdown')) {
+    document.querySelectorAll('.eq-menu').forEach(m => m.style.display = 'none');
+  }
+});
+
+// Selecciona un equipo del dropdown
+function selectEquipo(containerId, nombre, escudoUrl, pid, rol) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const menu = container.querySelector('.eq-menu');
+  const icon = container.querySelector('.eq-icon');
+  const label = container.querySelector('.eq-label');
+  if (menu) menu.style.display = 'none';
+  if (label) { label.textContent = nombre; label.style.color = '#e2e8f0'; }
+  if (icon) {
+    if (escudoUrl) {
+      icon.innerHTML = `<img src="${escudoUrl}" style="width:20px;height:20px;object-fit:contain" onerror="this.style.display='none'">`;
+    } else {
+      icon.innerHTML = '<span style="font-size:14px">⚽</span>';
+    }
+  }
+  // Simular el comportamiento original
+  if (rol === 'home') {
+    const homeHidden = document.getElementById(`${pid}-home`);
+    if (homeHidden) homeHidden.value = nombre;
+    checkMostrarFecha(pid);
+  } else {
+    const awayHidden = document.getElementById(`${pid}-away`);
+    if (awayHidden) awayHidden.value = nombre;
+    checkMostrarFecha(pid);
   }
   updatePreview();
 }
@@ -3992,15 +4073,25 @@ function buildBoxPick(num) {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
           <label class="flbl">🏠 Local</label>
-          <select id="${id}-home-sel" class="fsel" onchange="onManualLocalChange('${id}')">
-            <option value="">— Local —</option>
-          </select>
+          <div id="${id}-home-sel" class="equipo-dropdown" data-pid="${id}" data-rol="home" style="position:relative">
+            <div class="eq-trigger fsel" onclick="toggleEquipoDD('${id}-home-sel')" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+              <span class="eq-icon" style="width:20px;height:20px;flex-shrink:0"></span>
+              <span class="eq-label" style="flex:1;color:#52525b">— Local —</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="eq-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:999"></div>
+          </div>
         </div>
         <div>
           <label class="flbl">✈️ Visitante</label>
-          <select id="${id}-away-sel" class="fsel" onchange="onManualVisitanteChange('${id}')">
-            <option value="">— Visitante —</option>
-          </select>
+          <div id="${id}-away-sel" class="equipo-dropdown" data-pid="${id}" data-rol="away" style="position:relative">
+            <div class="eq-trigger fsel" onclick="toggleEquipoDD('${id}-away-sel')" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+              <span class="eq-icon" style="width:20px;height:20px;flex-shrink:0"></span>
+              <span class="eq-label" style="flex:1;color:#52525b">— Visitante —</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="eq-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:999"></div>
+          </div>
         </div>
       </div>
       <!-- inputs hidden para compatibilidad con publishPick y updatePreview -->
