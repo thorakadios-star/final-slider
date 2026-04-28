@@ -3494,8 +3494,9 @@ const SA_KEY  = '3b7d1aeeaamshce1e406a028e4adp1f3231jsn1132706d9b0b';
 const SA_HOST = 'sportapi7.p.rapidapi.com';
 const SA_BASE = 'https://sportapi7.p.rapidapi.com/api/v1';
 
-// URL del proxy Render
-const SA_PROXY = 'https://truestats-proxy.onrender.com';
+// URL del proxy Railway — actualiza esto tras el deploy
+// Ejemplo: 'https://truestats-proxy.up.railway.app'
+const SA_PROXY = 'https://truestats-proxy-production.up.railway.app';
 
 let categoriesCache = null;   // lista de países/categorías
 let eventsCache     = {};     // por fecha
@@ -6082,13 +6083,9 @@ function buildTelegramText(pick) {
   const lineasPartidos = partidos.map(p =>
     `⚽ <b>${p.equipo_local} vs ${p.equipo_visitante}</b>
 📋 ${p.liga || ''} · 🎯 ${p.seleccion || ''} · 📊 @${p.cuota}`
-  ).join('
+  ).join('\n\n');
 
-');
-
-  return `🎯 <b>${isCombo ? 'COMBINADA' : 'PICK SIMPLE'}</b> · ${estado}
-
-${lineasPartidos}
+  return `🎯 <b>${isCombo ? 'COMBINADA' : 'PICK SIMPLE'}</b> · ${estado}\n\n${lineasPartidos}
 
 📊 Cuota total: <b>${cuota}</b> · Stake: <b>${stake}u</b>
 🆔 ${pickId}`;
@@ -7133,7 +7130,7 @@ async function generateImage(cardId = 'tipster-card-1') {
  * @param {string} proxyUrl - URL del proxy (Railway)
  * @returns {Promise<boolean>} - true si se envió correctamente
  */
-async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy.onrender.com') {
+async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy-production.up.railway.app') {
   const base64 = await generateImage(cardId);
   
   if (!base64) {
