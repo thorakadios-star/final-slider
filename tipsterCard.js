@@ -207,10 +207,10 @@ async function generateImage(cardId = 'tipster-card-1') {
 /**
  * Genera imagen y la envía a Telegram
  * @param {string} cardId - ID de la card
- * @param {string} proxyUrl - URL del proxy (Railway)
+ * @param {string} proxyUrl - URL del proxy (Render)
  * @returns {Promise<boolean>} - true si se envió correctamente
  */
-async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy-production.up.railway.app') {
+async function generateAndSendToTelegram(cardId, proxyUrl = 'https://truestats-proxy.onrender.com') {
   const base64 = await generateImage(cardId);
   
   if (!base64) {
