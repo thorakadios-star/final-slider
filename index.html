@@ -3070,21 +3070,29 @@ function renderTipsterPicks() {
               <span class="teams">${p.evento || p.partido || ((p.equipo_local && p.equipo_visitante) ? p.equipo_local + ' vs ' + p.equipo_visitante : '—')}</span>
             </div>
             <div class="pick-h-date">${p.fecha || '—'}</div>
-            <div class="pick-h-sel">
-              <span class="pick-h-sel-label">Selección:</span>
-              ${(() => {
-                const rawSel = p.seleccion || p.mercado || '—';
-                const parts = rawSel.split(' | ').filter(s => s.trim());
-                if (parts.length <= 1) return `<span class="pick-h-sel-value">${rawSel}</span>`;
-                return parts.map((s,i) => `<span class="pick-h-sel-value" style="display:block;${i>0?'margin-top:3px;padding-top:3px;border-top:1px solid rgba(45,212,191,.1)':''}">${s.trim()}</span>`).join('');
-              })()}
-            </div>
+            ${(() => {
+              const rawSel = p.seleccion || p.mercado || '—';
+              const cuotaTotal = p.cuota || '—';
+              const parts = rawSel.split(' | ').map(s => s.trim()).filter(Boolean);
+              // Intentar partir la cuota total en cuotas individuales si hay varias selecciones
+              // Formato guardado: "Sel1 @1.85 | Sel2 @2.10" o simplemente "Sel1 | Sel2" con cuota total
+              const selRows = parts.map((sel, i) => {
+                // Detectar si la selección incluye cuota embebida tipo "Sel @1.85"
+                const cuotaMatch = sel.match(/@([\d.]+)$/);
+                const selText = cuotaMatch ? sel.replace(/@[\d.]+$/, '').trim() : sel;
+                const selCuota = cuotaMatch ? cuotaMatch[1] : (parts.length === 1 ? cuotaTotal : '');
+                return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.2);border-radius:6px;padding:6px 10px;${i>0?'margin-top:4px':''}">
+                  <span style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:#e2e8f0;flex:1">${selText}</span>
+                  ${selCuota ? `<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:#2dd4bf;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);border-radius:4px;padding:2px 7px;flex-shrink:0">@${selCuota}</span>` : ''}
+                </div>`;
+              });
+              return selRows.join('');
+            })()}
           </div>
           <div class="pick-h-right">
             <div class="pick-h-cuota">@${p.cuota || '—'}</div>
             <div class="pick-h-stats">
               <div class="pick-h-stat"><span class="lbl">Stake</span><span class="val orange">${stakeDisplay}</span></div>
-              <div class="pick-h-stat"><span class="lbl">Cuota</span><span class="val white">${p.cuota || '—'}</span></div>
               <div class="pick-h-stat"><span class="lbl">Ganancia</span><span class="val ${isWin ? 'green' : isLoss ? 'red' : 'white'}">${ganancia}</span></div>
             </div>
           </div>
