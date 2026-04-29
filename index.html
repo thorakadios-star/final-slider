@@ -1978,7 +1978,7 @@ if (typeof html2canvas === 'undefined') {
         <div class="card-content">
           <div class="tipster-identity">
             <div class="tipster-avatar verified">
-              <img src="ttp.jpg" alt="SpiderTipster">
+              <img src="spidertipster.JPG" alt="SpiderTipster">
             </div>
             <div class="tipster-info">
               <div class="tipster-name">SpiderTipster</div>
@@ -2005,8 +2005,8 @@ if (typeof html2canvas === 'undefined') {
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-action primary" onclick="openTipsterProfile({id:'tipstop',name:'SpiderTipster',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><i class="fa-solid fa-eye"></i>Ver Picks</button>
-            <button class="btn-action" onclick="openTipsterProfile({id:'tipstop',name:'SpiderTipster',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'ttp.jpg',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><i class="fa-solid fa-chart-bar"></i>Estadísticas</button>
+            <button class="btn-action primary" onclick="openTipsterProfile({id:'tipstop',name:'SpiderTipster',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'spidertipster.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'})"><i class="fa-solid fa-eye"></i>Ver Picks</button>
+            <button class="btn-action" onclick="openTipsterProfile({id:'tipstop',name:'SpiderTipster',subtitle:'FOOTBALL PREMIUM TIPSTER',avatar:'spidertipster.JPG',score:'0',yield:'0%',benefit:'0',bets:'0',winrate:'0%',stake:'0',sport:'futbol'});setTimeout(()=>showTipsterTab('stats'),100)"><i class="fa-solid fa-chart-bar"></i>Estadísticas</button>
             <button class="btn-action"><i class="fa-regular fa-bookmark"></i>Seguir</button>
           </div>
           <div class="admin-only" style="justify-content:center;margin-top:10px">
@@ -3051,6 +3051,10 @@ function renderTipsterPicks() {
     // Formatear stake
     const stakeDisplay = p.stake ? (p.stake.toString().includes('/') ? p.stake : p.stake + '/10') : '—';
     
+    // Emoji deporte
+    const _depKey = (p.deporte || 'futbol').toLowerCase();
+    const deporteEmoji = {futbol:'⚽',basket:'🏀',tenis:'🎾',otros:'🎯'}[_depKey] || '⚽';
+    
     return `
       <div class="pick-card ${borderClass}">
         <div class="pick-h-layout">
@@ -3062,24 +3066,8 @@ function renderTipsterPicks() {
               <span class="pick-h-badge auditado">🛡️ AUDITADO</span>
             </div>
             <div class="pick-h-match">
-              <span class="icon">⚽</span>
-              ${(() => {
-                const escLocal  = p.escudo_local  || '';
-                const escVisit  = p.escudo_visitante || '';
-                const local = p.equipo_local || '';
-                const visit = p.equipo_visitante || '';
-                const txt = p.evento || p.partido || (local && visit ? `${local} vs ${visit}` : '—');
-                if (escLocal || escVisit) {
-                  return `<span class="teams" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center">
-                    ${escLocal ? `<img src="${escLocal}" style="width:16px;height:16px;object-fit:contain" onerror="this.remove()">` : ''}
-                    <span>${local}</span>
-                    <span style="opacity:.5">vs</span>
-                    <span>${visit}</span>
-                    ${escVisit ? `<img src="${escVisit}" style="width:16px;height:16px;object-fit:contain" onerror="this.remove()">` : ''}
-                  </span>`;
-                }
-                return `<span class="teams">${txt}</span>`;
-              })()}
+              <span class="icon">${deporteEmoji}</span>
+              <span class="teams">${p.evento || p.partido || ((p.equipo_local && p.equipo_visitante) ? p.equipo_local + ' vs ' + p.equipo_visitante : '—')}</span>
             </div>
             <div class="pick-h-date">${p.fecha || '—'}</div>
             <div class="pick-h-sel">
