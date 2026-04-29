@@ -6242,41 +6242,36 @@ async function sendToTelegram(pick) {
         
         <div style="${hasResult ? 'opacity:.55' : ''}">
         
-        <!-- Header -->
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(45,212,191,.2)">
-          <div style="width:44px;height:44px;border-radius:10px;border:2px solid rgba(45,212,191,.6);overflow:hidden;background:linear-gradient(135deg,#1a3f1c,#0d1a0f)">
-            <img src="${tipster.avatar}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:16px;font-weight:900;color:#2dd4bf;display:flex;align-items:center;justify-content:center;height:100%\\'>${tipster.initials}</span>'"/>
+        <!-- Header: avatar más grande + nombre + TRUESTATS AI VERIFIED -->
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(45,212,191,.2)">
+          <div style="width:58px;height:58px;border-radius:12px;border:2px solid rgba(45,212,191,.6);overflow:hidden;background:linear-gradient(135deg,#1a3f1c,#0d1a0f);flex-shrink:0">
+            <img src="${tipster.avatar}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:22px;font-weight:900;color:#2dd4bf;display:flex;align-items:center;justify-content:center;height:100%\'>${tipster.initials}</span>'"/>
           </div>
-          <div style="flex:1">
-            <div style="font-weight:700;font-size:15px;color:#e2e8f0">${tipster.name}</div>
-            <div style="font-size:10px;color:#5eead4;font-family:monospace;letter-spacing:.08em">TRUESTATS AI VERIFIED</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:800;font-size:18px;color:#e2e8f0;letter-spacing:-.01em;line-height:1.2">${tipster.name}</div>
+            <div style="font-size:11px;color:#2dd4bf;font-family:monospace;letter-spacing:.1em;margin-top:3px">TRUESTATS AI VERIFIED</div>
           </div>
-          <div style="display:flex;gap:6px">
-            <span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:${isCombo ? 'rgba(251,191,36,.2)' : 'rgba(45,212,191,.15)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.4)' : 'rgba(45,212,191,.35)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+            <span style="font-family:monospace;font-size:10px;padding:5px 11px;border-radius:6px;background:${isCombo ? 'rgba(251,191,36,.2)' : 'rgba(45,212,191,.15)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.4)' : 'rgba(45,212,191,.35)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
             ${estadoBadge}
           </div>
         </div>
-        
-        <!-- Título -->
-        <div style="text-align:center;margin-bottom:14px">
-          <span style="font-size:13px;font-weight:700;color:#2dd4bf;letter-spacing:.15em">PRONÓSTICO</span>
-          ${isCombo ? `<span style="margin-left:10px;font-family:monospace;font-size:11px;color:#fbbf24;background:rgba(251,191,36,.15);padding:4px 12px;border-radius:5px;border:1px solid rgba(251,191,36,.3)">${partidos.length} PICKS</span>` : ''}
+
+        <!-- Fila: deporte + iconos auditoría + hora publicación -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:7px 12px;background:rgba(45,212,191,.05);border:1px solid rgba(45,212,191,.15);border-radius:8px">
+          <span style="font-size:18px">${deporteIcons[(pick.deporte||'futbol').toLowerCase()]||'⚽'}</span>
+          <div style="display:flex;align-items:center;gap:9px;font-size:14px;color:#5eead4">
+            <span title="Verificado">✓</span>
+            <span title="Timestamp">⏱</span>
+            <span title="Inmutable">🔐</span>
+            <span title="Auditado">◈</span>
+          </div>
+          <span style="font-family:monospace;font-size:10px;color:#5eead4">${pubDateTime}</span>
         </div>
         
         ${partidosHtml}
         
-        <!-- Timestamp -->
-        <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-          <span style="background:rgba(45,212,191,.15);border:1px solid rgba(45,212,191,.3);border-radius:5px;padding:4px 10px;color:#5eead4;font-size:10px;font-family:monospace">📤 ${pubDateTime}</span>
-        </div>
-        
-        <!-- Badges -->
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
-          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">✓</span> Verificado</span>
-          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">⏱</span> Timestamp</span>
-          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🔐</span> Inmutable</span>
-          <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">◈</span> Auditado</span>
-        </div>
+
         
         <!-- Footer -->
         <div style="padding-top:12px;border-top:1px solid rgba(45,212,191,.15)">
