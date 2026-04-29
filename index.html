@@ -3490,6 +3490,17 @@ function buildEquipoDropdown(containerId, equipos, pid, rol) {
     </div>`).join('');
 }
 
+// Posicionar menú fixed bajo el trigger
+function posicionarEqMenu(container) {
+  const trigger = container.querySelector('.eq-trigger');
+  const menu    = container.querySelector('.eq-menu');
+  if (!trigger || !menu) return;
+  const r = trigger.getBoundingClientRect();
+  menu.style.top   = (r.bottom + 2) + 'px';
+  menu.style.left  = r.left + 'px';
+  menu.style.width = r.width + 'px';
+}
+
 // Abre/cierra el menú
 function toggleEquipoDD(containerId) {
   const container = document.getElementById(containerId);
@@ -3498,8 +3509,20 @@ function toggleEquipoDD(containerId) {
   if (!menu) return;
   const isOpen = menu.style.display !== 'none';
   document.querySelectorAll('.eq-menu').forEach(m => m.style.display = 'none');
-  if (!isOpen) menu.style.display = 'block';
+  if (!isOpen) {
+    posicionarEqMenu(container);
+    menu.style.display = 'block';
+  }
 }
+
+// Reposicionar al hacer scroll en cualquier contenedor
+document.addEventListener('scroll', () => {
+  document.querySelectorAll('.eq-menu').forEach(menu => {
+    if (menu.style.display === 'none') return;
+    const container = menu.closest('.equipo-dropdown');
+    if (container) posicionarEqMenu(container);
+  });
+}, true);
 
 // Cierra dropdowns al hacer clic fuera
 document.addEventListener('click', e => {
@@ -4099,7 +4122,7 @@ function buildBoxPick(num) {
               <span class="eq-label" style="flex:1;color:#52525b">— Local —</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="eq-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6)"></div>
+            <div class="eq-menu" style="display:none;position:fixed;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.8)"></div>
           </div>
         </div>
         <div>
@@ -4110,7 +4133,7 @@ function buildBoxPick(num) {
               <span class="eq-label" style="flex:1;color:#52525b">— Visitante —</span>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="eq-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6)"></div>
+            <div class="eq-menu" style="display:none;position:fixed;background:#0a0e0b;border:1px solid rgba(16,185,129,.3);border-radius:8px;max-height:220px;overflow-y:auto;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.8)"></div>
           </div>
         </div>
       </div>
