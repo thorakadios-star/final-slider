@@ -3055,55 +3055,133 @@ function renderTipsterPicks() {
     const _depKey = (p.deporte || 'futbol').toLowerCase();
     const deporteEmoji = {futbol:'⚽',basket:'🏀',tenis:'🎾',otros:'🎯'}[_depKey] || '⚽';
     
+    const isComboCard = (p.tipo || '').toUpperCase() === 'COMBINADA';
+    const pCardColors = [
+      { bg:'#0f2318', border:'rgba(45,212,191,.3)', headerBg:'rgba(45,212,191,.12)', headerBorder:'rgba(45,212,191,.2)', accent:'#2dd4bf', accentLight:'rgba(45,212,191,.12)', accentBorder:'rgba(45,212,191,.3)', dot:'#2dd4bf', labelColor:'#5eead4', dimLabel:'rgba(45,212,191,.08)', dimBorder:'rgba(45,212,191,.2)' },
+      { bg:'#0d1a22', border:'rgba(99,179,237,.25)', headerBg:'rgba(99,179,237,.1)', headerBorder:'rgba(99,179,237,.18)', accent:'#90cdf4', accentLight:'rgba(99,179,237,.1)', accentBorder:'rgba(99,179,237,.25)', dot:'#90cdf4', labelColor:'#90cdf4', dimLabel:'rgba(99,179,237,.08)', dimBorder:'rgba(99,179,237,.2)' },
+    ];
+
+    // Parsear partidos combinada
+    let cardPartidos = [];
+    if (isComboCard && p.partidos) {
+      try { cardPartidos = JSON.parse(p.partidos); } catch(e) { cardPartidos = []; }
+    }
+    if (!isComboCard || cardPartidos.length === 0) {
+      cardPartidos = [{ deporte: p.deporte, equipo_local: p.equipo_local, equipo_visitante: p.equipo_visitante, liga: p.liga, pais: p.pais, fecha: p.fecha, hora: p.hora, seleccion: p.seleccion || p.mercado, cuota: p.cuota, momento: p.momento }];
+    }
+
+    const partidosCardHtml = cardPartidos.map((pt, idx) => {
+      const c = pCardColors[idx % pCardColors.length];
+      const momentoLabel = (pt.momento || p.momento || 'pre') === 'live'
+        ? `<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);font-family:monospace">&#9679; LIVE</span>`
+        : `<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${c.dimLabel};color:${c.labelColor};border:1px solid ${c.dimBorder};font-family:monospace">&#9679; PRE-PARTIDO</span>`;
+      const ligaStr = [pt.pais||p.pais, pt.liga||p.liga].filter(Boolean).join(' · ') || '—';
+      const fechaStr = (pt.fecha||p.fecha) ? new Date((pt.fecha||p.fecha)+'T00:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '';
+      const horaStr = pt.hora || p.hora || '';
+      const fechaDisplay = [fechaStr, horaStr].filter(Boolean).join(' · ');
+
+      const rawSel = pt.seleccion || p.seleccion || p.mercado || '—';
+      const selParts = rawSel.split(' | ').map(s => s.trim()).filter(Boolean);
+      const selRows = selParts.map(sel => {
+        const m = sel.match(/@([\d.]+)$/);
+        const selText = m ? sel.replace(/@[\d.]+$/,'').trim() : sel;
+        const selCuota = m ? m[1] : (selParts.length === 1 ? parseFloat(pt.cuota||p.cuota||0).toFixed(2) : '');
+        return `<div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+          <div style="display:flex;align-items:center;gap:6px;flex:1">
+            <div style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0"></div>
+            <span style="font-size:11px;color:#e2e8f0">${selText}</span>
+          </div>
+          ${selCuota ? `<span style="font-family:monospace;font-size:10px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;min-width:40px;text-align:center">${selCuota}</span>` : ''}
+        </div>`;
+      }).join('');
+
+      const cuotaPartido = selParts.length > 1
+        ? `<div style="border-top:1px dashed ${c.accentBorder};margin:3px 0"></div>
+           <div style="display:flex;align-items:center;justify-content:space-between">
+             <span style="font-family:monospace;font-size:9px;font-weight:600;color:${c.accent}">CUOTA PARTIDO</span>
+             <span style="font-family:monospace;font-size:12px;font-weight:700;color:${c.accent};min-width:40px;text-align:center">${parseFloat(pt.cuota||p.cuota||0).toFixed(2)}</span>
+           </div>` : '';
+
+      return `<div style="background:${c.bg};border:1px solid ${c.border};border-radius:10px;overflow:hidden;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:${c.headerBg};border-bottom:1px solid ${c.headerBorder}">
+          <div style="display:flex;align-items:center;gap:6px">
+            ${isComboCard ? `<span style="font-family:monospace;font-size:9px;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 8px;border-radius:4px;font-weight:700">PRONÓSTICO ${idx+1}</span>` : `<span style="font-size:12px">${deporteEmoji}</span>`}
+            ${momentoLabel}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+            <span style="font-family:monospace;font-size:9px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 7px;border-radius:4px">${ligaStr}</span>
+            ${fechaDisplay ? `<span style="font-family:monospace;font-size:9px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 7px;border-radius:4px">${fechaDisplay}</span>` : ''}
+          </div>
+        </div>
+        <div style="padding:8px 10px">
+          <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:6px">${pt.equipo_local||p.equipo_local||'—'} <span style="color:${c.accent};font-weight:400">vs</span> ${pt.equipo_visitante||p.equipo_visitante||'—'}</div>
+          <div style="display:flex;flex-direction:column;gap:4px">${selRows}${cuotaPartido}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Sello resultado — sección independiente debajo del boleto
+    const selloCardHtml = (isWin || isLoss) ? `
+      <div style="margin-top:6px;border-radius:10px;border:1.5px solid ${isWin ? 'rgba(34,197,94,.4)' : 'rgba(239,68,68,.4)'};background:${isWin ? 'rgba(5,46,22,.95)' : 'rgba(69,10,10,.95)'};padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:30px;height:30px;border-radius:50%;background:${isWin ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'};border:1.5px solid ${isWin ? 'rgba(34,197,94,.5)' : 'rgba(239,68,68,.5)'};display:flex;align-items:center;justify-content:center;font-size:12px">${isWin ? '✓' : '✗'}</div>
+          <div>
+            <div style="font-family:monospace;font-size:10px;font-weight:700;color:${isWin ? '#4ade80' : '#f87171'}">${isWin ? 'GANADA' : 'PERDIDA'}</div>
+            <div style="font-family:monospace;font-size:8px;color:${isWin ? '#166534' : '#7f1d1d'};margin-top:1px">Verificado · ${timestamp}</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:monospace;font-size:8px;color:${isWin ? '#166534' : '#7f1d1d'};margin-bottom:1px">${isWin ? 'BENEFICIO' : 'PÉRDIDA'}</div>
+          <div style="font-size:16px;font-weight:800;color:${isWin ? '#4ade80' : '#f87171'}">${ganancia}</div>
+        </div>
+      </div>` : '';
+
     return `
-      <div class="pick-card ${borderClass}">
-        <div class="pick-h-layout">
-          <div class="pick-h-left">
-            <div class="pick-h-badges">
-              <span class="pick-h-badge simple">${p.tipo || 'SIMPLE'}</span>
+      <div style="margin-bottom:16px">
+        <div style="background:#0a1612;border:1.5px solid #2dd4bf;border-radius:14px;overflow:hidden">
+
+          <!-- CABECERA -->
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(13,32,26,.9);border-bottom:1px solid rgba(45,212,191,.2)">
+            <div style="flex:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span class="pick-h-badge ${isComboCard ? 'combo' : 'simple'}">${p.tipo || 'SIMPLE'}</span>
               ${momentoBadge}
               ${accesoBadge}
-              <span class="pick-h-badge auditado">🛡️ AUDITADO</span>
             </div>
-            <div class="pick-h-match">
-              <span class="icon">${deporteEmoji}</span>
-              <span class="teams">${p.evento || p.partido || ((p.equipo_local && p.equipo_visitante) ? p.equipo_local + ' vs ' + p.equipo_visitante : '—')}</span>
-            </div>
-            <div class="pick-h-date">${p.fecha || '—'}</div>
-            ${(() => {
-              const rawSel = p.seleccion || p.mercado || '—';
-              const cuotaTotal = p.cuota || '—';
-              const parts = rawSel.split(' | ').map(s => s.trim()).filter(Boolean);
-              // Intentar partir la cuota total en cuotas individuales si hay varias selecciones
-              // Formato guardado: "Sel1 @1.85 | Sel2 @2.10" o simplemente "Sel1 | Sel2" con cuota total
-              const selRows = parts.map((sel, i) => {
-                // Detectar si la selección incluye cuota embebida tipo "Sel @1.85"
-                const cuotaMatch = sel.match(/@([\d.]+)$/);
-                const selText = cuotaMatch ? sel.replace(/@[\d.]+$/, '').trim() : sel;
-                const selCuota = cuotaMatch ? cuotaMatch[1] : (parts.length === 1 ? cuotaTotal : '');
-                return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.2);border-radius:6px;padding:6px 10px;${i>0?'margin-top:4px':''}">
-                  <span style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:#e2e8f0;flex:1">${selText}</span>
-                  ${selCuota ? `<span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:#2dd4bf;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);border-radius:4px;padding:2px 7px;flex-shrink:0">@${selCuota}</span>` : ''}
-                </div>`;
-              });
-              return selRows.join('');
-            })()}
-          </div>
-          <div class="pick-h-right">
-            <div class="pick-h-cuota">@${p.cuota || '—'}</div>
-            <div class="pick-h-stats">
-              <div class="pick-h-stat"><span class="lbl">Stake</span><span class="val orange">${stakeDisplay}</span></div>
-              <div class="pick-h-stat"><span class="lbl">Ganancia</span><span class="val ${isWin ? 'green' : isLoss ? 'red' : 'white'}">${ganancia}</span></div>
+            <div style="display:flex;gap:5px;align-items:center">
+              ${resultBadge || `<span style="font-family:monospace;font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)">⏳</span>`}
             </div>
           </div>
+
+          <!-- PARTIDOS -->
+          <div style="padding:10px 12px 4px">
+            ${partidosCardHtml}
+          </div>
+
+          <!-- FOOTER -->
+          <div style="margin:0 12px 10px;background:#0d1f1a;border:1px solid rgba(45,212,191,.15);border-radius:8px;padding:8px 10px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0">
+              <div style="text-align:center;padding:4px">
+                <div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px">${isComboCard ? 'CUOTA TOTAL' : 'CUOTA'}</div>
+                <div style="font-size:16px;font-weight:800;color:#e2e8f0">${p.cuota||'—'}</div>
+              </div>
+              <div style="text-align:center;padding:4px;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)">
+                <div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px">STAKE</div>
+                <div style="font-size:16px;font-weight:800;color:#e2e8f0">${stakeDisplay}</div>
+              </div>
+              <div style="text-align:center;padding:4px">
+                <div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px">GANANCIA</div>
+                <div style="font-size:16px;font-weight:800;color:#2dd4bf">${ganancia}</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px;border-top:1px solid rgba(45,212,191,.1);margin-top:4px">
+              <span style="font-family:monospace;font-size:8px;color:#2dd4bf">${timestamp}</span>
+              <span style="font-size:9px;color:#2dd4bf">✓ Verificado</span>
+              <span style="font-family:monospace;font-size:8px;color:#2dd4bf">${p.id ? '# ' + p.id.toString().slice(-6).toUpperCase() : ''}</span>
+            </div>
+          </div>
+
         </div>
-        <div class="pick-h-footer">
-          <div class="pick-h-timestamp">
-            <i class="fa-regular fa-clock"></i>
-            ${timestamp}
-          </div>
-          ${resultBadge}
-        </div>
+        ${selloCardHtml}
       </div>
     `;
   }).join('');
@@ -6141,140 +6219,166 @@ async function sendToTelegram(pick) {
     
     // Badge de estado
     const estadoBadge = estado === 'ganado' 
-      ? `<span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(20,184,166,.2);color:#14b8a6;border:1px solid rgba(20,184,166,.4)">✓ GANADA</span>`
+      ? `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)">✓ GANADA</span>`
       : estado === 'perdido'
-      ? `<span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(239,68,68,.2);color:#ef4444;border:1px solid rgba(239,68,68,.4)">✗ PERDIDA</span>`
-      : `<span style="font-family:monospace;font-size:10px;padding:6px 12px;border-radius:6px;background:rgba(251,191,36,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.4)">⏳ PENDIENTE</span>`;
-    
-    // Sello para ganada/perdida
-    const selloHtml = hasResult ? `
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);z-index:10;pointer-events:none">
-        <div style="border:4px solid ${isWin ? 'rgba(20,184,166,.8)' : 'rgba(239,68,68,.8)'};border-radius:12px;padding:12px 28px;background:rgba(10,22,18,.95)">
-          <div style="font-family:'Inter',sans-serif;font-size:28px;font-weight:900;color:${isWin ? '#14b8a6' : '#ef4444'};letter-spacing:.15em;text-shadow:0 0 30px ${isWin ? 'rgba(20,184,166,.8)' : 'rgba(239,68,68,.8)'}">${isWin ? 'GANADA' : 'PERDIDA'}</div>
-          <div style="text-align:center;font-family:monospace;font-size:11px;color:${isWin ? '#14b8a6' : '#ef4444'};margin-top:4px">${isWin ? '+' : ''}${ganancias}u</div>
-        </div>
-      </div>` : '';
+      ? `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)">✗ PERDIDA</span>`
+      : estado === 'nulo' || estado === 'void'
+      ? `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(148,163,184,.1);color:#94a3b8;border:1px solid rgba(148,163,184,.25)">— NULA</span>`
+      : `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)">⏳ PENDIENTE</span>`;
     
     // Renderizar partidos
     let partidosHtml = '';
-    if (!isCombo) {
-      const pt = partidos[0];
-      const deporteKey = (pt.deporte || 'futbol').toLowerCase();
-      const deporteEmoji = deporteIcons[deporteKey] || '⚽';
-      const deporteLabel = deporteLabels[deporteKey] || 'FÚTBOL';
-      const fechaStr = pt.fecha ? new Date(pt.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : '';
+    
+    const partidoColors = [
+      { bg:'#0f2318', border:'rgba(45,212,191,.3)', headerBg:'rgba(45,212,191,.12)', headerBorder:'rgba(45,212,191,.2)', accent:'#2dd4bf', accentLight:'rgba(45,212,191,.12)', accentBorder:'rgba(45,212,191,.3)', dot:'#2dd4bf', labelColor:'#5eead4', dimLabel:'rgba(45,212,191,.08)', dimBorder:'rgba(45,212,191,.2)' },
+      { bg:'#0d1a22', border:'rgba(99,179,237,.25)', headerBg:'rgba(99,179,237,.1)', headerBorder:'rgba(99,179,237,.18)', accent:'#90cdf4', accentLight:'rgba(99,179,237,.1)', accentBorder:'rgba(99,179,237,.25)', dot:'#90cdf4', labelColor:'#90cdf4', dimLabel:'rgba(99,179,237,.08)', dimBorder:'rgba(99,179,237,.2)' },
+      { bg:'#1a1530', border:'rgba(167,139,250,.25)', headerBg:'rgba(167,139,250,.1)', headerBorder:'rgba(167,139,250,.18)', accent:'#c4b5fd', accentLight:'rgba(167,139,250,.1)', accentBorder:'rgba(167,139,250,.25)', dot:'#c4b5fd', labelColor:'#c4b5fd', dimLabel:'rgba(167,139,250,.08)', dimBorder:'rgba(167,139,250,.2)' },
+    ];
+
+    // Función helper para construir HTML de un partido
+    function buildPartidoHtml(pt, idx, label, isCombo) {
+      const c = partidoColors[idx % partidoColors.length];
+      const depKey = (pt.deporte || 'futbol').toLowerCase();
+      const depEmoji = deporteIcons[depKey] || '⚽';
+      const momentoLabel = (pt.momento || pick.momento || 'pre') === 'live'
+        ? `<span style="font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);font-family:monospace;white-space:nowrap">&#9679; LIVE</span>`
+        : `<span style="font-size:9px;padding:2px 8px;border-radius:4px;background:${c.dimLabel};color:${c.labelColor};border:1px solid ${c.dimBorder};font-family:monospace;white-space:nowrap">&#9679; PRE-PARTIDO</span>`;
+      const ligaStr = pt.liga || pick.liga || '';
+      const paisStr = pt.pais || pick.pais || '';
+      const ligaDisplay = [paisStr, ligaStr].filter(Boolean).join(' · ') || '—';
+      const fechaStr = pt.fecha ? new Date(pt.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '';
       const horaStr = pt.hora || pick.hora || '';
-      partidosHtml = `
-        <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:14px;margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-            <span style="font-size:16px">${deporteEmoji}</span>
-            <span style="font-family:monospace;font-size:11px;color:#5eead4">${deporteLabel}</span>
-            <span style="color:#5eead4;opacity:.5">·</span>
-            <span style="font-size:15px;font-weight:600;color:#e2e8f0">${pt.equipo_local || '—'}</span>
-            <span style="font-size:11px;color:#5eead4;padding:2px 8px;background:rgba(45,212,191,.15);border-radius:4px">vs</span>
-            <span style="font-size:15px;font-weight:600;color:#e2e8f0">${pt.equipo_visitante || '—'}</span>
+      const fechaDisplay = [fechaStr, horaStr].filter(Boolean).join(' · ');
+
+      // Selecciones (separadas por |)
+      const rawSel = pt.seleccion || pick.seleccion || '—';
+      const selParts = rawSel.split(' | ').map(s => s.trim()).filter(Boolean);
+      const selRows = selParts.map(sel => {
+        const cuotaMatch = sel.match(/@([\d.]+)$/);
+        const selText = cuotaMatch ? sel.replace(/@[\d.]+$/,'').trim() : sel;
+        const selCuota = cuotaMatch ? cuotaMatch[1] : (selParts.length === 1 ? parseFloat(pt.cuota||0).toFixed(2) : '');
+        return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="display:flex;align-items:center;gap:7px;flex:1">
+            <div style="width:7px;height:7px;border-radius:50%;background:${c.dot};flex-shrink:0"></div>
+            <span style="font-size:11px;color:#e2e8f0">${selText}</span>
           </div>
-          <div style="font-family:monospace;font-size:11px;color:#94a3b8">
-            📋 ${pt.liga || pick.liga || 'Liga'} · ⏱ ${fechaStr}${horaStr ? ' · ' + horaStr : ''}
-          </div>
-        </div>
-        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(20,184,166,.08));border:1px solid rgba(45,212,191,.35);border-radius:10px;padding:14px;margin-bottom:14px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="font-family:monospace;font-size:9px;color:#5eead4;margin-bottom:4px">SELECCIÓN</div>
-              <div style="font-size:16px;font-weight:600;color:#e2e8f0">${pt.seleccion || pick.seleccion || '—'}</div>
-            </div>
-            <div style="display:flex;gap:8px">
-              <div style="background:rgba(45,212,191,.15);border:1px solid rgba(45,212,191,.4);border-radius:6px;padding:8px 12px;text-align:center">
-                <div style="font-family:monospace;font-size:8px;color:#5eead4">CUOTA</div>
-                <div style="font-size:18px;font-weight:800;color:#5eead4">${cuotaTotal.toFixed(2)}</div>
-              </div>
-              <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:6px;padding:8px 12px;text-align:center">
-                <div style="font-family:monospace;font-size:8px;color:#94a3b8">STAKE</div>
-                <div style="font-size:18px;font-weight:800;color:#e2e8f0">${stake}</div>
-              </div>
-            </div>
-          </div>
-        </div>`;
-    } else {
-      // COMBINADA
-      partidosHtml = partidos.map(pt => {
-        const deporteKey = (pt.deporte || 'futbol').toLowerCase();
-        const deporteEmoji = deporteIcons[deporteKey] || '⚽';
-        return `
-        <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:8px;padding:12px;margin-bottom:8px">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:14px">${deporteEmoji}</span>
-              <span style="font-size:13px;font-weight:600;color:#e2e8f0">${pt.equipo_local || '—'} vs ${pt.equipo_visitante || '—'}</span>
-            </div>
-            <span style="font-size:11px;color:#e2e8f0;background:rgba(45,212,191,.2);padding:5px 12px;border-radius:5px;border:1px solid rgba(45,212,191,.4)">${pt.seleccion || '—'} @ ${parseFloat(pt.cuota).toFixed(2)}</span>
-          </div>
+          ${selCuota ? `<span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 9px;border-radius:4px;min-width:46px;text-align:center">${selCuota}</span>` : ''}
         </div>`;
       }).join('');
-      
-      partidosHtml += `
-        <div style="background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(20,184,166,.08));border:1px solid rgba(45,212,191,.4);border-radius:10px;padding:14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div style="font-family:monospace;font-size:9px;color:#5eead4">CUOTA COMBINADA</div>
-            <div style="font-size:24px;font-weight:800;color:#5eead4">${cuotaTotal.toFixed(2)}</div>
+
+      const cuotaPartido = selParts.length > 1
+        ? `<div style="border-top:1px dashed ${c.accentBorder};margin:4px 0"></div>
+           <div style="display:flex;align-items:center;justify-content:space-between">
+             <span style="font-family:monospace;font-size:9px;font-weight:600;color:${c.accent}">CUOTA PARTIDO</span>
+             <span style="font-family:monospace;font-size:13px;font-weight:700;color:${c.accent};min-width:46px;text-align:center">${parseFloat(pt.cuota||0).toFixed(2)}</span>
+           </div>` : '';
+
+      return `<div style="background:${c.bg};border:1px solid ${c.border};border-radius:10px;overflow:hidden;margin-bottom:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:${c.headerBg};border-bottom:1px solid ${c.headerBorder}">
+          <div style="display:flex;align-items:center;gap:7px">
+            ${isCombo ? `<span style="font-family:monospace;font-size:9px;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 9px;border-radius:4px;font-weight:700;white-space:nowrap">PRONÓSTICO ${label}</span>` : `<span style="font-size:14px">${depEmoji}</span>`}
+            ${momentoLabel}
           </div>
-          <div style="background:rgba(13,32,26,.8);border:1px solid rgba(45,212,191,.3);border-radius:6px;padding:8px 14px;text-align:center">
-            <div style="font-family:monospace;font-size:8px;color:#94a3b8">STAKE</div>
-            <div style="font-size:20px;font-weight:800;color:#e2e8f0">${stake}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+            <span style="font-family:monospace;font-size:9px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 8px;border-radius:4px;white-space:nowrap">${ligaDisplay}</span>
+            ${fechaDisplay ? `<span style="font-family:monospace;font-size:9px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 8px;border-radius:4px;white-space:nowrap">${fechaDisplay}</span>` : ''}
           </div>
-        </div>`;
+        </div>
+        <div style="padding:9px 11px">
+          <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:8px">${pt.equipo_local||'—'} <span style="color:${c.accent};font-weight:400">vs</span> ${pt.equipo_visitante||'—'}</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            ${selRows}
+            ${cuotaPartido}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    if (!isCombo) {
+      const pt = partidos[0];
+      partidosHtml = buildPartidoHtml(pt, 0, 1, false);
+    } else {
+      partidosHtml = partidos.map((pt, idx) => buildPartidoHtml(pt, idx, idx+1, true)).join('');
     }
     
     // Obtener config del tipster del pick
     const tipsterId = pick.tipster_id || 'ghp';
     const tipster = tipsterConfig[tipsterId] || tipsterConfig['ghp'];
     
+    // Ganancias potenciales
+    const gananciaNum = isWin ? (stake * (cuotaTotal - 1)).toFixed(2)
+      : estado === 'perdido' ? (-stake).toFixed(2)
+      : (stake * (cuotaTotal - 1)).toFixed(2);
+
+    // Sello resultado — solo cuando hay resultado, FUERA del boleto
+    const selloOuterHtml = hasResult ? `
+      <div style="margin-top:8px;border-radius:12px;border:1.5px solid ${isWin ? 'rgba(34,197,94,.4)' : 'rgba(239,68,68,.4)'};background:${isWin ? 'rgba(5,46,22,.95)' : 'rgba(69,10,10,.95)'};padding:12px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:50%;background:${isWin ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'};border:1.5px solid ${isWin ? 'rgba(34,197,94,.5)' : 'rgba(239,68,68,.5)'};display:flex;align-items:center;justify-content:center;font-size:14px">${isWin ? '✓' : '✗'}</div>
+          <div>
+            <div style="font-family:monospace;font-size:11px;font-weight:700;color:${isWin ? '#4ade80' : '#f87171'};letter-spacing:.08em">${isWin ? 'GANADA' : 'PERDIDA'}</div>
+            <div style="font-family:monospace;font-size:9px;color:${isWin ? '#166534' : '#7f1d1d'};margin-top:1px">Resultado verificado · ${pubDateTime}</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:monospace;font-size:9px;color:${isWin ? '#166534' : '#7f1d1d'};margin-bottom:2px">${isWin ? 'BENEFICIO' : 'PÉRDIDA'}</div>
+          <div style="font-size:18px;font-weight:800;color:${isWin ? '#4ade80' : '#f87171'}">${isWin ? '+' : ''}${gananciaNum}u</div>
+        </div>
+      </div>` : '';
+
     // HTML completo del ticket
     const cardHtml = `
-      <div id="telegram-card" style="position:relative;width:440px;background:linear-gradient(160deg,#0a1612 0%,#0d1f18 50%,#0a1612 100%);border:2px solid #2dd4bf;border-radius:20px;padding:20px;font-family:'Inter',system-ui,sans-serif;box-shadow:0 0 40px rgba(45,212,191,.3);overflow:hidden">
-        
-        ${selloHtml}
-        
-        <div style="${hasResult ? 'opacity:.55' : ''}">
-        
-        <!-- Header: avatar más grande + nombre + TRUESTATS AI VERIFIED -->
-        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(45,212,191,.2)">
-          <div style="width:58px;height:58px;border-radius:12px;border:2px solid rgba(45,212,191,.6);overflow:hidden;background:linear-gradient(135deg,#1a3f1c,#0d1a0f);flex-shrink:0">
-            <img src="${tipster.avatar}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:22px;font-weight:900;color:#2dd4bf;display:flex;align-items:center;justify-content:center;height:100%\'>${tipster.initials}</span>'"/>
+      <div style="font-family:'Inter',system-ui,sans-serif;width:420px">
+        <div id="telegram-card" style="background:#0a1612;border:1.5px solid #2dd4bf;border-radius:16px;overflow:hidden">
+
+          <!-- CABECERA TIPSTER -->
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(13,32,26,.9);border-bottom:1px solid rgba(45,212,191,.2)">
+            <div style="width:46px;height:46px;border-radius:10px;border:1.5px solid rgba(45,212,191,.5);overflow:hidden;background:#132a16;flex-shrink:0">
+              <img src="${tipster.avatar}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:14px;font-weight:700;color:#2dd4bf;display:flex;align-items:center;justify-content:center;height:100%\'>${tipster.initials}</span>'"/>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:15px;color:#e2e8f0">${tipster.name}</div>
+              <div style="font-size:10px;color:#2dd4bf;font-family:monospace;letter-spacing:.08em">TRUESTATS AI VERIFIED</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+              <span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:${isCombo ? 'rgba(251,191,36,.15)' : 'rgba(45,212,191,.15)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.3)' : 'rgba(45,212,191,.3)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
+              ${estadoBadge}
+            </div>
           </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-weight:800;font-size:18px;color:#e2e8f0;letter-spacing:-.01em;line-height:1.2">${tipster.name}</div>
-            <div style="font-size:11px;color:#2dd4bf;font-family:monospace;letter-spacing:.1em;margin-top:3px">TRUESTATS AI VERIFIED</div>
+
+          <!-- PARTIDOS -->
+          <div style="padding:12px 14px;display:flex;flex-direction:column;gap:0">
+            ${partidosHtml}
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
-            <span style="font-family:monospace;font-size:10px;padding:5px 11px;border-radius:6px;background:${isCombo ? 'rgba(251,191,36,.2)' : 'rgba(45,212,191,.15)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.4)' : 'rgba(45,212,191,.35)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
-            ${estadoBadge}
+
+          <!-- FOOTER: cuota / stake / ganancia + timestamp -->
+          <div style="margin:0 14px 12px;background:#0d1f1a;border:1px solid rgba(45,212,191,.2);border-radius:10px;padding:11px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0">
+              <div style="text-align:center;padding:6px 4px">
+                <div style="font-family:monospace;font-size:8px;color:#2dd4bf;margin-bottom:3px;letter-spacing:.06em">${isCombo ? 'CUOTA TOTAL' : 'CUOTA'}</div>
+                <div style="font-size:20px;font-weight:800;color:#e2e8f0">${cuotaTotal.toFixed(2)}</div>
+              </div>
+              <div style="text-align:center;padding:6px 4px;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)">
+                <div style="font-family:monospace;font-size:8px;color:#2dd4bf;margin-bottom:3px;letter-spacing:.06em">STAKE (U)</div>
+                <div style="font-size:20px;font-weight:800;color:#e2e8f0">${stake}</div>
+              </div>
+              <div style="text-align:center;padding:6px 4px">
+                <div style="font-family:monospace;font-size:8px;color:#2dd4bf;margin-bottom:3px;letter-spacing:.06em">GANANCIA (U)</div>
+                <div style="font-size:20px;font-weight:800;color:#2dd4bf">+${gananciaNum}</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:6px 0;border-top:1px solid rgba(45,212,191,.12);border-bottom:1px solid rgba(45,212,191,.12);margin:8px 0">
+              <div style="text-align:center"><span style="font-family:monospace;font-size:9px;color:#2dd4bf">${pubDateTime}</span></div>
+              <div style="text-align:center;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)"><span style="font-size:10px;color:#2dd4bf">✓ Verificado</span></div>
+              <div style="text-align:center"><span style="font-family:monospace;font-size:9px;color:#2dd4bf"># ${pickId.split('-')[1]||pickId}</span></div>
+            </div>
           </div>
+
         </div>
 
-        <!-- Fila: deporte + iconos auditoría + hora publicación -->
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:7px 12px;background:rgba(45,212,191,.05);border:1px solid rgba(45,212,191,.15);border-radius:8px">
-          <span style="font-size:18px">${deporteIcons[(pick.deporte||'futbol').toLowerCase()]||'⚽'}</span>
-          <div style="display:flex;align-items:center;gap:9px;font-size:14px;color:#5eead4">
-            <span title="Verificado">✓</span>
-            <span title="Timestamp">⏱</span>
-            <span title="Inmutable">🔐</span>
-            <span title="Auditado">◈</span>
-          </div>
-          <span style="font-family:monospace;font-size:10px;color:#5eead4">${pubDateTime}</span>
-        </div>
-        
-        ${partidosHtml}
-        
+        <!-- SELLO RESULTADO (solo aparece si hay resultado) -->
+        ${selloOuterHtml}
 
-        
-        <!-- Footer -->
-        <div style="padding-top:12px;border-top:1px solid rgba(45,212,191,.15)">
-          <span style="background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 14px;font-family:monospace;font-size:10px;color:#5eead4">ID: ${pickId}</span>
-        </div>
-        
-        </div>
       </div>`;
     
     tempContainer.innerHTML = cardHtml;
