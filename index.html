@@ -4049,95 +4049,69 @@ function buildComboControls() {
 // ═══════════════════════════════════════════════════════════════════════════════
 function buildVistaPrevia() {
   const config = tipsterConfig[activeTipsterId] || tipsterConfig['ghp'];
+  const now = new Date();
+  const nowStr = now.toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}).replace(',','');
   return `
-<div id="vista-previa" style="position:relative;background:linear-gradient(160deg,#0a1612 0%,#0d1f18 50%,#0a1612 100%);border:2px solid #2dd4bf;border-radius:20px;padding:0;box-shadow:0 0 40px rgba(45,212,191,.2),0 0 80px rgba(45,212,191,.08);overflow:hidden;margin-top:18px">
-  
-  <!-- Efectos de luz -->
-  <div style="position:absolute;top:0;right:0;width:60%;height:100%;background:linear-gradient(135deg,transparent 0%,rgba(45,212,191,.03) 50%,rgba(20,184,166,.05) 100%);pointer-events:none"></div>
-  <div style="position:absolute;top:-100px;right:-100px;width:300px;height:300px;background:radial-gradient(circle,rgba(45,212,191,.08) 0%,transparent 70%);pointer-events:none"></div>
-  
-  <div style="position:relative;padding:18px">
-    
-    <!-- Header con logo -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(45,212,191,.15)">
-      <div id="prev-tipster-avatar" style="width:40px;height:40px;border-radius:10px;border:2px solid rgba(45,212,191,.5);overflow:hidden;box-shadow:0 0 15px rgba(45,212,191,.3)">
-        <img src="${config.avatar}" alt="${config.initials}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a3f1c,#0d1a0f);font-size:14px;font-weight:900;color:#2dd4bf\\'>${config.initials}</div>'">
+<div id="vista-previa" style="font-family:'Inter',system-ui,sans-serif">
+  <div style="background:#0a1612;border:1.5px solid #2dd4bf;border-radius:16px;overflow:hidden">
+
+    <!-- CABECERA TIPSTER -->
+    <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(13,32,26,.9);border-bottom:1px solid rgba(45,212,191,.2)">
+      <div id="prev-tipster-avatar" style="width:46px;height:46px;border-radius:10px;border:1.5px solid rgba(45,212,191,.5);overflow:hidden;background:#132a16;flex-shrink:0">
+        <img src="${config.avatar}" alt="${config.initials}" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<div style=\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2dd4bf\'>${config.initials}</div>'">
       </div>
-      <div style="flex:1">
-        <div id="prev-tipster-name" style="font-weight:700;font-size:14px;color:#e2e8f0">${config.name}</div>
-        <div style="font-size:9px;color:#5eead4;font-family:monospace;letter-spacing:.06em">TRUESTATS AI VERIFIED</div>
+      <div style="flex:1;min-width:0">
+        <div id="prev-tipster-name" style="font-weight:700;font-size:15px;color:#e2e8f0">${config.name}</div>
+        <div style="font-size:10px;color:#2dd4bf;font-family:monospace;letter-spacing:.08em">TRUESTATS AI VERIFIED</div>
       </div>
-      <div style="display:flex;gap:5px">
-        <span id="prev-tipo-badge" style="font-family:monospace;font-size:8px;padding:4px 8px;border-radius:5px;background:rgba(45,212,191,.1);color:#5eead4;border:1px solid rgba(45,212,191,.25)">SIMPLE</span>
-        <span id="prev-estado-badge" style="font-family:monospace;font-size:8px;padding:4px 8px;border-radius:5px;background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)">⏳ PENDIENTE</span>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        <span id="prev-tipo-badge" style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(45,212,191,.15);color:#5eead4;border:1px solid rgba(45,212,191,.3)">SIMPLE</span>
+        <span id="prev-estado-badge" style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)">⏳ PENDIENTE</span>
       </div>
     </div>
-    
-    <!-- Título -->
-    <div style="text-align:center;margin-bottom:12px">
-      <span style="font-size:12px;font-weight:700;color:#2dd4bf;letter-spacing:.12em">PRONÓSTICO</span>
+
+    <!-- PARTIDOS (se rellena con updatePreview) -->
+    <div id="prev-picks-container" style="padding:10px 12px 4px;display:flex;flex-direction:column;gap:0">
+      <div style="padding:20px;text-align:center;color:#3a5045;font-size:12px;font-style:italic">Selecciona un partido para ver la vista previa</div>
     </div>
-    
-    <!-- Contenedor de partidos -->
-    <div id="prev-picks-container" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
-      <div style="background:rgba(13,32,26,.6);border:1px solid rgba(45,212,191,.2);border-radius:10px;padding:12px;text-align:center;color:#4a6550;font-size:12px;font-style:italic">
-        Selecciona un partido para ver la vista previa
-      </div>
-    </div>
-    
-    <!-- Box Pick (se llenará dinámicamente) -->
-    <div id="prev-pick-box" style="background:linear-gradient(135deg,rgba(45,212,191,.08),rgba(20,184,166,.05));border:1px solid rgba(45,212,191,.25);border-radius:10px;padding:12px;margin-bottom:12px">
-      <!-- Fechas y Horas -->
-      <div style="margin-bottom:10px;padding:8px 10px;background:rgba(13,32,26,.6);border:1px solid rgba(45,212,191,.15);border-radius:6px;text-align:center">
-        <div style="font-family:monospace;font-size:8px;color:#5eead4;margin-bottom:4px">FECHA / HORA</div>
-        <div id="prev-fechas" style="font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.5">—</div>
-      </div>
-      <!-- Cuota y Stake -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:6px;padding:10px;text-align:center">
-          <div style="font-family:monospace;font-size:8px;color:#5eead4;margin-bottom:4px">CUOTA</div>
-          <div id="prev-cuota" style="font-size:18px;font-weight:800;color:#5eead4">—</div>
+
+    <!-- FOOTER: cuota / stake / ganancia + timestamp -->
+    <div style="margin:0 12px 12px;background:#0d1f1a;border:1px solid rgba(45,212,191,.2);border-radius:10px;padding:10px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0">
+        <div style="text-align:center;padding:5px 4px">
+          <div id="prev-cuota-label" style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px;letter-spacing:.06em">CUOTA</div>
+          <div id="prev-cuota" style="font-size:18px;font-weight:800;color:#e2e8f0">—</div>
         </div>
-        <div style="background:rgba(13,32,26,.6);border:1px solid rgba(45,212,191,.2);border-radius:6px;padding:10px;text-align:center">
-          <div style="font-family:monospace;font-size:8px;color:#94a3b8;margin-bottom:4px">STAKE</div>
+        <div style="text-align:center;padding:5px 4px;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)">
+          <div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px;letter-spacing:.06em">STAKE (U)</div>
           <div id="prev-stake" style="font-size:18px;font-weight:800;color:#e2e8f0">—</div>
         </div>
+        <div style="text-align:center;padding:5px 4px">
+          <div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px;letter-spacing:.06em">GANANCIA (U)</div>
+          <div id="prev-ganancias" style="font-size:18px;font-weight:800;color:#2dd4bf">—</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:5px 0;border-top:1px solid rgba(45,212,191,.1);margin-top:6px">
+        <div style="text-align:center"><span style="font-family:monospace;font-size:8px;color:#2dd4bf">${nowStr}</span></div>
+        <div style="text-align:center;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)"><span style="font-size:9px;color:#2dd4bf">✓ Verificado</span></div>
+        <div style="text-align:center"><span style="font-family:monospace;font-size:8px;color:#2dd4bf"># NUEVO</span></div>
       </div>
     </div>
-    
-    <!-- Badges verificación -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px">
-      <span style="display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">✓</span> Verificado</span>
-      <span style="display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">⏱</span> Timestamp</span>
-      <span style="display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">🔐</span> Inmutable</span>
-      <span style="display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 8px;font-family:monospace;font-size:9px;color:#5eead4"><span style="color:#e2e8f0">◈</span> Auditado</span>
-    </div>
-    
-    <!-- Footer con ID -->
-    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid rgba(45,212,191,.1);margin-bottom:16px">
-      <span style="background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.3);border-radius:4px;padding:4px 10px;font-family:monospace;font-size:9px;color:#5eead4">ID: TRUEPICK-XXXXXX</span>
-      <div style="display:flex;gap:5px">
-        <span style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(45,212,191,.25);background:rgba(45,212,191,.08);color:#5eead4;display:flex;align-items:center;justify-content:center;font-size:12px">👁</span>
-        <span style="width:28px;height:28px;border-radius:6px;border:1px solid rgba(45,212,191,.25);background:rgba(45,212,191,.08);color:#5eead4;display:flex;align-items:center;justify-content:center;font-size:12px">↗</span>
-      </div>
-    </div>
-    
-    <!-- Checkbox Telegram -->
-    <div style="display:flex;align-items:center;gap:10px;padding:12px;background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.2);border-radius:8px;margin-bottom:12px">
-      <input type="checkbox" id="pub-telegram" style="width:18px;height:18px;accent-color:#14b8a6">
-      <label for="pub-telegram" style="font-size:13px;color:#e2e8f0;cursor:pointer">📤 Enviar a Telegram</label>
-    </div>
-    
-    <!-- Botón Publicar -->
-    <button type="button" id="btn-publicar" onclick="publishPick()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 20px;background:linear-gradient(135deg,#14b8a6,#0d9488);border:none;border-radius:10px;color:white;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(20,184,166,.4)" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 30px rgba(20,184,166,.5)'" onmouseleave="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 20px rgba(20,184,166,.4)'">
-      <i class="fa-solid fa-paper-plane"></i>
-      Publicar Pronóstico
-    </button>
-    
-  </div>
-</div>`;
-}
 
+    <!-- Checkbox Telegram + Botón Publicar -->
+    <div style="padding:0 12px 12px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.15);border-radius:8px">
+        <input type="checkbox" id="pub-telegram" style="width:16px;height:16px;accent-color:#14b8a6">
+        <label for="pub-telegram" style="font-size:12px;color:#e2e8f0;cursor:pointer;display:flex;align-items:center;gap:6px"><i class="fa-brands fa-telegram" style="color:#2dd4bf"></i> Enviar a Telegram</label>
+      </div>
+      <button type="button" id="btn-publicar" onclick="publishPick()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px 20px;background:linear-gradient(135deg,#14b8a6,#0d9488);border:none;border-radius:10px;color:white;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform='translateY(0)'">
+        <i class="fa-solid fa-check"></i>
+        Confirmar apuesta
+      </button>
+    </div>
+
+  </div>
+</div>`;}
 // ═══════════════════════════════════════════════════════════════════════════════
 // RENDER PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -4594,35 +4568,15 @@ function updatePreview() {
   const momentoBadge = document.getElementById('prev-momento-badge');
   const accesoBadge = document.getElementById('prev-acceso-badge');
 
-  if (tipoBadge) tipoBadge.textContent = isCombo ? 'COMBINADA' : 'SIMPLE';
-  
-  if (momentoBadge) {
-    if (toggleState.momento === 'live') {
-      momentoBadge.textContent = '🔴 EN VIVO';
-      momentoBadge.style.background = 'rgba(239,68,68,.1)';
-      momentoBadge.style.color = '#ef4444';
-      momentoBadge.style.borderColor = 'rgba(239,68,68,.25)';
-    } else {
-      momentoBadge.textContent = 'PRE-PARTIDO';
-      momentoBadge.style.background = 'rgba(59,130,246,.1)';
-      momentoBadge.style.color = '#60a5fa';
-      momentoBadge.style.borderColor = 'rgba(59,130,246,.25)';
-    }
+  if (tipoBadge) {
+    tipoBadge.textContent = isCombo ? 'COMBINADA' : 'SIMPLE';
+    tipoBadge.style.background = isCombo ? 'rgba(251,191,36,.15)' : 'rgba(45,212,191,.15)';
+    tipoBadge.style.color = isCombo ? '#fbbf24' : '#5eead4';
+    tipoBadge.style.borderColor = isCombo ? 'rgba(251,191,36,.3)' : 'rgba(45,212,191,.3)';
   }
-  
-  if (accesoBadge) {
-    if (toggleState.acceso === 'premium') {
-      accesoBadge.textContent = '⭐ PREMIUM';
-      accesoBadge.style.background = 'rgba(251,191,36,.1)';
-      accesoBadge.style.color = '#fbbf24';
-      accesoBadge.style.borderColor = 'rgba(251,191,36,.25)';
-    } else {
-      accesoBadge.textContent = 'FREE';
-      accesoBadge.style.background = 'rgba(107,114,128,.1)';
-      accesoBadge.style.color = '#9ca3af';
-      accesoBadge.style.borderColor = 'rgba(107,114,128,.25)';
-    }
-  }
+
+  const cuotaLabel = document.getElementById('prev-cuota-label');
+  if (cuotaLabel) cuotaLabel.textContent = isCombo ? 'CUOTA TOTAL' : 'CUOTA';
 
   // Construir mini-boxes para cada pick
   const picksContainer = document.getElementById('prev-picks-container');
@@ -4688,16 +4642,57 @@ function updatePreview() {
         hasValidPick = true;
         if (cuota > 0) cuotaTotal *= cuota;
         allDates.push({ date: dateStr, time: timeStr });
+
+        const pColors = [
+          { bg:'#0f2318', border:'rgba(45,212,191,.3)', headerBg:'rgba(45,212,191,.12)', headerBorder:'rgba(45,212,191,.2)', accent:'#2dd4bf', accentLight:'rgba(45,212,191,.12)', accentBorder:'rgba(45,212,191,.3)', dot:'#2dd4bf', labelColor:'#5eead4', dimLabel:'rgba(45,212,191,.08)', dimBorder:'rgba(45,212,191,.2)' },
+          { bg:'#0d1a22', border:'rgba(99,179,237,.25)', headerBg:'rgba(99,179,237,.1)', headerBorder:'rgba(99,179,237,.18)', accent:'#90cdf4', accentLight:'rgba(99,179,237,.1)', accentBorder:'rgba(99,179,237,.25)', dot:'#90cdf4', labelColor:'#90cdf4', dimLabel:'rgba(99,179,237,.08)', dimBorder:'rgba(99,179,237,.2)' },
+          { bg:'#1a1530', border:'rgba(167,139,250,.25)', headerBg:'rgba(167,139,250,.1)', headerBorder:'rgba(167,139,250,.18)', accent:'#c4b5fd', accentLight:'rgba(167,139,250,.1)', accentBorder:'rgba(167,139,250,.25)', dot:'#c4b5fd', labelColor:'#c4b5fd', dimLabel:'rgba(167,139,250,.08)', dimBorder:'rgba(167,139,250,.2)' },
+        ];
+        const c = pColors[(i-1) % pColors.length];
+        const depEmoji = {futbol:'⚽',basket:'🏀',tenis:'🎾',otros:'🎯'}[(toggleState.deporte||'futbol').toLowerCase()] || '⚽';
+        const momentoLabel = toggleState.momento === 'live'
+          ? `<span style="font-size:8px;padding:2px 6px;border-radius:4px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);font-family:monospace">&#9679; LIVE</span>`
+          : `<span style="font-size:8px;padding:2px 6px;border-radius:4px;background:${c.dimLabel};color:${c.labelColor};border:1px solid ${c.dimBorder};font-family:monospace">&#9679; PRE-PARTIDO</span>`;
+        const ligaDisplay = comp || '—';
+        const fechaDisplay = [dateStr, timeStr].filter(Boolean).join(' · ');
+
+        // Selecciones con puntos
+        const rawSel = mercadoCompleto || '—';
+        const selParts = rawSel.split(' | ').map(s => s.trim()).filter(Boolean);
+        const selRows = selParts.map(sel => {
+          const m = sel.match(/@([\d.]+)$/);
+          const selText = m ? sel.replace(/@[\d.]+$/,'').trim() : sel;
+          const selCuota = m ? m[1] : (selParts.length === 1 && cuota > 0 ? cuota.toFixed(2) : '');
+          return `<div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+            <div style="display:flex;align-items:center;gap:6px;flex:1">
+              <div style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0"></div>
+              <span style="font-size:10px;color:#e2e8f0">${selText}</span>
+            </div>
+            ${selCuota ? `<span style="font-family:monospace;font-size:10px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;min-width:38px;text-align:center">${selCuota}</span>` : ''}
+          </div>`;
+        }).join('');
+        const cuotaPartidoRow = selParts.length > 1 && cuota > 0
+          ? `<div style="border-top:1px dashed ${c.accentBorder};margin:3px 0"></div>
+             <div style="display:flex;align-items:center;justify-content:space-between">
+               <span style="font-family:monospace;font-size:8px;font-weight:600;color:${c.accent}">CUOTA PARTIDO</span>
+               <span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};min-width:38px;text-align:center">${cuota.toFixed(2)}</span>
+             </div>` : '';
+
         picksHTML += `
-        <div style="background:#080c0a;border:1px solid #1a2e1f;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
-          ${isCombo ? `<div style="font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:#a855f7;text-transform:uppercase;letter-spacing:.1em">PICK ${i}</div>` : ''}
-          <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#93c5fd">
-            <span style="color:#2dd4bf">⚽</span>
-            ${home} vs ${away}
+        <div style="background:${c.bg};border:1px solid ${c.border};border-radius:10px;overflow:hidden;margin-bottom:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:${c.headerBg};border-bottom:1px solid ${c.headerBorder}">
+            <div style="display:flex;align-items:center;gap:6px">
+              ${isCombo ? `<span style="font-family:monospace;font-size:8px;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;font-weight:700">PRONÓSTICO ${i}</span>` : `<span style="font-size:12px">${depEmoji}</span>`}
+              ${momentoLabel}
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+              <span style="font-family:monospace;font-size:8px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:1px 6px;border-radius:4px">${ligaDisplay}</span>
+              ${fechaDisplay ? `<span style="font-family:monospace;font-size:8px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:1px 6px;border-radius:4px">${fechaDisplay}</span>` : ''}
+            </div>
           </div>
-          <div style="margin-top:6px;padding:10px 12px;background:#0c1210;border:1px solid #1a2e1f;border-radius:6px">
-            <div style="font-size:9px;color:#2dd4bf;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Selección</div>
-            <div style="font-size:13px;color:#ffffff;font-weight:600">${mercadoCompleto}</div>
+          <div style="padding:8px 10px">
+            <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:6px">${home} <span style="color:${c.accent};font-weight:400">vs</span> ${away}</div>
+            <div style="display:flex;flex-direction:column;gap:4px">${selRows}${cuotaPartidoRow}</div>
           </div>
         </div>`;
       }
@@ -4715,20 +4710,6 @@ function updatePreview() {
       : document.getElementById('p1-stake');
     const stake = parseFloat(stakeInput?.value) || 0;
 
-    // Actualizar box de fechas/horas
-    const prevFechas = document.getElementById('prev-fechas');
-    if (prevFechas && hasValidPick) {
-      if (allDates.length === 1) {
-        // Una sola fecha: en línea
-        prevFechas.innerHTML = `<span style="color:#fb923c">${allDates[0].date || '—'}</span> <span style="color:#94a3b8">${allDates[0].time || ''}</span>`;
-      } else {
-        // Múltiples fechas: una debajo de otra
-        prevFechas.innerHTML = allDates.map(d => `<div><span style="color:#fb923c">${d.date || '—'}</span> <span style="color:#94a3b8">${d.time || ''}</span></div>`).join('');
-      }
-    } else if (prevFechas) {
-      prevFechas.innerHTML = '—';
-    }
-
     const prevStake = document.getElementById('prev-stake');
     const prevCuota = document.getElementById('prev-cuota');
     const prevGanancias = document.getElementById('prev-ganancias');
@@ -4736,7 +4717,6 @@ function updatePreview() {
     if (prevCuota) prevCuota.textContent = cuotaTotal > 1 ? cuotaTotal.toFixed(2) : '—';
     if (prevStake) prevStake.textContent = stake > 0 ? `${stake}u` : '—';
     if (prevGanancias) {
-      // Ganancias = (cuota × stake) - stake = stake × (cuota - 1)
       const ganancias = stake > 0 && cuotaTotal > 1 ? (stake * (cuotaTotal - 1)).toFixed(2) : '—';
       prevGanancias.textContent = ganancias !== '—' ? `+${ganancias}u` : '—';
     }
