@@ -2024,16 +2024,16 @@ if (typeof html2canvas === 'undefined') {
           <div class="card-banner-bg" style="background:linear-gradient(135deg,#111a13 0%,#080c08 100%)"></div>
           <div class="card-banner-overlay"></div>
           <div class="card-banner-badges">
-            <div class="tipster-rank" style="color:#3a5a3a;border-color:rgba(45,212,191,.1)">— —</div>
+            <div class="tipster-rank" style="color:#e2e8f0;border-color:rgba(255,255,255,.2)">— —</div>
           </div>
         </div>
         <div class="card-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;gap:12px">
           <div style="width:52px;height:52px;border-radius:50%;border:2px dashed rgba(45,212,191,.2);display:flex;align-items:center;justify-content:center">
-            <i class="fa-solid fa-question" style="color:rgba(45,212,191,.3);font-size:20px"></i>
+            <i class="fa-solid fa-question" style="color:rgba(255,255,255,.5);font-size:20px"></i>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#2a3a2a;letter-spacing:.02em">¿Te apuntas?</div>
-            <div style="font-size:11px;color:#1e2e1e;margin-top:4px;font-family:'IBM Plex Mono',monospace">Plaza disponible</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#ffffff;letter-spacing:.02em">¿Te apuntas?</div>
+            <div style="font-size:11px;color:#e2e8f0;margin-top:4px;font-family:'IBM Plex Mono',monospace">Plaza disponible</div>
           </div>
         </div>
       </div>
@@ -2044,16 +2044,16 @@ if (typeof html2canvas === 'undefined') {
           <div class="card-banner-bg" style="background:linear-gradient(135deg,#111a13 0%,#080c08 100%)"></div>
           <div class="card-banner-overlay"></div>
           <div class="card-banner-badges">
-            <div class="tipster-rank" style="color:#3a5a3a;border-color:rgba(45,212,191,.1)">— —</div>
+            <div class="tipster-rank" style="color:#e2e8f0;border-color:rgba(255,255,255,.2)">— —</div>
           </div>
         </div>
         <div class="card-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;gap:12px">
           <div style="width:52px;height:52px;border-radius:50%;border:2px dashed rgba(45,212,191,.2);display:flex;align-items:center;justify-content:center">
-            <i class="fa-solid fa-question" style="color:rgba(45,212,191,.3);font-size:20px"></i>
+            <i class="fa-solid fa-question" style="color:rgba(255,255,255,.5);font-size:20px"></i>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#2a3a2a;letter-spacing:.02em">¿Te apuntas?</div>
-            <div style="font-size:11px;color:#1e2e1e;margin-top:4px;font-family:'IBM Plex Mono',monospace">Plaza disponible</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#ffffff;letter-spacing:.02em">¿Te apuntas?</div>
+            <div style="font-size:11px;color:#e2e8f0;margin-top:4px;font-family:'IBM Plex Mono',monospace">Plaza disponible</div>
           </div>
         </div>
       </div>
@@ -2064,16 +2064,16 @@ if (typeof html2canvas === 'undefined') {
           <div class="card-banner-bg" style="background:linear-gradient(135deg,#111a13 0%,#080c08 100%)"></div>
           <div class="card-banner-overlay"></div>
           <div class="card-banner-badges">
-            <div class="tipster-rank" style="color:#3a5a3a;border-color:rgba(45,212,191,.1)">— —</div>
+            <div class="tipster-rank" style="color:#e2e8f0;border-color:rgba(255,255,255,.2)">— —</div>
           </div>
         </div>
         <div class="card-content" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;gap:12px">
           <div style="width:52px;height:52px;border-radius:50%;border:2px dashed rgba(45,212,191,.2);display:flex;align-items:center;justify-content:center">
-            <i class="fa-solid fa-question" style="color:rgba(45,212,191,.3);font-size:20px"></i>
+            <i class="fa-solid fa-question" style="color:rgba(255,255,255,.5);font-size:20px"></i>
           </div>
           <div style="text-align:center">
-            <div style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#2a3a2a;letter-spacing:.02em">¿Te apuntas?</div>
-            <div style="font-size:11px;color:#1e2e1e;margin-top:4px;font-family:'IBM Plex Mono',monospace">Plaza disponible</div>
+            <div style="font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#ffffff;letter-spacing:.02em">¿Te apuntas?</div>
+            <div style="font-size:11px;color:#e2e8f0;margin-top:4px;font-family:'IBM Plex Mono',monospace">Plaza disponible</div>
           </div>
         </div>
       </div>
@@ -3115,26 +3115,12 @@ function renderTipsterPicks() {
         </div>
         <div style="padding:8px 10px">
           <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:6px">${pt.equipo_local||p.equipo_local||'—'} <span style="color:${c.accent};font-weight:400">vs</span> ${pt.equipo_visitante||p.equipo_visitante||'—'}</div>
-          <div style="display:flex;flex-direction:column;gap:4px">${selRows}${cuotaPartido}</div>
+          <div style="display:flex;flex-direction:column;gap:4px">${selRows}${buildSelloHtml(isWin,isLoss,isVoid,Math.abs(parseFloat(ganancia)||0).toFixed(2))}${cuotaPartido}</div>
         </div>
       </div>`;
     }).join('');
 
-    // Sello resultado — sección independiente debajo del boleto
-    const selloCardHtml = (isWin || isLoss) ? `
-      <div style="margin-top:6px;border-radius:10px;border:1.5px solid ${isWin ? 'rgba(34,197,94,.4)' : 'rgba(239,68,68,.4)'};background:${isWin ? 'rgba(5,46,22,.95)' : 'rgba(69,10,10,.95)'};padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:30px;height:30px;border-radius:50%;background:${isWin ? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.2)'};border:1.5px solid ${isWin ? 'rgba(34,197,94,.5)' : 'rgba(239,68,68,.5)'};display:flex;align-items:center;justify-content:center;font-size:12px">${isWin ? '✓' : '✗'}</div>
-          <div>
-            <div style="font-family:monospace;font-size:10px;font-weight:700;color:${isWin ? '#4ade80' : '#f87171'}">${isWin ? 'GANADA' : 'PERDIDA'}</div>
-            <div style="font-family:monospace;font-size:8px;color:${isWin ? '#166534' : '#7f1d1d'};margin-top:1px">Verificado · ${timestamp}</div>
-          </div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:monospace;font-size:8px;color:${isWin ? '#166534' : '#7f1d1d'};margin-bottom:1px">${isWin ? 'BENEFICIO' : 'PÉRDIDA'}</div>
-          <div style="font-size:16px;font-weight:800;color:${isWin ? '#4ade80' : '#f87171'}">${ganancia}</div>
-        </div>
-      </div>` : '';
+    const selloCardHtml = ''; // Sello ahora va dentro del partido como estampilla
 
     return `
       <div style="margin-bottom:16px">
@@ -3225,6 +3211,25 @@ function selModo(modo, btn) {
 
 // Manual: cuando cambia local o visitante
 // ── DATOS MANUAL (listas a rellenar) ──────────────────────────────────────────
+
+// ── SELLO RESULTADO (estampilla rotada entre selecciones y cuota partido) ────
+function buildSelloHtml(isWin, isLoss, isVoid, gananciaStr) {
+  if (!isWin && !isLoss && !isVoid) return '';
+  const color   = isWin ? '#22c55e' : isLoss ? '#ff2222' : '#94a3b8';
+  const bg      = isWin ? 'rgba(2,44,18,.95)' : isLoss ? 'rgba(60,5,5,.95)' : 'rgba(15,23,42,.95)';
+  const glow    = isWin ? 'rgba(34,197,94,.5)' : isLoss ? 'rgba(255,34,34,.55)' : 'rgba(148,163,184,.3)';
+  const glowIn  = isWin ? 'rgba(34,197,94,.08)' : isLoss ? 'rgba(255,34,34,.1)' : 'rgba(148,163,184,.06)';
+  const sub     = isWin ? `+${gananciaStr} · TrueStats ✓` : isLoss ? `-${gananciaStr} · TrueStats ✓` : 'Devuelto · TrueStats ✓';
+  const subColor= isWin ? '#16a34a' : isLoss ? '#b91c1c' : '#475569';
+  const label   = isWin ? 'GANADA' : isLoss ? 'PERDIDA' : 'VOID';
+  return `<div style="display:flex;align-items:center;justify-content:center;padding:6px 0 8px">
+    <div style="transform:rotate(-10deg);border:3px solid ${color};border-radius:5px;padding:6px 20px;background:${bg};box-shadow:0 0 20px ${glow},inset 0 0 12px ${glowIn}">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:900;color:${color};letter-spacing:.2em;text-shadow:0 0 16px ${glow}">${label}</div>
+      <div style="font-family:monospace;font-size:9px;color:${subColor};text-align:center;margin-top:2px;letter-spacing:.05em">${sub}</div>
+    </div>
+  </div>`;
+}
+
 // ── CASCADA MANUAL DESDE SUPABASE ────────────────────────────────────────────
 
 // Muestra un paso con animación
@@ -4852,26 +4857,12 @@ function renderPicksPanel(tipsterId) {
         </div>
         <div style="padding:8px 10px">
           <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:6px">${pt.equipo_local||p.equipo_local||'—'} <span style="color:${c.accent};font-weight:400">vs</span> ${pt.equipo_visitante||p.equipo_visitante||'—'}</div>
-          <div style="display:flex;flex-direction:column;gap:4px">${selRows}${cuotaPartido}</div>
+          <div style="display:flex;flex-direction:column;gap:4px">${selRows}${buildSelloHtml(isWin,isLoss,isVoid,Math.abs(parseFloat(ganancia)||0).toFixed(2))}${cuotaPartido}</div>
         </div>
       </div>`;
     }).join('');
 
-    // Sello resultado
-    const selloHtml = (isWin||isLoss||isVoid) ? `
-      <div style="margin-top:6px;border-radius:10px;border:1.5px solid ${isWin?'rgba(34,197,94,.4)':isLoss?'rgba(239,68,68,.4)':'rgba(148,163,184,.3)'};background:${isWin?'rgba(5,46,22,.95)':isLoss?'rgba(69,10,10,.95)':'rgba(15,23,42,.95)'};padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:30px;height:30px;border-radius:50%;background:${isWin?'rgba(34,197,94,.2)':isLoss?'rgba(239,68,68,.2)':'rgba(148,163,184,.1)'};border:1.5px solid ${isWin?'rgba(34,197,94,.5)':isLoss?'rgba(239,68,68,.5)':'rgba(148,163,184,.4)'};display:flex;align-items:center;justify-content:center;font-size:12px">${isWin?'✓':isLoss?'✗':'—'}</div>
-          <div>
-            <div style="font-family:monospace;font-size:10px;font-weight:700;color:${isWin?'#4ade80':isLoss?'#f87171':'#94a3b8'}">${isWin?'GANADA':isLoss?'PERDIDA':'NULA / VOID'}</div>
-            <div style="font-family:monospace;font-size:8px;color:${isWin?'#166534':isLoss?'#7f1d1d':'#334155'};margin-top:1px">Verificado · ${timestamp}</div>
-          </div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:monospace;font-size:8px;color:${isWin?'#166534':isLoss?'#7f1d1d':'#334155'};margin-bottom:1px">${isWin?'BENEFICIO':isLoss?'PÉRDIDA':'DEVUELTO'}</div>
-          <div style="font-size:15px;font-weight:800;color:${isWin?'#4ade80':isLoss?'#f87171':'#94a3b8'}">${isVoid ? stake.toFixed(2)+'u' : ganancia+'u'}</div>
-        </div>
-      </div>` : '';
+    const selloHtml = ''; // Sello ahora va dentro del partido como estampilla
 
     return `
       <div style="margin-bottom:4px">
@@ -4905,7 +4896,6 @@ function renderPicksPanel(tipsterId) {
             </div>
           </div>
         </div>
-        ${selloHtml}
       </div>`;
   }).join('');
 }
@@ -6178,6 +6168,15 @@ async function sendToTelegram(pick) {
              <span style="font-family:monospace;font-size:13px;font-weight:700;color:${c.accent};min-width:46px;text-align:center">${parseFloat(pt.cuota||0).toFixed(2)}</span>
            </div>` : '';
 
+      const _st = (pick.estado || 'pendiente').toLowerCase();
+      const _isWin  = _st === 'ganado';
+      const _isLoss = _st === 'perdido';
+      const _isVoid = _st === 'nulo' || _st === 'void';
+      const _stakeN = parseFloat(pick.stake) || 0;
+      const _cuotaN = parseFloat(pick.cuota) || 1;
+      const _ganStr = (_stakeN * (_cuotaN - 1)).toFixed(2);
+      const _sello  = buildSelloHtml(_isWin, _isLoss, _isVoid, _ganStr);
+
       return `<div style="background:${c.bg};border:1px solid ${c.border};border-radius:10px;overflow:hidden;margin-bottom:8px">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:${c.headerBg};border-bottom:1px solid ${c.headerBorder}">
           <div style="display:flex;align-items:center;gap:7px">
@@ -6193,6 +6192,7 @@ async function sendToTelegram(pick) {
           <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:8px">${pt.equipo_local||'—'} <span style="color:${c.accent};font-weight:400">vs</span> ${pt.equipo_visitante||'—'}</div>
           <div style="display:flex;flex-direction:column;gap:5px">
             ${selRows}
+            ${_sello}
             ${cuotaPartido}
           </div>
         </div>
