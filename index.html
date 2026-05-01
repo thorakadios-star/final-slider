@@ -1909,7 +1909,10 @@ if (typeof html2canvas === 'undefined') {
           <div class="card-banner-badges">
             <div class="tipster-rank top3">🏆 #1</div>
             <div class="verified-badge">🔰 Verificado</div>
-            <div class="sport-badge futbol">⚽ Fútbol&nbsp;<span style="opacity:.4">|</span>&nbsp;🏀 Basket</div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-left:auto">
+              <div class="sport-badge" style="margin-left:0">⚽ Fútbol</div>
+              <div class="sport-badge" style="margin-left:0">🎾 Tenis</div>
+            </div>
           </div>
         </div>
         <div class="card-content">
@@ -1972,7 +1975,10 @@ if (typeof html2canvas === 'undefined') {
           <div class="card-banner-badges">
             <div class="tipster-rank top3">🥈 #2</div>
             <div class="verified-badge">🔰 Verificado</div>
-            <div class="sport-badge futbol">⚽ Fútbol</div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;margin-left:auto">
+              <div class="sport-badge" style="margin-left:0">⚽ Fútbol</div>
+              <div class="sport-badge" style="margin-left:0">🏀 Basket</div>
+            </div>
           </div>
         </div>
         <div class="card-content">
@@ -2185,7 +2191,7 @@ if (typeof html2canvas === 'undefined') {
     <button class="tipster-tab tab-green" onclick="showTipsterTab('picks')" style="opacity:0.6">← Ver Picks</button>
     <div style="flex:1"></div>
     <button class="tipster-tab tab-blue active">Stats</button>
-    <select id="month-filter-stats" class="tipster-tab tab-blue" style="appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:28px;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2360a5fa%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>');background-repeat:no-repeat;background-position:right 10px center">
+    <select id="month-filter-stats" class="tipster-tab tab-blue" onchange="const cd=calculateChartData();drawStatsChart(cd);updateStatsTable(cd);" style="appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:28px;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2360a5fa%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>');background-repeat:no-repeat;background-position:right 10px center">
     </select>
   </div>
 
@@ -2407,27 +2413,34 @@ const slidePos = { 1: 0, 2: 0, 3: 0 };
 const autoInterval = { 1: null, 2: null, 3: null };
 const SLIDE_COUNT = 5;
 
-// Inicializar selectores de mes con solo Abril 2026
+// Inicializar selectores de mes — mes actual por defecto + 12 meses anteriores + Historial completo
 function initMonthSelectors() {
   const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth(); // 0-11
-  const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-  
-  // Solo mes actual (Abril 2026)
-  const options = [{
-    value: `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`,
-    label: `${months[currentMonth]} ${currentYear}`
-  }];
-  
-  // Actualizar selectores
+  const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const monthsShort = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  const options = [];
+
+  // Mes actual primero
+  for (let i = 0; i < 13; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    options.push({
+      value: `${y}-${String(m + 1).padStart(2, '0')}`,
+      label: i === 0 ? `${months[m]} ${y} (actual)` : `${monthsShort[m]} ${y}`
+    });
+  }
+
+  // Opción historial completo al final
+  options.push({ value: 'all', label: '📋 Historial completo' });
+
   ['month-filter-picks', 'month-filter-stats'].forEach(id => {
     const sel = document.getElementById(id);
-    if (sel) {
-      sel.innerHTML = options.map((o, i) => 
-        `<option value="${o.value}"${i === 0 ? ' selected' : ''}>${o.label}</option>`
-      ).join('');
-    }
+    if (!sel) return;
+    sel.innerHTML = options.map((o, i) =>
+      `<option value="${o.value}"${i === 0 ? ' selected' : ''}>${o.label}</option>`
+    ).join('');
   });
 }
 
@@ -2840,9 +2853,12 @@ function showTipsterTab(tabName) {
     // Inicializar selector de mes con mes actual y renderizar
     const monthSelector = document.getElementById('month-filter-picks');
     if (monthSelector) {
-      const now = new Date();
-      const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-      monthSelector.value = currentMonth;
+      if (!monthSelector.dataset.initialized) {
+        const now = new Date();
+        const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        monthSelector.value = currentMonth;
+        monthSelector.dataset.initialized = '1';
+      }
     }
     // Renderizar picks con el tipster del perfil actual
     setTimeout(() => renderPicksPanel(currentProfileTipsterId), 50);
@@ -2851,12 +2867,13 @@ function showTipsterTab(tabName) {
     if (tabsPicks) tabsPicks.style.display = 'none';
     if (tabsStats) tabsStats.style.display = 'flex';
     
-    // Inicializar selector de mes de stats
+    // Inicializar selector de mes de stats (mes actual por defecto)
     const monthSelectorStats = document.getElementById('month-filter-stats');
-    if (monthSelectorStats) {
+    if (monthSelectorStats && !monthSelectorStats.dataset.initialized) {
       const now = new Date();
       const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
       monthSelectorStats.value = currentMonth;
+      monthSelectorStats.dataset.initialized = '1';
     }
     
     // Dibujar la gráfica
@@ -4766,9 +4783,14 @@ function renderPicksPanel(tipsterId) {
   const selectedMonth = monthSelector ? monthSelector.value : currentMonth;
 
   const allPicks = picksStore[tipsterId] || [];
-  const picks = allPicks
-    .filter(p => p.fecha && p.fecha.startsWith(selectedMonth))
-    .sort((a, b) => new Date(b.created_at || b.fecha) - new Date(a.created_at || a.fecha));
+  const picks = (selectedMonth === 'all'
+    ? allPicks
+    : allPicks.filter(p => {
+        // Filtrar por mes usando created_at o fecha
+        const ref = p.created_at ? p.created_at.slice(0,7) : (p.fecha ? p.fecha.slice(0,7) : '');
+        return ref === selectedMonth;
+      })
+  ).sort((a, b) => new Date(b.created_at || b.fecha) - new Date(a.created_at || a.fecha));
 
   const container = document.getElementById('tipster-picks-container');
   if (!container) return;
@@ -5417,8 +5439,8 @@ async function loadPicksFromSupabase() {
       window.ghpRecentForm = form.forma;
     }
 
-    // Renderizar panels y actualizar cards
-    renderPicksPanel('ghp');
+    // Renderizar panels para todos los tipsters y actualizar cards
+    ['ghp', 'spider', 'tipstop'].forEach(tid => renderPicksPanel(tid));
     updateTipsterCards();
 
   } catch (e) {
@@ -5438,44 +5460,57 @@ async function loadTipsterStats() {
       .order('created_at', { ascending: false });
     
     if (!errPicks && picks) {
-      picksStore.ghp = picks;
+      // Distribuir picks por tipster correctamente
+      picksStore.ghp = [];
+      picksStore.spider = [];
+      picksStore.tipstop = [];
+      picks.forEach(pick => {
+        const tid = pick.tipster_id || 'ghp';
+        if (!picksStore[tid]) picksStore[tid] = [];
+        picksStore[tid].push(pick);
+      });
       savePicksToStorage();
     }
 
-    // 2. Cargar estadísticas de la vista (se actualizan automáticamente en Supabase)
-    const { data: stats, error: errStats } = await client
-      .from('tipster_stats')
-      .select('*')
-      .eq('tipster_id', 'ghp')
-      .single();
+    // 2. Cargar estadísticas para TODOS los tipsters
+    const tipsterIds = ['ghp', 'spider', 'tipstop'];
+    for (const tid of tipsterIds) {
+      const { data: stats } = await client
+        .from('tipster_stats')
+        .select('*')
+        .eq('tipster_id', tid)
+        .single();
+      if (stats) {
+        const beneficio = stats.beneficio_total ?? stats.beneficio ?? 0;
+        window[tid + 'Stats'] = {
+          score: Math.round(stats.winrate || 0).toString(),
+          yield: `${stats.yield || 0}%`,
+          benefit: `${beneficio >= 0 ? '+' : ''}${parseFloat(beneficio).toFixed(2)}u`,
+          bets: (stats.total_picks || 0).toString(),
+          winrate: `${stats.winrate || 0}%`,
+          stake: (stats.stake_medio || 0).toString(),
+          ganados: stats.ganados || 0,
+          perdidos: stats.perdidos || 0,
+          pendientes: stats.pendientes || 0
+        };
+      }
+      renderPicksPanel(tid);
+    }
 
-    // 3. Cargar estadísticas mensuales para gráfica
-    const { data: monthly, error: errMonthly } = await client
-      .from('tipster_stats_cumulative')
-      .select('*')
-      .eq('tipster_id', 'ghp')
-      .order('mes', { ascending: true });
-
-    // 4. Cargar forma reciente
-    const { data: form, error: errForm } = await client
+    // Forma reciente GHP (gráfica)
+    const { data: form } = await client
       .from('tipster_recent_form')
       .select('*')
       .eq('tipster_id', 'ghp')
       .single();
 
-    // Actualizar stats en window
-    if (stats) {
-      const beneficio = stats.beneficio_total ?? stats.beneficio ?? 0;
+    if (false) { // bloque legacy — evitar duplicado
+      const stats = null;
+      const beneficio = 0;
       window.ghpStats = {
-        score: Math.round(stats.winrate || 0).toString(),
-        yield: `${stats.yield || 0}%`,
-        benefit: `${beneficio >= 0 ? '+' : ''}${parseFloat(beneficio).toFixed(2)}u`,
-        bets: (stats.total_picks || 0).toString(),
-        winrate: `${stats.winrate || 0}%`,
-        stake: (stats.stake_medio || 0).toString(),
-        ganados: stats.ganados || 0,
-        perdidos: stats.perdidos || 0,
-        pendientes: stats.pendientes || 0
+        score: '0', yield: '0%', benefit: '0u',
+        bets: '0', winrate: '0%', stake: '0',
+        ganados: 0, perdidos: 0, pendientes: 0
       };
       console.log('📊 Stats recargadas:', window.ghpStats);
     } else if (picks && picks.length > 0) {
