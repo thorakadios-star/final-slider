@@ -4780,151 +4780,7 @@ function openPicks(tipsterId) {
   go('picks');
 }
     
-function renderPicksPanel(tipsterId) {
-  const monthSelector = document.getElementById('month-filter-picks');
-  const now = new Date();
-  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-  const selectedMonth = monthSelector ? monthSelector.value : currentMonth;
 
-  const allPicks = picksStore[tipsterId] || [];
-  const picks = (selectedMonth === 'all'
-    ? allPicks
-    : allPicks.filter(p => {
-        // Filtrar por mes usando created_at o fecha
-        const ref = p.created_at ? p.created_at.slice(0,7) : (p.fecha ? p.fecha.slice(0,7) : '');
-        return ref === selectedMonth;
-      })
-  ).sort((a, b) => new Date(b.created_at || b.fecha) - new Date(a.created_at || a.fecha));
-
-  const container = document.getElementById('tipster-picks-container');
-  if (!container) return;
-
-  if (picks.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:center;padding:60px 20px;color:#4a6550">
-        <i class="fa-regular fa-file"></i>
-        <p style="font-size:15px;margin-bottom:8px">Sin picks publicados para este periodo</p>
-        <p style="font-size:12px;opacity:.6">Selecciona otro mes o espera nuevas publicaciones</p>
-      </div>`;
-    return;
-  }
-
-  container.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;padding:20px 0;';
-
-  const pColors = [
-    { bg:'#0f2318', border:'rgba(45,212,191,.3)', headerBg:'rgba(45,212,191,.12)', headerBorder:'rgba(45,212,191,.2)', accent:'#2dd4bf', accentLight:'rgba(45,212,191,.12)', accentBorder:'rgba(45,212,191,.3)', dot:'#2dd4bf', labelColor:'#5eead4', dimLabel:'rgba(45,212,191,.08)', dimBorder:'rgba(45,212,191,.2)' },
-    { bg:'#0d1a22', border:'rgba(99,179,237,.25)', headerBg:'rgba(99,179,237,.1)', headerBorder:'rgba(99,179,237,.18)', accent:'#90cdf4', accentLight:'rgba(99,179,237,.1)', accentBorder:'rgba(99,179,237,.25)', dot:'#90cdf4', labelColor:'#90cdf4', dimLabel:'rgba(99,179,237,.08)', dimBorder:'rgba(99,179,237,.2)' },
-    { bg:'#1a1530', border:'rgba(167,139,250,.25)', headerBg:'rgba(167,139,250,.1)', headerBorder:'rgba(167,139,250,.18)', accent:'#c4b5fd', accentLight:'rgba(167,139,250,.1)', accentBorder:'rgba(167,139,250,.25)', dot:'#c4b5fd', labelColor:'#c4b5fd', dimLabel:'rgba(167,139,250,.08)', dimBorder:'rgba(167,139,250,.2)' },
-  ];
-
-  container.innerHTML = picks.map((p, index) => {
-    const st = (p.estado || 'pendiente').toLowerCase();
-    const isCombo = p.tipo === 'COMBINADA';
-    const isWin  = st === 'ganado';
-    const isLoss = st === 'perdido';
-    const isVoid = st === 'nulo' || st === 'void';
-
-    // Parsear partidos
-    let partidos = [];
-    if (isCombo && p.partidos) { try { partidos = JSON.parse(p.partidos); } catch(e) {} }
-    if (!isCombo || partidos.length === 0) {
-      partidos = [{ deporte:p.deporte, equipo_local:p.equipo_local, equipo_visitante:p.equipo_visitante, liga:p.liga, pais:p.pais, fecha:p.fecha, hora:p.hora, seleccion:p.seleccion||p.mercado, cuota:p.cuota, momento:p.momento }];
-    }
-
-    const depEmoji = {futbol:'⚽',basket:'🏀',tenis:'🎾',otros:'🎯'}[(p.deporte||'futbol').toLowerCase()] || '⚽';
-    const stake = parseFloat(p.stake) || 0;
-    const cuota = parseFloat(p.cuota) || 1;
-    const ganancia = isWin ? '+' + (stake*(cuota-1)).toFixed(2) : isLoss ? '-'+stake.toFixed(2) : '+' + (stake*(cuota-1)).toFixed(2);
-    const timestamp = p.created_at ? new Date(p.created_at).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
-    const pickId = p.id ? p.id.toString().slice(-6).toUpperCase() : '';
-
-    // Partidos HTML
-    const partidosHtml = partidos.map((pt, idx) => {
-      const c = pColors[idx % pColors.length];
-      const depKey = (pt.deporte||p.deporte||'futbol').toLowerCase();
-      const momentoStr = (pt.momento||p.momento||'pre');
-      const momentoLabel = momentoStr === 'live'
-        ? `<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);font-family:monospace">&#9679; LIVE</span>`
-        : `<span style="font-size:9px;padding:2px 7px;border-radius:4px;background:${c.dimLabel};color:${c.labelColor};border:1px solid ${c.dimBorder};font-family:monospace">&#9679; PRE-PARTIDO</span>`;
-      const liga = [pt.pais||p.pais, pt.liga||p.liga].filter(Boolean).join(' · ') || '—';
-      const fechaStr = (pt.fecha||p.fecha) ? new Date((pt.fecha||p.fecha)+'T00:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '';
-      const horaStr = pt.hora||p.hora||'';
-      const fechaDisplay = [fechaStr, horaStr].filter(Boolean).join(' · ');
-      const rawSel = pt.seleccion||p.seleccion||p.mercado||'—';
-      const selParts = rawSel.split(' | ').map(s=>s.trim()).filter(Boolean);
-      const selRows = selParts.map(sel => {
-        const m = sel.match(/@([\d.]+)$/);
-        const selText = m ? sel.replace(/@[\d.]+$/,'').trim() : sel;
-        const selCuota = m ? m[1] : (selParts.length===1 ? parseFloat(pt.cuota||p.cuota||0).toFixed(2) : '');
-        return `<div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-          <div style="display:flex;align-items:center;gap:6px;flex:1">
-            <div style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0"></div>
-            <span style="font-size:11px;color:#e2e8f0">${selText}</span>
-          </div>
-          ${selCuota ? `<span style="font-family:monospace;font-size:10px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;min-width:40px;text-align:center">${selCuota}</span>` : ''}
-        </div>`;
-      }).join('');
-      const cuotaPartido = selParts.length > 1
-        ? `<div style="border-top:1px dashed ${c.accentBorder};margin:3px 0"></div>
-           <div style="display:flex;align-items:center;justify-content:space-between">
-             <span style="font-family:monospace;font-size:9px;font-weight:600;color:${c.accent}">CUOTA PARTIDO</span>
-             <span style="font-family:monospace;font-size:12px;font-weight:700;color:${c.accent};min-width:40px;text-align:center">${parseFloat(pt.cuota||p.cuota||0).toFixed(2)}</span>
-           </div>` : '';
-      return `<div style="background:${c.bg};border:1px solid ${c.border};border-radius:10px;overflow:hidden;margin-bottom:6px">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:${c.headerBg};border-bottom:1px solid ${c.headerBorder}">
-          <div style="display:flex;align-items:center;gap:6px">
-            ${isCombo ? `<span style="font-family:monospace;font-size:9px;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 8px;border-radius:4px;font-weight:700">PRONÓSTICO ${idx+1}</span>` : `<span style="font-size:12px">${depEmoji}</span>`}
-            ${momentoLabel}
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
-            <span style="font-family:monospace;font-size:9px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 7px;border-radius:4px">${liga}</span>
-            ${fechaDisplay ? `<span style="font-family:monospace;font-size:9px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 7px;border-radius:4px">${fechaDisplay}</span>` : ''}
-          </div>
-        </div>
-        <div style="padding:8px 10px">
-          <div style="font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:6px">${pt.equipo_local||p.equipo_local||'—'} <span style="color:${c.accent};font-weight:400">vs</span> ${pt.equipo_visitante||p.equipo_visitante||'—'}</div>
-          <div style="display:flex;flex-direction:column;gap:4px">${selRows}${buildSelloHtml(isWin,isLoss,isVoid,Math.abs(parseFloat(ganancia)||0).toFixed(2))}${cuotaPartido}</div>
-        </div>
-      </div>`;
-    }).join('');
-
-    const selloHtml = ''; // Sello ahora va dentro del partido como estampilla
-
-    return `
-      <div style="margin-bottom:4px">
-        <div style="background:#0a1612;border:1.5px solid #2dd4bf;border-radius:14px;overflow:hidden">
-          <!-- CABECERA -->
-          <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(13,32,26,.9);border-bottom:1px solid rgba(45,212,191,.2)">
-            <div style="flex:1;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-              <span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:${isCombo?'rgba(251,191,36,.15)':'rgba(45,212,191,.15)'};color:${isCombo?'#fbbf24':'#5eead4'};border:1px solid ${isCombo?'rgba(251,191,36,.3)':'rgba(45,212,191,.3)'}">${isCombo?'COMBINADA':'SIMPLE'}</span>
-              <span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:${p.acceso==='premium'?'rgba(251,191,36,.1)':'rgba(107,114,128,.1)'};color:${p.acceso==='premium'?'#fbbf24':'#9ca3af'};border:1px solid ${p.acceso==='premium'?'rgba(251,191,36,.2)':'rgba(107,114,128,.2)'}">${p.acceso==='premium'?'⭐ PREMIUM':'FREE'}</span>
-            </div>
-            <span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:${isWin?'rgba(34,197,94,.15)':isLoss?'rgba(239,68,68,.15)':isVoid?'rgba(148,163,184,.1)':'rgba(251,191,36,.1)'};color:${isWin?'#4ade80':isLoss?'#f87171':isVoid?'#94a3b8':'#fbbf24'};border:1px solid ${isWin?'rgba(34,197,94,.3)':isLoss?'rgba(239,68,68,.3)':isVoid?'rgba(148,163,184,.25)':'rgba(251,191,36,.2)'}">${isWin?'✓ GANADA':isLoss?'✗ PERDIDA':isVoid?'— NULA':'⏳ PENDIENTE'}</span>
-          </div>
-          <!-- PARTIDOS -->
-          <div style="padding:10px 12px 4px">${partidosHtml}</div>
-          <!-- FOOTER -->
-          <div style="margin:0 12px 10px;background:#0d1f1a;border:1px solid rgba(45,212,191,.15);border-radius:8px;padding:8px 10px">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0">
-              <div style="text-align:center;padding:4px"><div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px">${isCombo?'CUOTA TOTAL':'CUOTA'}</div><div style="font-size:16px;font-weight:800;color:#e2e8f0">${p.cuota||'—'}</div></div>
-              <div style="text-align:center;padding:4px;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)"><div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px">STAKE</div><div style="font-size:16px;font-weight:800;color:#e2e8f0">${p.stake||'—'}</div></div>
-              <div style="text-align:center;padding:4px"><div style="font-family:monospace;font-size:7px;color:#2dd4bf;margin-bottom:2px">GANANCIA</div><div style="font-size:16px;font-weight:800;color:#2dd4bf">${ganancia}u</div></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:5px;border-top:1px solid rgba(45,212,191,.1);margin-top:4px">
-              <span style="font-family:monospace;font-size:8px;color:#2dd4bf">${timestamp}</span>
-              <span style="font-size:9px;color:#2dd4bf">✓ Verificado</span>
-              <div style="display:flex;gap:4px;align-items:center">
-                <span style="font-family:monospace;font-size:8px;color:#2dd4bf">${pickId ? '# '+pickId : ''}</span>
-                ${!isWin && !isLoss && !isVoid ? `
-                <button onclick="editPick('${tipsterId}',${index})" title="Editar" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(251,191,36,.25);background:rgba(251,191,36,.08);color:#fbbf24;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center">✎</button>
-                <button onclick="deletePick('${tipsterId}',${index})" title="Borrar" style="width:22px;height:22px;border-radius:4px;border:1px solid rgba(239,68,68,.25);background:rgba(239,68,68,.08);color:#ef4444;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center">✕</button>` : ''}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>`;
-  }).join('');
-}
 // ═══════════════════════════════════════════════════════════════════════════════
 // VER PICK (Modal con vista previa completa)
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -6153,12 +6009,12 @@ async function sendToTelegram(pick) {
     
     // Badge de estado
     const estadoBadge = estado === 'ganado' 
-      ? `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)">✓ GANADA</span>`
+      ? `<span style="font-family:monospace;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);white-space:nowrap">GANADA</span>`
       : estado === 'perdido'
-      ? `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)">✗ PERDIDA</span>`
+      ? `<span style="font-family:monospace;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;background:rgba(239,68,68,.12);color:#ff2222;border:1px solid rgba(239,68,68,.3);white-space:nowrap">PERDIDA</span>`
       : estado === 'nulo' || estado === 'void'
-      ? `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(148,163,184,.1);color:#94a3b8;border:1px solid rgba(148,163,184,.25)">— NULA</span>`
-      : `<span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)">⏳ PENDIENTE</span>`;
+      ? `<span style="font-family:monospace;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;background:rgba(148,163,184,.08);color:#94a3b8;border:1px solid rgba(148,163,184,.25);white-space:nowrap">NULA</span>`
+      : `<span style="font-family:monospace;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.3);white-space:nowrap">PENDIENTE</span>`;
     
     // Renderizar partidos
     let partidosHtml = '';
