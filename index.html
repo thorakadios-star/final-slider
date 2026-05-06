@@ -3485,23 +3485,36 @@ async function addSeleccion(pid, isFirst = false) {
 
   container.insertAdjacentHTML('beforeend', rowHtml);
 
-  // Cargar opciones de Supabase en el nuevo select
-  const newRow = document.getElementById(rowId);
-  const dropdown = newRow?.querySelector('.sel-dropdown');
-  if (dropdown) {
-    dropdown.innerHTML = '<option>⟳ Cargando...</option>';
-    try {
-      const sb = getSbClient();
-      const { data, error } = await sb.from('selecciones').select('id, mercado, opciones').order('mercado');
-      if (error) throw error;
-      dropdown.innerHTML = '<option value="">— Selecciona selección —</option>' +
-        data.map(s => {
-          const label = s.opciones ? `${s.mercado} — ${s.opciones}` : s.mercado;
-          return `<option value="${label}">${label}</option>`;
-        }).join('');
-    } catch(e) {
-      dropdown.innerHTML = '<option value="">⚠ Error al cargar</option>';
-    }
+ // Cargar opciones de Supabase en el select de Selecciones
+const newRow = document.getElementById(rowId);
+const dropdown = newRow?.querySelector('.sel-dropdown');
+
+if (dropdown) {
+  dropdown.innerHTML = '<option>⟳ Cargando mercados...</option>';
+  try {
+    const sb = getSbClient();
+    
+    // Traemos id, mercado y opciones
+    const { data, error } = await sb.from('selecciones')
+      .select('id, mercado, opciones')
+      .order('id', { ascending: true }); // Ordenamos por ID para mantener tu estructura lógica
+
+    if (error) throw error;
+
+    let htmlOptions = '<option value="">— Selecciona selección —</option>';
+    
+    data.forEach(s => {
+      // Formato: "Resultado Final: 1" o "Doble Oportunidad: 1X"
+      // Usamos el ID como value para que luego sea fácil identificar la apuesta exacta
+      const etiqueta = `${s.mercado}: ${s.opciones}`;
+      htmlOptions += `<option value="${etiqueta}">${etiqueta}</option>`;
+    });
+
+    dropdown.innerHTML = htmlOptions;
+
+  } catch(e) {
+    console.error("Error cargando selecciones:", e);
+    dropdown.innerHTML = '<option value="">⚠ Error al cargar</option>';
   }
 }
 
