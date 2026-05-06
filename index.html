@@ -3485,38 +3485,42 @@ async function cargarComboSelecciones(rowId) {
 
 2. FUNCIÓN PARA AÑADIR FILAS: Ahora está limpia y llama a la de arriba
 async function addSeleccion(pid, isFirst = false) {
-    const container = document.getElementById(`${pid}-sels-container`);
-    if (!container) return;
-    const idx = container.querySelectorAll('.sel-row').length + 1;
-    const rowId = `${pid}-selrow-${idx}`;
+  const container = document.getElementById(`${pid}-sels-container`);
+  if (!container) return;
+  
+  const idx = container.querySelectorAll('.sel-row').length + 1;
+  const rowId = `${pid}-selrow-${idx}`;
 
-    const rowHtml = `
-    <div id="${rowId}" class="sel-row" style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.15);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;animation:fadeUp .2s ease forwards">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#10b981;letter-spacing:.08em">SEL ${idx}</span>
-            ${idx > 1 ? `<button type="button" onclick="removeSeleccion('${pid}','${rowId}')" style="background:transparent;border:none;color:#52525b;cursor:pointer;font-size:12px;padding:2px 6px" onmouseenter="this.style.color='#ef4444'" onmouseleave="this.style.color='#52525b'">✕</button>` : ''}
-        </div>
-        <div style="display:flex;gap:8px;align-items:flex-start">
-            <div style="flex:1">
-                <select class="sel-dropdown fsel" onchange="onSelRowChange('${pid}','${rowId}')">
-                    <option value="">— Selecciona selección —</option>
-                </select>
-            </div>
-            <div style="width:75px;flex-shrink:0">
-                <label style="font-size:9px;color:#3a5a3a;font-family:'IBM Plex Mono',monospace;display:block;margin-bottom:4px">CUOTA</label>
-                <input type="number" class="sel-cuota finp" placeholder="1.85" step="0.01" min="1" style="font-size:13px;font-weight:700;background:#080c0a;border-color:rgba(16,185,129,.3);text-align:center;padding:8px 6px" oninput="recalcCuotaTotal('${pid}')"/>
-            </div>
-        </div>
-        <div>
-            <label style="font-size:10px;color:#52525b;font-family:'IBM Plex Mono',monospace">✏️ Manual <span style="color:#3a3a44">(opcional)</span></label>
-            <input type="text" class="sel-text finp" placeholder="Selección personalizada..." style="font-size:12px;background:#080c0a;border-color:#1a2020;margin-top:4px" oninput="onSelTextChange('${pid}')"/>
-        </div>
-    </div>`;
+  const rowHtml = `
+  <div id="${rowId}" class="sel-row" style="background:rgba(16,185,129,.04);border:1px solid rgba(16,185,129,.15);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;margin-bottom:10px;animation:fadeUp .2s ease forwards">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:#10b981;letter-spacing:.08em">SEL ${idx}</span>
+      ${idx > 1 ? `<button type="button" onclick="removeSeleccion('${pid}','${rowId}')" style="background:transparent;border:none;color:#52525b;cursor:pointer;font-size:12px;padding:2px 6px">✕</button>` : ''}
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="flex:1">
+        <select class="sel-dropdown fsel" onchange="onSelRowChange('${pid}','${rowId}')">
+          <option value="">— Selecciona selección —</option>
+        </select>
+      </div>
+      <div style="width:75px;flex-shrink:0">
+        <label style="font-size:9px;color:#3a5a3a;font-family:'IBM Plex Mono',monospace;display:block;margin-bottom:4px">CUOTA</label>
+        <input type="number" class="sel-cuota finp" placeholder="1.85" step="0.01" min="1" style="font-size:13px;font-weight:700;background:#080c0a;border-color:rgba(16,185,129,.3);text-align:center;padding:8px 6px" oninput="recalcCuotaTotal('${pid}')"/>
+      </div>
+    </div>
+    <div>
+      <label style="font-size:10px;color:#52525b;font-family:'IBM Plex Mono',monospace">✏️ Manual <span style="color:#3a3a44">(opcional)</span></label>
+      <input type="text" class="sel-text finp" placeholder="Selección personalizada..." style="font-size:12px;background:#080c0a;border-color:#1a2020;margin-top:4px" oninput="onSelTextChange('${pid}')"/>
+    </div>
+  </div>`;
 
-    container.insertAdjacentHTML('beforeend', rowHtml);
+  container.insertAdjacentHTML('beforeend', rowHtml);
 
-    // LLAMADA CLAVE: Se ejecuta después de insertar el HTML
+  // Ejecutamos la carga de datos para esta nueva fila
+  // Usamos un pequeño delay para asegurar que el DOM ha renderizado el nuevo <select>
+  setTimeout(() => {
     cargarComboSelecciones(rowId);
+  }, 50);
 }
 
 // 3. RESTO DE FUNCIONES (Asegúrate de que estén fuera de las anteriores)
