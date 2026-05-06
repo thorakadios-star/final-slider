@@ -3486,27 +3486,30 @@ async function addSeleccion(pid, isFirst = false) {
   container.insertAdjacentHTML('beforeend', rowHtml);
 
  // Cargar opciones de Supabase en el select de Selecciones
-const newRow = document.getElementById(rowId);
-const dropdown = newRow?.querySelector('.sel-dropdown');
+// Definimos la función como ASYNC para permitir el uso de await
+async function cargarOpcionesSeleccion(rowId) {
+  const newRow = document.getElementById(rowId);
+  const dropdown = newRow?.querySelector('.sel-dropdown');
 
-if (dropdown) {
+  if (!dropdown) return;
+
   dropdown.innerHTML = '<option>⟳ Cargando mercados...</option>';
+  
   try {
     const sb = getSbClient();
     
-    // Traemos id, mercado y opciones
+    // Consulta a Supabase usando las columnas reales: mercado y opciones
     const { data, error } = await sb.from('selecciones')
       .select('id, mercado, opciones')
-      .order('id', { ascending: true }); // Ordenamos por ID para mantener tu estructura lógica
+      .order('id', { ascending: true });
 
     if (error) throw error;
 
     let htmlOptions = '<option value="">— Selecciona selección —</option>';
     
     data.forEach(s => {
-      // Formato: "Resultado Final: 1" o "Doble Oportunidad: 1X"
-      // Usamos el ID como value para que luego sea fácil identificar la apuesta exacta
-      const etiqueta = `${s.mercado}: ${s.opciones}`;
+      // Formateamos para el desplegable único
+      const etiqueta = s.opciones ? `${s.mercado}: ${s.opciones}` : s.mercado;
       htmlOptions += `<option value="${etiqueta}">${etiqueta}</option>`;
     });
 
