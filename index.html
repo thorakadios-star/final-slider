@@ -30,7 +30,7 @@ body.admin-mode .admin-only{display:flex !important}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid #1a2620}
+nav{position:sticky;top:0;z-index:100;background:rgba(4,10,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(45,212,191,.15)}
 .nav-inner{max-width:1300px;margin:0 auto;padding:0 20px;height:72px;display:flex;align-items:center;justify-content:space-between}
 .ts-logo{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
 .ts-name{font-weight:900;font-size:18px;letter-spacing:.06em;color:#e2f0de;font-family:'Montserrat',sans-serif;text-transform:uppercase}
@@ -420,7 +420,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter
   .tipster-tab{padding:10px 16px;font-size:12px}
 }
 /* NAV */
-nav{position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid #1a2620;transition:border-color .3s}
+nav{position:sticky;top:0;z-index:100;background:rgba(4,10,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(45,212,191,.15);transition:border-color .3s}
 nav.sc{border-color:#243028}
 .nav-inner{max-width:1300px;margin:0 auto;padding:0 20px;height:72px;display:flex;align-items:center}
 .ts-logo{display:flex;align-items:center;gap:12px;cursor:pointer;flex-shrink:0;text-decoration:none}
@@ -433,9 +433,9 @@ nav.sc{border-color:#243028}
 
 /* PLATFORM SHELL */
 .shell{display:flex;min-height:calc(100vh - 62px)}
-.sb{width:206px;flex-shrink:0;background:#070a09;border-right:1px solid #1a2620;display:flex;flex-direction:column;padding:18px 0;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto}
-.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#2dd4bf;letter-spacing:.13em;text-transform:uppercase;padding:0 14px;margin:14px 0 5px;display:block}
-.sb-item{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:1px 8px;border-radius:3px;cursor:pointer;color:#e2f0de;font-size:13px;border:1px solid transparent;transition:all .15s;font-family:'Inter',sans-serif}
+.sb{width:206px;flex-shrink:0;background:#040a07;border-right:1px solid rgba(45,212,191,.12);display:flex;flex-direction:column;padding:18px 0;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto}
+.sb-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#2dd4bf;letter-spacing:.13em;text-transform:uppercase;padding:0 14px;margin:14px 0 5px;display:block;opacity:.8}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 12px;margin:1px 8px;border-radius:6px;cursor:pointer;color:#7a9a8a;font-size:13px;border:1px solid transparent;transition:all .15s;font-family:'Inter',sans-serif}
 .sb-item svg{flex-shrink:0;opacity:.6;transition:opacity .15s}
 .sb-item:hover{background:#0e1812;color:#f0fdf4;border-color:#22362a}
 .sb-item:hover svg{opacity:1}
@@ -735,16 +735,16 @@ nav.sc{border-color:#243028}
 .ptype{font-family:'Inter',sans-serif;font-size:12px;padding:6px 12px;border-radius:3px;border:1px solid #192018;background:transparent;color:#a1a1aa;cursor:pointer;transition:all .15s}
 .ptype:hover{border-color:#2a2a36;color:#d6e3d2}
 .ptype.act-type{background:rgba(16,185,129,.1);border-color:rgba(74,125,82,.3);color:#9ac49c}
-.flbl{font-size:11px;color:#a1a1aa;display:block;margin-bottom:6px;font-family:'Inter',sans-serif}
-.fsel{width:100%;background:#080c0a;border:1px solid #192018;border-radius:4px;padding:9px 12px;color:#d6e3d2;font-family:'Inter',sans-serif;font-size:13px;outline:none;cursor:pointer;transition:border-color .15s}
-.fsel:focus{border-color:rgba(74,125,82,.4)}
+.flbl{font-size:11px;color:#5eead4;display:block;margin-bottom:6px;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;font-weight:600}
+.fsel{width:100%;background:#060e0a;border:1px solid rgba(45,212,191,.2);border-radius:6px;padding:9px 12px;color:#e2e8f0;font-family:'Inter',sans-serif;font-size:13px;outline:none;cursor:pointer;transition:border-color .15s}
+.fsel:focus{border-color:rgba(45,212,191,.5);box-shadow:0 0 0 2px rgba(45,212,191,.08)}
 .fsel:disabled{opacity:.4;cursor:not-allowed}
 .fval{background:#080c0a;border:1px solid #192018;border-radius:4px;padding:9px 12px;color:#d6e3d2;font-family:'Inter',sans-serif;font-size:13px;min-height:38px;display:flex;align-items:center}
-.finp{width:100%;background:#080c0a;border:1px solid #192018;border-radius:4px;padding:9px 12px;color:#d6e3d2;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s}
-.finp:focus{border-color:rgba(74,125,82,.4)}
+.finp{width:100%;background:#060e0a;border:1px solid rgba(45,212,191,.2);border-radius:6px;padding:9px 12px;color:#e2e8f0;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s}
+.finp:focus{border-color:rgba(45,212,191,.5);box-shadow:0 0 0 2px rgba(45,212,191,.08)}
 .pata-row{background:#080c0a;border:1px solid #192018;border-radius:6px;padding:14px;display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
-.tog-btn:hover{color:#d6e3d2;background:#111118}
-.tog-btn.act-tog{background:rgba(16,185,129,.1);color:#9ac49c}
+.tog-btn:hover{color:#e2e8f0;background:rgba(45,212,191,.08)}
+.tog-btn.act-tog{background:rgba(45,212,191,.15);color:#2dd4bf;border-color:rgba(45,212,191,.4)}
 .sport-btn{font-family:'Inter',sans-serif;font-size:13px;padding:8px 16px;border-radius:4px;border:1px solid #192018;background:transparent;color:#a1a1aa;cursor:pointer;transition:all .15s}
 .sport-btn:hover{border-color:#2a2a36;color:#d6e3d2}
 .sport-btn.act-sport{background:rgba(16,185,129,.1);border-color:rgba(74,125,82,.3);color:#9ac49c}
@@ -1853,7 +1853,7 @@ if (typeof html2canvas === 'undefined') {
       <a href="#" class="ts-logo" onclick="go('land');return false;">
         <img src="logo-truestats.png" alt="TrueStats AI" class="ts-logo-img">
       </a>
-      <button onclick="go('land')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(45,212,191,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
+      <button onclick="go('land')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid rgba(45,212,191,.3);border-radius:8px;color:#2dd4bf;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;background:rgba(45,212,191,.06)" onmouseenter="this.style.background='rgba(45,212,191,.12)';this.style.color='#e2e8f0'" onmouseleave="this.style.background='rgba(45,212,191,.06)';this.style.color='#2dd4bf'">
         <i class="fa-solid fa-arrow-left"></i>
         Volver
       </button>
@@ -2109,7 +2109,7 @@ if (typeof html2canvas === 'undefined') {
       <a href="#" class="ts-logo" onclick="go('land');return false;">
         <img src="logo-truestats.png" alt="TrueStats AI" class="ts-logo-img">
       </a>
-      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(45,212,191,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
+      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid rgba(45,212,191,.3);border-radius:8px;color:#2dd4bf;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;background:rgba(45,212,191,.06)" onmouseenter="this.style.background='rgba(45,212,191,.12)';this.style.color='#e2e8f0'" onmouseleave="this.style.background='rgba(45,212,191,.06)';this.style.color='#2dd4bf'">
         <i class="fa-solid fa-arrow-left"></i>
         Volver a Tipsters
       </button>
@@ -2264,12 +2264,12 @@ if (typeof html2canvas === 'undefined') {
 
 <!-- PICKS PAGE -->
 <div id="pg-picks" style="display:none !important">
-  <nav style="position:sticky;top:0;z-index:100;background:rgba(5,7,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid #1a2620">
+  <nav style="position:sticky;top:0;z-index:100;background:rgba(4,10,8,.98);backdrop-filter:blur(20px);border-bottom:1px solid rgba(45,212,191,.15)">
     <div style="max-width:1300px;margin:0 auto;padding:0 20px;height:72px;display:flex;align-items:center;justify-content:space-between">
       <a href="#" class="ts-logo" onclick="go('land');return false;">
         <img src="logo-truestats.png" alt="TrueStats AI" class="ts-logo-img">
       </a>
-      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid #1a2620;border-radius:100px;color:#7a9280;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s" onmouseenter="this.style.borderColor='rgba(45,212,191,.3)';this.style.color='#e8f5e4'" onmouseleave="this.style.borderColor='#1a2620';this.style.color='#7a9280'">
+      <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid rgba(45,212,191,.3);border-radius:8px;color:#2dd4bf;font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;background:rgba(45,212,191,.06)" onmouseenter="this.style.background='rgba(45,212,191,.12)';this.style.color='#e2e8f0'" onmouseleave="this.style.background='rgba(45,212,191,.06)';this.style.color='#2dd4bf'">
         <i class="fa-solid fa-arrow-left"></i>
         Volver
       </button>
@@ -2322,10 +2322,10 @@ if (typeof html2canvas === 'undefined') {
             Crear <span style="color:#2dd4bf;text-shadow:0 0 15px rgba(45,212,191,.6)">Pick</span>
           </h1>
           <p id="picks-header-subtitle" style="font-size:11px;font-weight:500;color:#94a3b8;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em">
-            <strong style="color:#e2e8f0">Green Hunter Pro</strong> · <span style="color:#2dd4bf">Publicación auditada</span> por TrueStats AI
+            <span style="color:#2dd4bf;font-weight:700" id="picks-tipster-name-header">Green Hunter Pro</span> · <span style="color:#5eead4">PUBLICACIÓN AUDITADA POR TRUESTATS AI</span>
           </p>
         </div>
-        <button onclick="go('plat')" style="display:flex;align-items:center;gap:7px;background:transparent;border:1px solid #162018;color:#a1a1aa;font-family:'Inter',sans-serif;font-size:13px;padding:8px 16px;border-radius:4px;cursor:pointer;transition:all .15s" onmouseenter="this.style.borderColor='#2a3830';this.style.color='#d6e3d2'" onmouseleave="this.style.borderColor='#162018';this.style.color='#a1a1aa'">
+        <button onclick="go('plat')" style="display:flex;align-items:center;gap:7px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.3);color:#2dd4bf;font-family:'Inter',sans-serif;font-size:13px;padding:8px 16px;border-radius:8px;cursor:pointer;transition:all .15s" onmouseenter="this.style.background='rgba(45,212,191,.15)';this.style.color='#e2e8f0'" onmouseleave="this.style.background='rgba(45,212,191,.06)';this.style.color='#2dd4bf'">
           <i class="fa-solid fa-arrow-left"></i>
           Volver
         </button>
@@ -2337,7 +2337,7 @@ if (typeof html2canvas === 'undefined') {
         
         <!-- Botón Volver (abajo) -->
         <div style="display:flex;justify-content:center;margin-top:24px;padding-top:20px;border-top:1px solid #162018">
-          <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;background:transparent;border:1px solid #162018;color:#a1a1aa;font-family:'Inter',sans-serif;font-size:13px;padding:10px 20px;border-radius:6px;cursor:pointer;transition:all .15s" onmouseenter="this.style.borderColor='#2a3830';this.style.color='#d6e3d2'" onmouseleave="this.style.borderColor='#162018';this.style.color='#a1a1aa'">
+          <button onclick="go('plat')" style="display:flex;align-items:center;gap:8px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.3);color:#2dd4bf;font-family:'Inter',sans-serif;font-size:13px;padding:10px 20px;border-radius:8px;cursor:pointer;transition:all .15s" onmouseenter="this.style.background='rgba(45,212,191,.15)';this.style.color='#e2e8f0'" onmouseleave="this.style.background='rgba(45,212,191,.06)';this.style.color='#2dd4bf'">
             <i class="fa-solid fa-arrow-left"></i>
             Volver a Tipsters
           </button>
@@ -2788,7 +2788,7 @@ function setActiveTipster(tipsterId) {
   // Actualizar header de la página Crear Pick
   const subtitle = document.getElementById('picks-header-subtitle');
   if (subtitle) {
-    subtitle.textContent = config.name + ' · Publicación auditada por TrueStats AI';
+    subtitle.innerHTML = `<span style="color:#2dd4bf;font-weight:700">${config.name}</span> · <span style="color:#5eead4">PUBLICACIÓN AUDITADA POR TRUESTATS AI</span>`;
   }
   
   // Actualizar vista previa
@@ -3492,10 +3492,13 @@ async function addSeleccion(pid, isFirst = false) {
     dropdown.innerHTML = '<option>⟳ Cargando...</option>';
     try {
       const sb = getSbClient();
-      const { data, error } = await sb.from('selecciones').select('id, nombre').order('nombre');
+      const { data, error } = await sb.from('selecciones').select('id, mercado, opciones').order('mercado');
       if (error) throw error;
       dropdown.innerHTML = '<option value="">— Selecciona selección —</option>' +
-        data.map(s => `<option value="${s.nombre}">${s.nombre}</option>`).join('');
+        data.map(s => {
+          const label = s.opciones ? `${s.mercado} — ${s.opciones}` : s.mercado;
+          return `<option value="${label}">${label}</option>`;
+        }).join('');
     } catch(e) {
       dropdown.innerHTML = '<option value="">⚠ Error al cargar</option>';
     }
@@ -4782,7 +4785,9 @@ function openPicks(tipsterId) {
     
 
 function renderPicksPanel(tipsterId) {
-  const container = document.getElementById(`picks-panel-${tipsterId}`);
+  // Buscar el contenedor correcto — puede ser picks-panel-{id} o tipster-picks-container
+  const container = document.getElementById(`picks-panel-${tipsterId}`) 
+    || document.getElementById('tipster-picks-container');
   if (!container) return;
   const monthSelector = document.getElementById('month-filter-picks');
   const selectedMonth = monthSelector?.value || (() => {
