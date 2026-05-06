@@ -3486,40 +3486,36 @@ async function addSeleccion(pid, isFirst = false) {
   container.insertAdjacentHTML('beforeend', rowHtml);
 
  // Cargar opciones de Supabase en el select de Selecciones
-// Definimos la función como ASYNC para permitir el uso de await
-async function cargarOpcionesSeleccion(rowId) {
-  const newRow = document.getElementById(rowId);
-  const dropdown = newRow?.querySelector('.sel-dropdown');
+// 1. Definimos la función ASYNC
+async function cargarComboSelecciones(rowId) {
+    const newRow = document.getElementById(rowId);
+    const dropdown = newRow?.querySelector('.sel-dropdown');
+    if (!dropdown) return;
 
-  if (!dropdown) return;
-
-  dropdown.innerHTML = '<option>⟳ Cargando mercados...</option>';
-  
-  try {
-    const sb = getSbClient();
+    dropdown.innerHTML = '<option>⟳ Cargando...</option>';
     
-    // Consulta a Supabase usando las columnas reales: mercado y opciones
-    const { data, error } = await sb.from('selecciones')
-      .select('id, mercado, opciones')
-      .order('id', { ascending: true });
+    try {
+        const sb = getSbClient();
+        const { data, error } = await sb.from('selecciones')
+            .select('id, mercado, opciones')
+            .order('id', { ascending: true });
 
-    if (error) throw error;
+        if (error) throw error;
 
-    let htmlOptions = '<option value="">— Selecciona selección —</option>';
-    
-    data.forEach(s => {
-      // Formateamos para el desplegable único
-      const etiqueta = s.opciones ? `${s.mercado}: ${s.opciones}` : s.mercado;
-      htmlOptions += `<option value="${etiqueta}">${etiqueta}</option>`;
-    });
-
-    dropdown.innerHTML = htmlOptions;
-
-  } catch(e) {
-    console.error("Error cargando selecciones:", e);
-    dropdown.innerHTML = '<option value="">⚠ Error al cargar</option>';
-  }
+        let html = '<option value="">— Selecciona selección —</option>';
+        data.forEach(s => {
+            const etiqueta = s.opciones ? `${s.mercado}: ${s.opciones}` : s.mercado;
+            html += `<option value="${etiqueta}">${etiqueta}</option>`;
+        });
+        dropdown.innerHTML = html;
+    } catch(e) {
+        console.error("Error Supabase:", e);
+        dropdown.innerHTML = '<option value="">⚠ Error</option>';
+    }
 }
+
+// 2. Para usarla, simplemente llámala donde antes tenías el código suelto:
+cargarComboSelecciones(rowId);
 
 // Eliminar una fila de selección
 function removeSeleccion(pid, rowId) {
