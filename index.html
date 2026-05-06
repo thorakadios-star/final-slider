@@ -3119,7 +3119,7 @@ function renderTipsterPicks() {
       const cuotaPartido = selParts.length > 1
         ? `<div style="border-top:1px dashed ${c.accentBorder};margin:3px 0"></div>
            <div style="display:flex;align-items:center;justify-content:space-between">
-             <span style="font-family:monospace;font-size:9px;font-weight:600;color:${c.accent}">CUOTA PARTIDO</span>
+             <span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0">CUOTA SELECCIÓN</span>
              <span style="font-family:monospace;font-size:12px;font-weight:700;color:${c.accent};min-width:40px;text-align:center">${parseFloat(pt.cuota||p.cuota||0).toFixed(2)}</span>
            </div>` : '';
 
@@ -4088,7 +4088,7 @@ function buildVistaPrevia() {
       </div>
       <div style="flex:1;min-width:0">
         <div id="prev-tipster-name" style="font-weight:700;font-size:15px;color:#e2e8f0">${config.name}</div>
-        <div style="font-size:10px;color:#2dd4bf;font-family:monospace;letter-spacing:.08em">TRUESTATS AI VERIFIED</div>
+        <div style="font-size:12px;color:#2dd4bf;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;margin-top:2px">TRUESTATS AI VERIFIED</div>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
         <span id="prev-tipo-badge" style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:rgba(45,212,191,.15);color:#5eead4;border:1px solid rgba(45,212,191,.3)">SIMPLE</span>
@@ -4700,7 +4700,7 @@ function updatePreview() {
         const cuotaPartidoRow = selParts.length > 1 && cuota > 0
           ? `<div style="border-top:1px dashed ${c.accentBorder};margin:3px 0"></div>
              <div style="display:flex;align-items:center;justify-content:space-between">
-               <span style="font-family:monospace;font-size:8px;font-weight:600;color:${c.accent}">CUOTA PARTIDO</span>
+               <span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0">CUOTA SELECCIÓN</span>
                <span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};min-width:38px;text-align:center">${cuota.toFixed(2)}</span>
              </div>` : '';
 
@@ -4780,6 +4780,154 @@ function openPicks(tipsterId) {
   go('picks');
 }
     
+
+function renderPicksPanel(tipsterId) {
+  const container = document.getElementById(`picks-panel-${tipsterId}`);
+  if (!container) return;
+  const monthSelector = document.getElementById('month-filter-picks');
+  const selectedMonth = monthSelector?.value || (() => {
+    const n = new Date();
+    return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;
+  })();
+
+  const allPicks = picksStore[tipsterId] || [];
+  const picks = (selectedMonth === 'all'
+    ? allPicks
+    : allPicks.filter(p => {
+        const ref = p.created_at ? p.created_at.slice(0,7) : (p.fecha ? p.fecha.slice(0,7) : '');
+        return ref === selectedMonth;
+      })
+  ).sort((a, b) => new Date(b.created_at || b.fecha) - new Date(a.created_at || a.fecha));
+
+  if (picks.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:40px 20px;color:#3a5045;font-family:'IBM Plex Mono',monospace;font-size:13px">Sin picks en este período</div>`;
+    return;
+  }
+
+  container.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;padding:20px 0;';
+
+  const pColors = [
+    { bg:'#0f2318', border:'rgba(45,212,191,.3)', headerBg:'rgba(45,212,191,.12)', headerBorder:'rgba(45,212,191,.2)', accent:'#2dd4bf', accentLight:'rgba(45,212,191,.12)', accentBorder:'rgba(45,212,191,.3)', dot:'#2dd4bf', labelColor:'#5eead4', dimLabel:'rgba(45,212,191,.08)', dimBorder:'rgba(45,212,191,.2)' },
+    { bg:'#0d1a22', border:'rgba(99,179,237,.25)', headerBg:'rgba(99,179,237,.1)', headerBorder:'rgba(99,179,237,.18)', accent:'#90cdf4', accentLight:'rgba(99,179,237,.1)', accentBorder:'rgba(99,179,237,.25)', dot:'#90cdf4', labelColor:'#90cdf4', dimLabel:'rgba(99,179,237,.08)', dimBorder:'rgba(99,179,237,.2)' },
+    { bg:'#1a1530', border:'rgba(167,139,250,.25)', headerBg:'rgba(167,139,250,.1)', headerBorder:'rgba(167,139,250,.18)', accent:'#c4b5fd', accentLight:'rgba(167,139,250,.1)', accentBorder:'rgba(167,139,250,.25)', dot:'#c4b5fd', labelColor:'#c4b5fd', dimLabel:'rgba(167,139,250,.08)', dimBorder:'rgba(167,139,250,.2)' },
+  ];
+
+  container.innerHTML = picks.map((p, index) => {
+    const st = (p.estado || 'pendiente').toLowerCase();
+    const isCombo = p.tipo === 'COMBINADA';
+    const isWin   = st === 'ganado';
+    const isLoss  = st === 'perdido';
+    const isVoid  = st === 'nulo' || st === 'void';
+
+    let partidos = [];
+    if (isCombo && p.partidos) { try { partidos = JSON.parse(p.partidos); } catch(e){} }
+    if (!isCombo || partidos.length === 0) {
+      partidos = [{ deporte:p.deporte, equipo_local:p.equipo_local, equipo_visitante:p.equipo_visitante, liga:p.liga, pais:p.pais, fecha:p.fecha, hora:p.hora, seleccion:p.seleccion||p.mercado, cuota:p.cuota, momento:p.momento }];
+    }
+
+    const depEmoji = {futbol:'⚽',basket:'🏀',tenis:'🎾',otros:'🎯'}[(p.deporte||'futbol').toLowerCase()]||'⚽';
+    const stake = parseFloat(p.stake)||0;
+    const cuota = parseFloat(p.cuota)||1;
+    const ganancia = isWin ? '+' + (stake*(cuota-1)).toFixed(2) : isLoss ? '-'+stake.toFixed(2) : '+' + (stake*(cuota-1)).toFixed(2);
+    const timestamp = p.created_at ? new Date(p.created_at).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+    const pickId = p.id ? p.id.toString().slice(-6).toUpperCase() : '';
+
+    const partidosHtml = partidos.map((pt, idx) => {
+      const c = pColors[idx % pColors.length];
+      const momentoStr = (pt.momento||p.momento||'pre');
+      const _momBadge = momentoStr === 'live'
+        ? `<span style="font-family:monospace;font-size:11px;color:#f87171;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);padding:2px 7px;border-radius:4px;font-weight:700;white-space:nowrap;flex-shrink:0">LIVE</span>`
+        : `<span style="font-family:monospace;font-size:11px;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;font-weight:700;white-space:nowrap;flex-shrink:0">PRE-PARTIDO</span>`;
+      const liga = [pt.pais||p.pais, pt.liga||p.liga].filter(Boolean).join(' · ') || '—';
+      const fechaStr = (pt.fecha||p.fecha) ? new Date((pt.fecha||p.fecha)+'T00:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '';
+      const horaStr = pt.hora||p.hora||'';
+      const fechaDisplay = [fechaStr,horaStr].filter(Boolean).join(' · ');
+      const rawSel = pt.seleccion||p.seleccion||p.mercado||'—';
+      const selParts = rawSel.split(' | ').map(s=>s.trim()).filter(Boolean);
+      const selRows = selParts.map(sel => {
+        const m = sel.match(/@([\d.]+)$/);
+        const selText = m ? sel.replace(/@[\d.]+$/,'').trim() : sel;
+        const selCuota = m ? m[1] : (selParts.length===1 ? parseFloat(pt.cuota||p.cuota||0).toFixed(2) : '');
+        return `<div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+          <div style="display:flex;align-items:center;gap:6px;flex:1"><div style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0"></div><span style="font-size:12px;color:#e2e8f0;font-weight:500">${selText}</span></div>
+          ${selCuota ? `<span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;min-width:40px;text-align:center">${selCuota}</span>` : ''}
+        </div>`;
+      }).join('');
+      const cuotaSel = `<div style="border-top:1px dashed ${c.accentBorder};margin:3px 0"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0">CUOTA SELECCIÓN</span>
+          <span style="font-family:monospace;font-size:13px;font-weight:700;color:${c.accent};min-width:40px;text-align:center">${parseFloat(pt.cuota||p.cuota||0).toFixed(2)}</span>
+        </div>`;
+      const sello = buildSelloHtml(isWin,isLoss,isVoid,Math.abs(parseFloat(ganancia)||0).toFixed(2));
+      return `<div style="background:${c.bg};border:1px solid ${c.border};border-radius:10px;overflow:hidden;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:${c.headerBg};border-bottom:1px solid ${c.headerBorder}">
+          ${_momBadge}
+          <div style="display:flex;align-items:center;gap:5px;margin-left:6px;flex-shrink:0">
+            <span style="font-family:monospace;font-size:10px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 6px;border-radius:4px;white-space:nowrap">${liga}</span>
+            ${fechaDisplay ? `<span style="font-family:monospace;font-size:10px;color:${c.labelColor};background:${c.dimLabel};border:1px solid ${c.dimBorder};padding:2px 6px;border-radius:4px;white-space:nowrap">${fechaDisplay}</span>` : ''}
+          </div>
+        </div>
+        <div style="padding:8px 10px">
+          <div style="font-size:13px;font-weight:700;color:#e2e8f0;margin-bottom:6px">${pt.equipo_local||p.equipo_local||'—'} <span style="color:${c.accent};font-weight:400">vs</span> ${pt.equipo_visitante||p.equipo_visitante||'—'}</div>
+          <div style="display:flex;flex-direction:column;gap:4px">${selRows}${sello}${cuotaSel}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    return `
+      <div style="margin-bottom:4px">
+        <div style="background:#0a1612;border:1.5px solid #2dd4bf;border-radius:14px;overflow:hidden">
+          <div style="padding:10px 14px;background:rgba(13,32,26,.9);border-bottom:1px solid rgba(45,212,191,.2)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:700;font-size:15px;color:#e2e8f0">${tipsterConfig[tipsterId]?.name||tipsterId}</div>
+                <div style="font-size:12px;color:#2dd4bf;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;margin-top:2px">TRUESTATS AI VERIFIED</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+              <div><span style="font-family:monospace;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:700;white-space:nowrap;background:${isCombo?'rgba(251,191,36,.12)':'rgba(45,212,191,.12)'};color:${isCombo?'#fbbf24':'#2dd4bf'};border:1px solid ${isCombo?'rgba(251,191,36,.3)':'rgba(45,212,191,.3)'}">${isCombo?'COMBINADA':'SIMPLE'}</span></div>
+              <div style="text-align:center"><span style="font-family:monospace;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:700;white-space:nowrap;background:${p.acceso==='premium'?'rgba(251,191,36,.12)':'rgba(255,255,255,.08)'};color:${p.acceso==='premium'?'#fbbf24':'#e2e8f0'};border:1px solid ${p.acceso==='premium'?'rgba(251,191,36,.3)':'rgba(255,255,255,.2)'}">${p.acceso==='premium'?'PREMIUM':'FREE'}</span></div>
+              <div style="text-align:right"><span style="font-family:monospace;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:700;white-space:nowrap;background:${isWin?'rgba(34,197,94,.12)':isLoss?'rgba(239,68,68,.12)':isVoid?'rgba(148,163,184,.08)':'rgba(251,191,36,.12)'};color:${isWin?'#22c55e':isLoss?'#ff2222':isVoid?'#94a3b8':'#fbbf24'};border:1px solid ${isWin?'rgba(34,197,94,.3)':isLoss?'rgba(239,68,68,.3)':isVoid?'rgba(148,163,184,.25)':'rgba(251,191,36,.3)'}">${isWin?'GANADA':isLoss?'PERDIDA':isVoid?'NULA':'PENDIENTE'}</span></div>
+            </div>
+          </div>
+          <div style="padding:10px 12px 4px">${partidosHtml}</div>
+          <div style="margin:0 12px 10px;background:#0d1f1a;border:1px solid rgba(45,212,191,.2);border-radius:10px;padding:10px 12px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+              <div style="text-align:center;padding:4px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.15);border-radius:6px">
+                <div style="font-family:monospace;font-size:11px;font-weight:700;color:#2dd4bf;margin-bottom:2px">${isCombo?'CUOTA TOTAL':'CUOTA'}</div>
+                <div style="font-size:15px;font-weight:800;color:#e2e8f0">${p.cuota||'—'}</div>
+              </div>
+              <div style="text-align:center;padding:4px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.15);border-radius:6px">
+                <div style="font-family:monospace;font-size:11px;font-weight:700;color:#2dd4bf;margin-bottom:2px">STAKE</div>
+                <div style="font-size:15px;font-weight:800;color:#e2e8f0">${p.stake||'—'}</div>
+              </div>
+              <div style="text-align:center;padding:4px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.15);border-radius:6px">
+                <div style="font-family:monospace;font-size:11px;font-weight:700;color:#2dd4bf;margin-bottom:2px">GANANCIA</div>
+                <div style="font-size:15px;font-weight:800;color:#2dd4bf">${ganancia}u</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:6px 0;border-top:1px solid rgba(45,212,191,.12)">
+              <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+                <i class="fa-regular fa-clock" style="color:#2dd4bf;font-size:11px"></i>
+                <span style="font-family:monospace;font-size:9px;color:#2dd4bf;font-weight:600">${timestamp}</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:4px;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)">
+                <i class="fa-solid fa-shield-halved" style="color:#2dd4bf;font-size:11px"></i>
+                <span style="font-size:10px;color:#2dd4bf;font-weight:700">Verificado</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:3px">
+                <i class="fa-solid fa-hashtag" style="color:#2dd4bf;font-size:10px"></i>
+                <span style="font-family:monospace;font-size:9px;color:#2dd4bf;font-weight:600">${pickId}</span>
+                ${!isWin && !isLoss && !isVoid ? `
+                <button onclick="editPick('${tipsterId}',${index})" title="Editar" style="width:19px;height:19px;border-radius:4px;border:1px solid rgba(251,191,36,.25);background:rgba(251,191,36,.08);color:#fbbf24;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;margin-left:3px">✎</button>
+                <button onclick="deletePick('${tipsterId}',${index})" title="Borrar" style="width:19px;height:19px;border-radius:4px;border:1px solid rgba(239,68,68,.25);background:rgba(239,68,68,.08);color:#ef4444;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center">✕</button>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // VER PICK (Modal con vista previa completa)
@@ -6059,7 +6207,7 @@ async function sendToTelegram(pick) {
       const cuotaPartido = selParts.length > 1
         ? `<div style="border-top:1px dashed ${c.accentBorder};margin:4px 0"></div>
            <div style="display:flex;align-items:center;justify-content:space-between">
-             <span style="font-family:monospace;font-size:9px;font-weight:600;color:${c.accent}">CUOTA PARTIDO</span>
+             <span style="font-family:monospace;font-size:11px;font-weight:700;color:${c.accent};background:${c.accentLight};border:1px solid ${c.accentBorder};padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0">CUOTA SELECCIÓN</span>
              <span style="font-family:monospace;font-size:13px;font-weight:700;color:${c.accent};min-width:46px;text-align:center">${parseFloat(pt.cuota||0).toFixed(2)}</span>
            </div>` : '';
 
@@ -6132,17 +6280,20 @@ async function sendToTelegram(pick) {
         <div id="telegram-card" style="background:#0a1612;border:1.5px solid #2dd4bf;border-radius:16px;overflow:hidden">
 
           <!-- CABECERA TIPSTER -->
-          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(13,32,26,.9);border-bottom:1px solid rgba(45,212,191,.2)">
-            <div style="width:46px;height:46px;border-radius:10px;border:1.5px solid rgba(45,212,191,.5);overflow:hidden;background:#132a16;flex-shrink:0">
-              <img src="${tipster.avatar}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:14px;font-weight:700;color:#2dd4bf;display:flex;align-items:center;justify-content:center;height:100%\'>${tipster.initials}</span>'"/>
+          <div style="padding:10px 14px;background:rgba(13,32,26,.9);border-bottom:1px solid rgba(45,212,191,.2)">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              <div style="width:46px;height:46px;border-radius:10px;border:1.5px solid rgba(45,212,191,.5);overflow:hidden;background:#132a16;flex-shrink:0">
+                <img src="${tipster.avatar}" style="width:100%;height:100%;object-fit:cover" crossorigin="anonymous" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\'font-size:14px;font-weight:700;color:#2dd4bf;display:flex;align-items:center;justify-content:center;height:100%\'>${tipster.initials}</span>'"/>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:700;font-size:15px;color:#e2e8f0">${tipster.name}</div>
+                <div style="font-size:12px;color:#2dd4bf;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;margin-top:2px">TRUESTATS AI VERIFIED</div>
+              </div>
             </div>
-            <div style="flex:1;min-width:0">
-              <div style="font-weight:700;font-size:15px;color:#e2e8f0">${tipster.name}</div>
-              <div style="font-size:10px;color:#2dd4bf;font-family:monospace;letter-spacing:.08em">TRUESTATS AI VERIFIED</div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-              <span style="font-family:monospace;font-size:9px;padding:3px 8px;border-radius:4px;background:${isCombo ? 'rgba(251,191,36,.15)' : 'rgba(45,212,191,.15)'};color:${isCombo ? '#fbbf24' : '#5eead4'};border:1px solid ${isCombo ? 'rgba(251,191,36,.3)' : 'rgba(45,212,191,.3)'}">${isCombo ? 'COMBINADA' : 'SIMPLE'}</span>
-              ${estadoBadge}
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px">
+              <div><span style="font-family:monospace;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;background:${isCombo?'rgba(251,191,36,.12)':'rgba(45,212,191,.12)'};color:${isCombo?'#fbbf24':'#2dd4bf'};border:1px solid ${isCombo?'rgba(251,191,36,.3)':'rgba(45,212,191,.3)'}">${isCombo?'COMBINADA':'SIMPLE'}</span></div>
+              <div style="text-align:center"><span style="font-family:monospace;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;background:${pick.acceso==='premium'?'rgba(251,191,36,.12)':'rgba(255,255,255,.08)'};color:${pick.acceso==='premium'?'#fbbf24':'#e2e8f0'};border:1px solid ${pick.acceso==='premium'?'rgba(251,191,36,.3)':'rgba(255,255,255,.2)'}">${pick.acceso==='premium'?'PREMIUM':'FREE'}</span></div>
+              <div style="text-align:right">${estadoBadge}</div>
             </div>
           </div>
 
@@ -6153,24 +6304,24 @@ async function sendToTelegram(pick) {
 
           <!-- FOOTER: cuota / stake / ganancia + timestamp -->
           <div style="margin:0 14px 12px;background:#0d1f1a;border:1px solid rgba(45,212,191,.2);border-radius:10px;padding:11px">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0">
-              <div style="text-align:center;padding:6px 4px">
-                <div style="font-family:monospace;font-size:8px;color:#2dd4bf;margin-bottom:3px;letter-spacing:.06em">${isCombo ? 'CUOTA TOTAL' : 'CUOTA'}</div>
-                <div style="font-size:20px;font-weight:800;color:#e2e8f0">${cuotaTotal.toFixed(2)}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+              <div style="text-align:center;padding:5px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.15);border-radius:6px">
+                <div style="font-family:monospace;font-size:11px;font-weight:700;color:#2dd4bf;margin-bottom:3px">${isCombo ? 'CUOTA TOTAL' : 'CUOTA'}</div>
+                <div style="font-size:18px;font-weight:800;color:#e2e8f0">${cuotaTotal.toFixed(2)}</div>
               </div>
-              <div style="text-align:center;padding:6px 4px;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)">
-                <div style="font-family:monospace;font-size:8px;color:#2dd4bf;margin-bottom:3px;letter-spacing:.06em">STAKE (U)</div>
-                <div style="font-size:20px;font-weight:800;color:#e2e8f0">${stake}</div>
+              <div style="text-align:center;padding:5px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.15);border-radius:6px">
+                <div style="font-family:monospace;font-size:11px;font-weight:700;color:#2dd4bf;margin-bottom:3px">STAKE (U)</div>
+                <div style="font-size:18px;font-weight:800;color:#e2e8f0">${stake}</div>
               </div>
-              <div style="text-align:center;padding:6px 4px">
-                <div style="font-family:monospace;font-size:8px;color:#2dd4bf;margin-bottom:3px;letter-spacing:.06em">GANANCIA (U)</div>
-                <div style="font-size:20px;font-weight:800;color:#2dd4bf">+${gananciaNum}</div>
+              <div style="text-align:center;padding:5px;background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.15);border-radius:6px">
+                <div style="font-family:monospace;font-size:11px;font-weight:700;color:#2dd4bf;margin-bottom:3px">GANANCIA (U)</div>
+                <div style="font-size:18px;font-weight:800;color:#2dd4bf">+${gananciaNum}</div>
               </div>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:6px 0;border-top:1px solid rgba(45,212,191,.12);border-bottom:1px solid rgba(45,212,191,.12);margin:8px 0">
-              <div style="text-align:center"><span style="font-family:monospace;font-size:9px;color:#2dd4bf">${pubDateTime}</span></div>
-              <div style="text-align:center;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)"><span style="font-size:10px;color:#2dd4bf">✓ Verificado</span></div>
-              <div style="text-align:center"><span style="font-family:monospace;font-size:9px;color:#2dd4bf"># ${pickId.split('-')[1]||pickId}</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;padding:6px 0;border-top:1px solid rgba(45,212,191,.12);margin-bottom:0">
+              <div style="display:flex;align-items:center;justify-content:center;gap:5px"><i class="fa-regular fa-clock" style="color:#2dd4bf;font-size:11px"></i><span style="font-family:monospace;font-size:10px;color:#2dd4bf;font-weight:600">${pubDateTime}</span></div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:5px;border-left:1px solid rgba(45,212,191,.1);border-right:1px solid rgba(45,212,191,.1)"><i class="fa-solid fa-shield-halved" style="color:#2dd4bf;font-size:11px"></i><span style="font-size:11px;color:#2dd4bf;font-weight:700">Verificado</span></div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:5px"><i class="fa-solid fa-hashtag" style="color:#2dd4bf;font-size:11px"></i><span style="font-family:monospace;font-size:10px;color:#2dd4bf;font-weight:600">${pickId.split('-')[1]||pickId}</span></div>
             </div>
           </div>
 
