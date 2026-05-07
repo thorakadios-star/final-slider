@@ -2184,7 +2184,7 @@ if (typeof html2canvas === 'undefined') {
   <!-- Tabs para Picks -->
   <div class="tipster-tabs" id="tabs-picks-section">
     <button class="tipster-tab tab-green active">Picks</button>
-    <select id="month-filter-picks" class="tipster-tab tab-orange" onchange="renderPicksPanel('ghp')" style="appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:28px;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23fb923c%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>');background-repeat:no-repeat;background-position:right 10px center">
+    <select id="month-filter-picks" class="tipster-tab tab-orange" onchange="renderPicksPanel(currentProfileTipsterId || activeTipsterId || 'ghp')" style="appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:28px;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23fb923c%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>');background-repeat:no-repeat;background-position:right 10px center">
     </select>
     <div style="flex:1"></div>
     <button class="tipster-tab tab-blue" onclick="showTipsterTab('stats')" style="opacity:0.6">Ver Estadísticas →</button>
@@ -3857,7 +3857,7 @@ function buildBoxPick(num) {
   const stakeField = isSimple ? `
       <div>
         <label class="flbl">Stake (1-10)</label>
-        <input id="${id}-stake" type="number" class="finp" placeholder="ej. 3" min="1" max="10" oninput="updatePreview()"/>
+        <input id="${id}-stake" type="number" class="finp" placeholder="ej. 1.5" min="0.1" max="100" step="0.1" oninput="updatePreview()"/>
       </div>` : '';
 
   // Selector de deporte individual para cada pick (en combinadas)
@@ -4067,7 +4067,7 @@ function buildComboControls() {
   <!-- Stake Combinada -->
   <div style="background:#060e0a;border:1px solid #1a2e1f;border-radius:8px;padding:16px">
     <label class="flbl">Stake combinada (1-10)</label>
-    <input type="number" id="combo-stake" class="finp" placeholder="ej. 2" min="1" max="10" style="max-width:150px" oninput="updatePreview()"/>
+    <input type="number" id="combo-stake" class="finp" placeholder="ej. 1.5" min="0.1" max="100" step="0.1" style="max-width:150px" oninput="updatePreview()"/>
   </div>
 
 </div>`;
@@ -4785,10 +4785,14 @@ function openPicks(tipsterId) {
     
 
 function renderPicksPanel(tipsterId) {
-  // Buscar el contenedor correcto — puede ser picks-panel-{id} o tipster-picks-container
+  // Buscar el contenedor correcto
   const container = document.getElementById(`picks-panel-${tipsterId}`) 
     || document.getElementById('tipster-picks-container');
   if (!container) return;
+  
+  // Solo renderizar si este tipster es el que se está mostrando actualmente
+  const visibleTipster = currentProfileTipsterId || activeTipsterId || 'ghp';
+  if (container.id === 'tipster-picks-container' && tipsterId !== visibleTipster) return;
   const monthSelector = document.getElementById('month-filter-picks');
   const selectedMonth = monthSelector?.value || (() => {
     const n = new Date();
@@ -5184,7 +5188,7 @@ function editPick(tipsterId, index) {
             </div>
             <div>
               <label class="flbl">Stake</label>
-              <input id="edit-stake" type="number" class="finp" min="1" max="10" value="${pick.stake}"/>
+              <input id="edit-stake" type="number" class="finp" min="0.1" max="100" step="0.1" value="${pick.stake}"/>
             </div>
           </div>
           <div>
@@ -5211,7 +5215,7 @@ async function saveEditPick(tipsterId, index) {
   const nuevoEstado = document.getElementById('edit-estado').value;
   const nuevaSeleccion = document.getElementById('edit-seleccion').value;
   const nuevaCuota = parseFloat(document.getElementById('edit-cuota').value) || pick.cuota;
-  const nuevoStake = parseInt(document.getElementById('edit-stake').value) || pick.stake;
+  const nuevoStake = parseFloat(document.getElementById('edit-stake').value) || pick.stake;
   const nuevoAnalisis = document.getElementById('edit-analisis').value;
 
   // Detectar si el estado cambió a un resultado final
@@ -5813,7 +5817,7 @@ async function updatePickInSupabase(pick) {
       nuevo_estado: estadoNorm,
       nueva_seleccion: pick.seleccion || null,
       nueva_cuota: parseFloat(pick.cuota) || null,
-      nuevo_stake: parseInt(pick.stake) || null,
+      nuevo_stake: parseFloat(pick.stake) || null,
       nuevo_analisis: pick.analisis || null
     });
     
@@ -6079,7 +6083,7 @@ function roundRect(ctx, x, y, w, h, r) {
 // Construye mensaje de texto para fallback o envío directo
 function buildTelegramText(pick) {
   const isCombo = pick.tipo === 'COMBINADA';
-  const stake = parseInt(pick.stake) || 1;
+  const stake = parseFloat(pick.stake) || 1;
   const cuota = parseFloat(pick.cuota) || 1;
   const estado = (pick.estado || 'pendiente').toUpperCase();
   const pickId = pick.id ? `TRUEPICK-${pick.id.toString().slice(-6).toUpperCase()}` : `TS-${Date.now().toString(36).toUpperCase()}`;
@@ -6117,7 +6121,7 @@ async function sendToTelegram(pick) {
     }
     
     const isCombo = pick.tipo === 'COMBINADA';
-    const stake = parseInt(pick.stake) || 1;
+    const stake = parseFloat(pick.stake) || 1;
     const cuotaTotal = parseFloat(pick.cuota) || 1;
     const estado = (pick.estado || 'pendiente').toLowerCase();
     const hasResult = estado === 'ganado' || estado === 'perdido';
