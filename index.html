@@ -5456,8 +5456,8 @@ async function loadPicksFromSupabase() {
       window.ghpRecentForm = form.forma;
     }
 
-    // Renderizar panels para todos los tipsters y actualizar cards
-    ['ghp', 'spider', 'tipstop'].forEach(tid => renderPicksPanel(tid));
+    // Renderizar SOLO el tipster cuyo perfil está visible ahora mismo
+    renderPicksPanel(currentProfileTipsterId || 'ghp');
     updateTipsterCards();
 
   } catch (e) {
@@ -5511,8 +5511,9 @@ async function loadTipsterStats() {
           pendientes: stats.pendientes || 0
         };
       }
-      renderPicksPanel(tid);
     }
+    // Solo renderizar el tipster visible después de cargar todas las stats
+    renderPicksPanel(currentProfileTipsterId || 'ghp');
 
     // Forma reciente GHP (gráfica)
     const { data: form } = await client
