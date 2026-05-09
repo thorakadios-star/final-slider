@@ -3492,13 +3492,26 @@ async function addSeleccion(pid, isFirst = false) {
     dropdown.innerHTML = '<option>⟳ Cargando...</option>';
     try {
       const sb = getSbClient();
-      const { data, error } = await sb.from('selecciones').select('id, mercado, opciones').order('mercado');
+      const { data, error } = await sb.from('selecciones').select('id, categoria, mercado, opciones').order('mercado');
       if (error) throw error;
+      const ORDEN = ['Resultado','Goles','Corners','Hándicap','Remates','Tarjetas'];
+      const ICONOS = {Resultado:'🏆',Goles:'⚽',Corners:'🚩',Hándicap:'⚖️',Remates:'🎯',Tarjetas:'🟨'};
+      const grupos = {};
+      data.forEach(s => {
+        const cat = s.categoria || 'Otros';
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(s);
+      });
+      const cats = [...ORDEN.filter(c => grupos[c]), ...Object.keys(grupos).filter(c => !ORDEN.includes(c))];
       dropdown.innerHTML = '<option value="">— Selecciona selección —</option>' +
-        data.map(s => {
-          const label = s.opciones ? `${s.mercado} — ${s.opciones}` : s.mercado;
-          return `<option value="${label}">${label}</option>`;
-        }).join('');
+        cats.map(cat =>
+          `<optgroup label="${ICONOS[cat]||'•'} ${cat}">${
+            grupos[cat].map(s => {
+              const label = s.opciones ? `${s.mercado} — ${s.opciones}` : s.mercado;
+              return `<option value="${label}">${label}</option>`;
+            }).join('')
+          }</optgroup>`
+        ).join('');
     } catch(e) {
       dropdown.innerHTML = '<option value="">⚠ Error al cargar</option>';
     }
