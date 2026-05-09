@@ -6735,6 +6735,8 @@ async function publishPick() {
           btn.innerHTML = 'Publicar Pronóstico';
           btn.style.background = '';
           resetForm();
+          // Sincronizar perfil visible con el tipster que acaba de publicar
+          currentProfileTipsterId = activeTipsterId;
           loadPicksFromSupabase();
         }, 2000);
       }, 800);
