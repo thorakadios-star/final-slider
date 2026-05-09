@@ -3467,9 +3467,12 @@ async function addSeleccion(pid, isFirst = false) {
       ${idx > 1 ? `<button type="button" onclick="removeSeleccion('${pid}','${rowId}')" style="background:transparent;border:none;color:#52525b;cursor:pointer;font-size:12px;padding:2px 6px" onmouseenter="this.style.color='#ef4444'" onmouseleave="this.style.color='#52525b'">✕</button>` : ''}
     </div>
     <div style="display:flex;gap:8px;align-items:flex-start">
-      <div style="flex:1">
-        <select class="sel-dropdown fsel" onchange="onSelRowChange('${pid}','${rowId}')">
-          <option value="">— Selecciona selección —</option>
+      <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+        <select class="sel-cat fsel" onchange="onSelCatChange('${pid}','${rowId}')" style="font-size:12px">
+          <option value="">— Categoría —</option>
+        </select>
+        <select class="sel-dropdown fsel" onchange="onSelRowChange('${pid}','${rowId}')" style="display:none;font-size:12px">
+          <option value="">— Mercado —</option>
         </select>
       </div>
       <div style="width:75px;flex-shrink:0">
@@ -3503,15 +3506,11 @@ async function addSeleccion(pid, isFirst = false) {
         grupos[cat].push(s);
       });
       const cats = [...ORDEN.filter(c => grupos[c]), ...Object.keys(grupos).filter(c => !ORDEN.includes(c))];
-      dropdown.innerHTML = '<option value="">— Selecciona selección —</option>' +
-        cats.map(cat =>
-          `<optgroup label="${ICONOS[cat]||'•'} ${cat}">${
-            grupos[cat].map(s => {
-              const label = s.opciones ? `${s.mercado} — ${s.opciones}` : s.mercado;
-              return `<option value="${label}">${label}</option>`;
-            }).join('')
-          }</optgroup>`
-        ).join('');
+      const catSel = newRow.querySelector('.sel-cat');
+      catSel.innerHTML = '<option value="">— Categoría —</option>' +
+        cats.map(cat => `<option value="${cat}">${ICONOS[cat]||'•'} ${cat}</option>`).join('');
+      catSel._grupos = grupos;
+      catSel._iconos = ICONOS;
     } catch(e) {
       dropdown.innerHTML = '<option value="">⚠ Error al cargar</option>';
     }
@@ -3521,6 +3520,26 @@ async function addSeleccion(pid, isFirst = false) {
 // Eliminar una fila de selección
 function removeSeleccion(pid, rowId) {
   document.getElementById(rowId)?.remove();
+  syncSeleccionesHidden(pid);
+  updatePreview();
+}
+
+// Cuando cambia la categoría → poblar mercados
+function onSelCatChange(pid, rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  const catSel  = row.querySelector('.sel-cat');
+  const mktSel  = row.querySelector('.sel-dropdown');
+  const cat     = catSel.value;
+  const grupos  = catSel._grupos || {};
+  if (!cat) { mktSel.style.display = 'none'; mktSel.value = ''; return; }
+  const items = grupos[cat] || [];
+  mktSel.innerHTML = '<option value="">— Mercado —</option>' +
+    items.map(s => {
+      const label = s.opciones ? `${s.mercado} — ${s.opciones}` : s.mercado;
+      return `<option value="${label}">${label}</option>`;
+    }).join('');
+  mktSel.style.display = '';
   syncSeleccionesHidden(pid);
   updatePreview();
 }
