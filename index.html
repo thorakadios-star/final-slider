@@ -140,11 +140,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(4,10,8,.98);backdrop-filte
 .sort-select:hover,.sort-select:focus{border-color:rgba(45,212,191,.3)}
 
 /* Logo img */
-.ts-logo-img{height:40px;width:auto;object-fit:contain}
+.ts-logo-img{height:56px;width:auto;object-fit:contain}
 
 /* ═══ RESPONSIVE MÓVIL - CARDS Y LOGO ═══ */
 @media(max-width:768px){
-  .ts-logo-img{height:40px;width:40px;object-fit:contain}
+  .ts-logo-img{height:52px;width:52px;object-fit:contain}
   #pg-plat .tipsters-grid{
     display:flex !important;
     flex-direction:column !important;
@@ -162,7 +162,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(4,10,8,.98);backdrop-filte
 }
 
 @media(max-width:480px){
-  .ts-logo-img{height:40px;width:40px;object-fit:contain}
+  .ts-logo-img{height:52px;width:52px;object-fit:contain}
   #pg-plat .tipsters-grid{
     width:85% !important;
     max-width:400px !important;
@@ -1226,7 +1226,7 @@ nav.sc{border-color:#243028}
 /* ── LOGOS MÁS GRANDES EN TODAS LAS PÁGINAS ────────────────────────────────────── */
 /* ── LOGO GLOBAL - IGUAL QUE HAMBURGUESA (40px) ────────────────────────────────── */
 @media(max-width:768px){
-  .ts-logo-img{height:40px !important;width:40px !important;object-fit:contain}
+  .ts-logo-img{height:52px !important;width:52px !important;object-fit:contain}
   img[alt="TrueStats AI"]{height:40px !important;width:40px !important;object-fit:contain}
 }
 
@@ -1340,7 +1340,7 @@ nav.sc{border-color:#243028}
 /* ── PÁGINA CREAR PICK (#pg-picks) ──────────────────────────────────────────────── */
 @media(max-width:768px){
   #pg-picks nav>div{padding:0 16px;height:60px}
-  #pg-picks nav .ts-logo-img{height:28px}
+  #pg-picks nav .ts-logo-img{height:48px}
   #pg-picks nav button{padding:8px 14px;font-size:11px}
   #pg-picks .shell{flex-direction:column}
   #pg-picks .sb{display:none}
@@ -1428,7 +1428,7 @@ if (typeof html2canvas === 'undefined') {
       
       <!-- Logo izquierda -->
       <a href="#" class="ts-logo" onclick="go('land');return false;" style="flex-shrink:0">
-        <img src="logo-truestats.png" alt="TrueStats AI" style="height:32px">
+        <img src="logo-truestats.png" alt="TrueStats AI" style="height:52px">
       </a>
       
       <!-- Slogan centro -->
@@ -1875,10 +1875,10 @@ if (typeof html2canvas === 'undefined') {
 
     <!-- Stats Banner -->
     <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;animation:fadeUp .7s .1s ease forwards;opacity:0">
-      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🛡️</span> <span id="global-picks">0</span> picks auditados</span>
-      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">🎯</span> <span id="global-winrate">0%</span> precisión media</span>
-      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">💰</span> +<span id="global-profit">0</span>u verificados</span>
-      <span style="display:flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:5px;padding:6px 12px;font-family:monospace;font-size:10px;color:#5eead4"><span style="color:#e2e8f0">📊</span> 6 tipsters activos</span>
+      <span style="display:flex;align-items:center;gap:8px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:6px;padding:8px 16px;font-family:monospace;font-size:12px;color:#5eead4;min-width:0;white-space:nowrap"><span style="color:#e2e8f0;font-size:14px">🛡️</span> <span id="global-picks">0</span> picks auditados</span>
+      <span style="display:flex;align-items:center;gap:8px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:6px;padding:8px 16px;font-family:monospace;font-size:12px;color:#5eead4;min-width:0;white-space:nowrap"><span style="color:#e2e8f0;font-size:14px">🎯</span> <span id="global-winrate">0%</span> precisión media</span>
+      <span style="display:flex;align-items:center;gap:8px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:6px;padding:8px 16px;font-family:monospace;font-size:12px;color:#5eead4;min-width:0;white-space:nowrap"><span style="color:#e2e8f0;font-size:14px">💰</span> +<span id="global-profit">0</span>u verificados</span>
+      <span style="display:flex;align-items:center;gap:8px;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);border-radius:6px;padding:8px 16px;font-family:monospace;font-size:12px;color:#5eead4;min-width:0;white-space:nowrap"><span style="color:#e2e8f0;font-size:14px">📊</span> 6 tipsters activos</span>
     </div>
 
     <!-- Filter Section -->
@@ -2353,7 +2353,7 @@ if (typeof html2canvas === 'undefined') {
   <nav style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,7,8,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(192,200,212,.2)">
     <div style="max-width:1400px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between">
       <a href="#" onclick="go('land');return false;">
-        <img src="logo-truestats.png" alt="TrueStats AI" style="height:36px">
+        <img src="logo-truestats.png" alt="TrueStats AI" style="height:52px">
       </a>
       <button onclick="go('land')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid rgba(192,200,212,.3);border-radius:8px;color:#c0c8d4;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;transition:all .2s">
         <i class="fa-solid fa-arrow-left"></i>
@@ -2377,7 +2377,7 @@ if (typeof html2canvas === 'undefined') {
   <nav style="position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,7,8,.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(251,191,36,.2)">
     <div style="max-width:1400px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between">
       <a href="#" onclick="go('land');return false;">
-        <img src="logo-truestats.png" alt="TrueStats AI" style="height:36px">
+        <img src="logo-truestats.png" alt="TrueStats AI" style="height:52px">
       </a>
       <button onclick="go('land')" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:transparent;border:1px solid rgba(251,191,36,.3);border-radius:8px;color:#fbbf24;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;transition:all .2s">
         <i class="fa-solid fa-arrow-left"></i>
